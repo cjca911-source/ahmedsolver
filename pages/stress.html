@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AhmedSolver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header id="site-navbar"></header>
+
+    <main>
+      <section class="page-hero fade-in-up">
+        <div class="page-hero__split">
+          <div>
+            <span class="page-badge" data-i18n="interactive.stress.kicker"></span>
+            <h1 data-i18n="topics.stress.title"></h1>
+            <p data-i18n="interactive.stress.subtitle"></p>
+
+            <div class="placeholder-actions">
+              <a class="button button-primary" href="../index.html#topics" data-i18n="common.backToTopics"></a>
+              <a class="button button-secondary" href="unit-converter.html" data-i18n="topics.unitConverter.title"></a>
+            </div>
+          </div>
+
+          <aside class="hero-side-card">
+            <span class="section-chip" data-i18n="interactive.shared.formula"></span>
+            <p data-i18n="interactive.stress.explanation"></p>
+            <div class="formula-display">sigma = P / A</div>
+            <p class="hint-line" data-i18n="interactive.stress.inputHint"></p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tool-page section-block">
+        <div class="module-grid">
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.inputs"></span>
+              <h2 data-i18n="interactive.stress.formTitle"></h2>
+            </div>
+
+            <form id="stress-form" novalidate>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="stress-load-value" data-i18n="interactive.stress.loadValue"></label>
+                  <input
+                    id="stress-load-value"
+                    class="input-control"
+                    type="number"
+                    inputmode="decimal"
+                    step="any"
+                    data-i18n-placeholder="interactive.stress.loadValue"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="stress-load-unit" data-i18n="interactive.stress.loadUnit"></label>
+                  <select id="stress-load-unit" class="select-control"></select>
+                </div>
+
+                <div class="field">
+                  <label for="stress-area-value" data-i18n="interactive.stress.areaValue"></label>
+                  <input
+                    id="stress-area-value"
+                    class="input-control"
+                    type="number"
+                    inputmode="decimal"
+                    min="0"
+                    step="any"
+                    data-i18n-placeholder="interactive.stress.areaValue"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="stress-area-unit" data-i18n="interactive.stress.areaUnit"></label>
+                  <select id="stress-area-unit" class="select-control"></select>
+                </div>
+
+                <div class="field field--full">
+                  <label for="stress-output-unit" data-i18n="interactive.stress.outputUnit"></label>
+                  <select id="stress-output-unit" class="select-control"></select>
+                  <p class="field-help" data-i18n="interactive.stress.inputHint"></p>
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button type="submit" class="button button-primary" data-i18n="common.solve"></button>
+                <button type="button" class="button button-secondary" id="stress-clear" data-i18n="common.clear"></button>
+              </div>
+
+              <div id="stress-status" class="status-banner" data-state="neutral" aria-live="polite"></div>
+            </form>
+          </article>
+
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.results"></span>
+              <h2 data-i18n="interactive.stress.resultTitle"></h2>
+            </div>
+
+            <div class="result-block" aria-live="polite">
+              <div class="result-card">
+                <div class="field-title" data-i18n="interactive.stress.finalLabel"></div>
+                <div class="result-value" id="stress-final-answer">--</div>
+                <div class="result-subline" id="stress-secondary-answer" data-i18n="interactive.stress.resultPlaceholder"></div>
+              </div>
+
+              <div class="result-card">
+                <div class="field-title" data-i18n="interactive.stress.inputSummaryTitle"></div>
+                <div class="summary-list" id="stress-summary-list"></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="module-grid">
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.notes"></span>
+              <h2 data-i18n="interactive.shared.explanation"></h2>
+            </div>
+
+            <div class="support-list">
+              <div class="step-card">
+                <h4 data-i18n="interactive.stress.formTitle"></h4>
+                <p data-i18n="interactive.stress.explanation"></p>
+              </div>
+              <div class="step-card">
+                <h4 data-i18n="interactive.shared.formula"></h4>
+                <div class="equation-line">sigma = P / A</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.steps"></span>
+              <h2 data-i18n="interactive.stress.stepsTitle"></h2>
+            </div>
+
+            <div class="steps-list" id="stress-steps-list">
+              <div class="empty-state">
+                <p data-i18n="interactive.stress.resultPlaceholder"></p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+  </div>
+
+  <script src="../js/i18n.js" defer></script>
+  <script src="../js/module-i18n.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/calculators.js" defer></script>
+</body>
+</html>

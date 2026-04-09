@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AhmedSolver</title>
+  <meta
+    name="description"
+    content="AhmedSolver is a smart engineering platform for Strength of Materials with bilingual calculators, engineering visuals, and guided study tools."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="home-page">
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header id="site-navbar"></header>
+
+    <main>
+      <section class="hero-section" id="top">
+        <div class="hero-copy">
+          <span class="eyebrow" data-i18n="hero.eyebrow"></span>
+          <h1 data-i18n="hero.title"></h1>
+          <p class="hero-description" data-i18n="hero.description"></p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#topics" data-i18n="hero.primaryCta"></a>
+            <a class="button button-secondary" href="#roadmap" data-i18n="hero.secondaryCta"></a>
+          </div>
+
+          <div class="hero-stats">
+            <article class="stat-card">
+              <strong>16+</strong>
+              <span data-i18n="hero.statModules"></span>
+            </article>
+            <article class="stat-card">
+              <strong>AR / EN</strong>
+              <span data-i18n="hero.statLanguages"></span>
+            </article>
+            <article class="stat-card">
+              <strong>RTL</strong>
+              <span data-i18n="hero.statResponsive"></span>
+            </article>
+          </div>
+        </div>
+
+        <div class="hero-visual glass-card">
+          <div class="visual-head">
+            <span class="visual-badge" data-i18n="hero.visualBadge"></span>
+            <h2 data-i18n="hero.visualTitle"></h2>
+            <p data-i18n="hero.visualDescription"></p>
+          </div>
+
+          <div class="formula-stack">
+            <article class="formula-chip">
+              <span data-i18n="hero.formulas.stress"></span>
+              <strong>&sigma; = P / A</strong>
+            </article>
+            <article class="formula-chip">
+              <span data-i18n="hero.formulas.strain"></span>
+              <strong>&epsilon; = &Delta;L / L</strong>
+            </article>
+            <article class="formula-chip">
+              <span data-i18n="hero.formulas.torsion"></span>
+              <strong>&tau; = (T r) / J</strong>
+            </article>
+            <article class="formula-chip">
+              <span data-i18n="hero.formulas.bending"></span>
+              <strong>&sigma; = (M y) / I</strong>
+            </article>
+          </div>
+
+          <div class="engineering-sketch" aria-hidden="true">
+            <div class="sketch-axis sketch-axis-x"></div>
+            <div class="sketch-axis sketch-axis-y"></div>
+            <div class="sketch-beam"></div>
+            <div class="sketch-load"></div>
+            <div class="sketch-support sketch-support-left"></div>
+            <div class="sketch-support sketch-support-right"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-strip" id="platform-tools">
+        <article class="glass-card feature-card">
+          <span class="feature-index">01</span>
+          <h3 data-i18n="features.stepByStep.title"></h3>
+          <p data-i18n="features.stepByStep.description"></p>
+        </article>
+        <article class="glass-card feature-card">
+          <span class="feature-index">02</span>
+          <h3 data-i18n="features.bilingual.title"></h3>
+          <p data-i18n="features.bilingual.description"></p>
+        </article>
+        <article class="glass-card feature-card">
+          <span class="feature-index">03</span>
+          <h3 data-i18n="features.engineeringUi.title"></h3>
+          <p data-i18n="features.engineeringUi.description"></p>
+        </article>
+      </section>
+
+      <section class="section-block" id="topics">
+        <div class="section-heading">
+          <span class="section-kicker" data-i18n="sections.topics.kicker"></span>
+          <h2 data-i18n="sections.topics.title"></h2>
+          <p data-i18n="sections.topics.description"></p>
+        </div>
+
+        <div class="topic-groups">
+          <article class="topic-group glass-card">
+            <div class="group-heading">
+              <h3 data-i18n="groups.core.title"></h3>
+              <p data-i18n="groups.core.description"></p>
+            </div>
+            <div class="topic-grid" data-topic-group="core"></div>
+          </article>
+
+          <article class="topic-group glass-card">
+            <div class="group-heading">
+              <h3 data-i18n="groups.visual.title"></h3>
+              <p data-i18n="groups.visual.description"></p>
+            </div>
+            <div class="topic-grid" data-topic-group="visual"></div>
+          </article>
+
+          <article class="topic-group glass-card">
+            <div class="group-heading">
+              <h3 data-i18n="groups.tools.title"></h3>
+              <p data-i18n="groups.tools.description"></p>
+            </div>
+            <div class="topic-grid" data-topic-group="tools"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block" id="roadmap">
+        <div class="section-heading">
+          <span class="section-kicker" data-i18n="roadmap.kicker"></span>
+          <h2 data-i18n="roadmap.title"></h2>
+          <p data-i18n="roadmap.description"></p>
+        </div>
+
+        <div class="roadmap-grid">
+          <article class="glass-card roadmap-card">
+            <span class="roadmap-step">01</span>
+            <h3 data-i18n="roadmap.steps.solve.title"></h3>
+            <p data-i18n="roadmap.steps.solve.description"></p>
+          </article>
+          <article class="glass-card roadmap-card">
+            <span class="roadmap-step">02</span>
+            <h3 data-i18n="roadmap.steps.visualize.title"></h3>
+            <p data-i18n="roadmap.steps.visualize.description"></p>
+          </article>
+          <article class="glass-card roadmap-card">
+            <span class="roadmap-step">03</span>
+            <h3 data-i18n="roadmap.steps.practice.title"></h3>
+            <p data-i18n="roadmap.steps.practice.description"></p>
+          </article>
+          <article class="glass-card roadmap-card">
+            <span class="roadmap-step">04</span>
+            <h3 data-i18n="roadmap.steps.share.title"></h3>
+            <p data-i18n="roadmap.steps.share.description"></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block bilingual-section" id="bilingual">
+        <div class="bilingual-copy">
+          <span class="section-kicker" data-i18n="bilingual.kicker"></span>
+          <h2 data-i18n="bilingual.title"></h2>
+          <p data-i18n="bilingual.description"></p>
+
+          <div class="bilingual-points">
+            <article class="point-item">
+              <h3 data-i18n="bilingual.points.toggle.title"></h3>
+              <p data-i18n="bilingual.points.toggle.description"></p>
+            </article>
+            <article class="point-item">
+              <h3 data-i18n="bilingual.points.layout.title"></h3>
+              <p data-i18n="bilingual.points.layout.description"></p>
+            </article>
+            <article class="point-item">
+              <h3 data-i18n="bilingual.points.foundation.title"></h3>
+              <p data-i18n="bilingual.points.foundation.description"></p>
+            </article>
+          </div>
+        </div>
+
+        <div class="language-preview glass-card">
+          <div class="preview-toolbar" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="preview-panel">
+            <span class="preview-label" data-i18n="bilingual.previewLabel"></span>
+            <h3 data-i18n="bilingual.previewTitle"></h3>
+
+            <div class="preview-row">
+              <span data-i18n="bilingual.previewRows.stress"></span>
+              <strong>&sigma; = P / A</strong>
+            </div>
+            <div class="preview-row">
+              <span data-i18n="bilingual.previewRows.strain"></span>
+              <strong>&epsilon; = &Delta;L / L</strong>
+            </div>
+            <div class="preview-row">
+              <span data-i18n="bilingual.previewRows.result"></span>
+              <strong data-i18n="bilingual.previewRows.resultValue"></strong>
+            </div>
+
+            <div class="preview-actions">
+              <button class="button button-primary" type="button" data-i18n="common.solve"></button>
+              <button class="button button-secondary" type="button" data-i18n="common.clear"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+  </div>
+
+  <script src="js/i18n.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

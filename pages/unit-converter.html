@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AhmedSolver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header id="site-navbar"></header>
+
+    <main>
+      <section class="page-hero fade-in-up">
+        <div class="page-hero__split">
+          <div>
+            <span class="page-badge" data-i18n="interactive.converter.kicker"></span>
+            <h1 data-i18n="topics.unitConverter.title"></h1>
+            <p data-i18n="interactive.converter.subtitle"></p>
+
+            <div class="placeholder-actions">
+              <a class="button button-primary" href="../index.html#topics" data-i18n="common.backToTopics"></a>
+              <a class="button button-secondary" href="stress.html" data-i18n="topics.stress.title"></a>
+            </div>
+          </div>
+
+          <aside class="hero-side-card">
+            <span class="section-chip" data-i18n="interactive.shared.formula"></span>
+            <p data-i18n="interactive.converter.explanation"></p>
+            <div class="formula-display" data-i18n="interactive.converter.formulaLine"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tool-page section-block">
+        <div class="module-grid">
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.inputs"></span>
+              <h2 data-i18n="interactive.converter.panelTitle"></h2>
+            </div>
+
+            <form id="unit-converter-form" novalidate>
+              <div class="field-grid">
+                <div class="field field--full">
+                  <label for="converter-category" data-i18n="interactive.converter.category"></label>
+                  <select id="converter-category" class="select-control"></select>
+                </div>
+
+                <div class="field field--full">
+                  <label for="converter-value" data-i18n="interactive.converter.value"></label>
+                  <input
+                    id="converter-value"
+                    class="input-control"
+                    type="number"
+                    inputmode="decimal"
+                    step="any"
+                    data-i18n-placeholder="interactive.converter.value"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="converter-from" data-i18n="interactive.converter.fromUnit"></label>
+                  <select id="converter-from" class="select-control"></select>
+                </div>
+
+                <div class="field">
+                  <label for="converter-to" data-i18n="interactive.converter.toUnit"></label>
+                  <select id="converter-to" class="select-control"></select>
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button type="submit" class="button button-primary" data-i18n="interactive.converter.convertButton"></button>
+                <button type="button" class="button button-secondary" id="converter-clear" data-i18n="common.clear"></button>
+              </div>
+
+              <div id="converter-status" class="status-banner" data-state="neutral" aria-live="polite"></div>
+            </form>
+          </article>
+
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.results"></span>
+              <h2 data-i18n="interactive.converter.resultTitle"></h2>
+            </div>
+
+            <div class="result-block" aria-live="polite">
+              <div class="result-card">
+                <div class="field-title" data-i18n="interactive.converter.convertedValueLabel"></div>
+                <div class="result-value" id="converter-final-answer">--</div>
+                <div class="result-subline" id="converter-secondary-answer" data-i18n="interactive.converter.resultPlaceholder"></div>
+              </div>
+
+              <div class="metric-grid" id="converter-metric-grid"></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="module-grid">
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.notes"></span>
+              <h2 data-i18n="interactive.shared.explanation"></h2>
+            </div>
+
+            <div class="converter-reference" id="converter-reference-list"></div>
+          </article>
+
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.steps"></span>
+              <h2 data-i18n="interactive.shared.steps"></h2>
+            </div>
+
+            <div class="steps-list" id="converter-steps-list">
+              <div class="empty-state">
+                <p data-i18n="interactive.converter.resultPlaceholder"></p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+  </div>
+
+  <script src="../js/i18n.js" defer></script>
+  <script src="../js/module-i18n.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/calculators.js" defer></script>
+  <script src="../js/unit-converter.js" defer></script>
+</body>
+</html>

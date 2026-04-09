@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AhmedSolver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header id="site-navbar"></header>
+
+    <main>
+      <section class="page-hero fade-in-up">
+        <span class="page-badge" data-i18n="common.moduleScaffold"></span>
+        <h1 data-module-title></h1>
+        <p data-module-description></p>
+
+        <div class="page-formula">
+          <h2 data-i18n="common.formulaLabel"></h2>
+          <code data-module-formula></code>
+        </div>
+
+        <div class="placeholder-actions">
+          <a class="button button-primary" href="../index.html#topics" data-i18n="common.backToTopics"></a>
+          <a class="button button-secondary" href="../index.html#roadmap" data-i18n="common.viewRoadmap"></a>
+        </div>
+      </section>
+
+      <section class="placeholder-grid section-block">
+        <article class="info-card glass-card">
+          <span class="page-badge" data-module-badge></span>
+          <h2 data-i18n="placeholder.readyTitle"></h2>
+          <ul class="placeholder-list" data-placeholder-ready-list></ul>
+        </article>
+
+        <article class="info-card glass-card">
+          <span class="page-badge" data-i18n="common.comingSoon"></span>
+          <h2 data-i18n="placeholder.nextTitle"></h2>
+          <p data-i18n="placeholder.nextDescription"></p>
+          <div class="next-chip" data-i18n="placeholder.nextChip"></div>
+        </article>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+  </div>
+
+  <script src="../js/i18n.js" defer></script>
+  <script src="../js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AhmedSolver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+  <div class="site-backdrop" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header id="site-navbar"></header>
+
+    <main>
+      <section class="page-hero fade-in-up">
+        <div class="page-hero__split">
+          <div>
+            <span class="page-badge" data-i18n="interactive.fbd.kicker"></span>
+            <h1 data-i18n="topics.fbd.title"></h1>
+            <p data-i18n="interactive.fbd.subtitle"></p>
+
+            <div class="placeholder-actions">
+              <a class="button button-primary" href="../index.html#topics" data-i18n="common.backToTopics"></a>
+              <a class="button button-secondary" href="stress.html" data-i18n="topics.stress.title"></a>
+            </div>
+          </div>
+
+          <aside class="hero-side-card">
+            <span class="section-chip" data-i18n="interactive.shared.explanation"></span>
+            <p data-i18n="interactive.fbd.explanation"></p>
+            <div class="formula-display">Fx = F cos(theta) | Fy = F sin(theta)</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tool-page section-block">
+        <div class="module-grid module-grid--fbd">
+          <article class="module-panel glass-card module-panel--fbd-controls">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.shared.inputs"></span>
+              <h2 data-i18n="interactive.fbd.controlTitle"></h2>
+            </div>
+
+            <form id="fbd-form" novalidate>
+              <div class="field-grid field-grid--triplet">
+                <div class="field">
+                  <label for="fbd-label" data-i18n="interactive.fbd.label"></label>
+                  <input
+                    id="fbd-label"
+                    class="text-control"
+                    type="text"
+                    maxlength="10"
+                    data-i18n-placeholder="interactive.fbd.label"
+                  >
+                  <p class="field-help" data-i18n="interactive.fbd.labelHint"></p>
+                </div>
+
+                <div class="field">
+                  <label for="fbd-magnitude" data-i18n="interactive.fbd.magnitude"></label>
+                  <input
+                    id="fbd-magnitude"
+                    class="input-control"
+                    type="number"
+                    inputmode="decimal"
+                    min="0"
+                    step="any"
+                    data-i18n-placeholder="interactive.fbd.magnitude"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="fbd-angle" data-i18n="interactive.fbd.angle"></label>
+                  <input
+                    id="fbd-angle"
+                    class="input-control"
+                    type="number"
+                    inputmode="decimal"
+                    step="any"
+                    data-i18n-placeholder="interactive.fbd.angle"
+                  >
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button type="submit" class="button button-primary" id="fbd-add-force" data-i18n="interactive.fbd.addForce"></button>
+                <button type="button" class="button button-secondary" id="fbd-clear-forces" data-i18n="interactive.fbd.clearAll"></button>
+              </div>
+
+              <div id="fbd-status" class="status-banner" data-state="neutral" aria-live="polite"></div>
+            </form>
+
+            <div class="force-chip-panel">
+              <div class="module-panel__header module-panel__header--compact">
+                <span class="section-chip" data-i18n="interactive.fbd.activeTitle"></span>
+                <p data-i18n="interactive.fbd.activeHint"></p>
+              </div>
+              <div id="fbd-force-chips" class="force-chip-grid"></div>
+            </div>
+          </article>
+
+          <article class="module-panel glass-card module-panel--canvas">
+            <div class="canvas-shell">
+              <div class="canvas-toolbar">
+                <div>
+                  <span class="section-chip" data-i18n="interactive.fbd.canvasTitle"></span>
+                  <h3 data-i18n="interactive.fbd.canvasTitle"></h3>
+                </div>
+                <p data-i18n="interactive.fbd.canvasHint"></p>
+              </div>
+              <div class="canvas-stage">
+                <canvas id="fbd-canvas" class="diagram-canvas" width="820" height="420"></canvas>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="module-grid module-grid--fbd-secondary">
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.fbd.summaryTitle"></span>
+              <h2 data-i18n="interactive.fbd.summaryTitle"></h2>
+            </div>
+
+            <div class="metric-grid" id="fbd-summary-grid" aria-live="polite"></div>
+          </article>
+
+          <article class="module-panel glass-card">
+            <div class="module-panel__header">
+              <span class="section-chip" data-i18n="interactive.fbd.listTitle"></span>
+              <h2 data-i18n="interactive.fbd.listTitle"></h2>
+            </div>
+
+            <div id="fbd-force-table" aria-live="polite"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+  </div>
+
+  <script src="../js/i18n.js" defer></script>
+  <script src="../js/module-i18n.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/fbd.js" defer></script>
+</body>
+</html>

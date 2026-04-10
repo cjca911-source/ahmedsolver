@@ -62,14 +62,6 @@
       formula: "value x (from / to)",
       ready: true
     },
-    aiSolver: {
-      slug: "ai-solver",
-      path: "pages/ai-solver.html",
-      group: "tools",
-      type: "utility",
-      formula: "Image -> OCR -> Solve",
-      ready: true
-    },
     questionBank: {
       slug: "question-bank",
       path: "pages/question-bank.html",
@@ -92,7 +84,7 @@
   const topicGroups = {
     core: ["stress", "strain", "hookesLaw", "axialDeformation", "shearStress", "torsion", "bending", "thermalStress"],
     visual: ["beamReactions", "mohrsCircle", "fbd", "beamDiagrams"],
-    tools: ["unitConverter", "aiSolver", "questionBank", "quiz", "pdfExport"]
+    tools: ["unitConverter", "questionBank", "quiz", "pdfExport"]
   };
 
   function getStoredLanguage() {
@@ -198,14 +190,12 @@
 
     const homeHref = isHomePage() ? "#top" : buildUrl("index.html");
     const topicsHref = isHomePage() ? "#topics" : buildUrl("index.html#topics");
-    const aiSolverHref = buildUrl("pages/ai-solver.html");
     const toolsHref = isHomePage() ? "#platform-tools" : buildUrl("index.html#platform-tools");
     const roadmapHref = isHomePage() ? "#roadmap" : buildUrl("index.html#roadmap");
     const currentModuleKey = getCurrentModuleKey();
     const currentModule = currentModuleKey ? modules[currentModuleKey] : null;
     const isTopicsActive = !!currentModule && (currentModule.group === "core" || currentModule.group === "visual");
-    const isAiSolverActive = currentModuleKey === "aiSolver";
-    const isToolsActive = !!currentModule && currentModule.group === "tools" && !isAiSolverActive;
+    const isToolsActive = !!currentModule && currentModule.group === "tools";
     const isQuizActive = currentModuleKey === "quiz";
     const isFeaturedActive = currentModuleKey === "stress";
 
@@ -235,7 +225,6 @@
           <ul class="nav-links">
             ${createNavLink(homeHref, translate("nav.home", language), isHomePage(), isHomePage())}
             ${createNavLink(topicsHref, translate("nav.topics", language), isTopicsActive, false)}
-            ${createNavLink(aiSolverHref, translate("nav.aiSolver", language), isAiSolverActive, false)}
             ${createNavLink(toolsHref, translate("nav.tools", language), isToolsActive, false)}
             ${createNavLink(roadmapHref, translate("nav.roadmap", language), false, false)}
           </ul>
@@ -287,7 +276,6 @@
           <ul class="footer-links">
             <li><a href="${isHomePage() ? "#top" : buildUrl("index.html")}">${translate("nav.home", language)}</a></li>
             <li><a href="${isHomePage() ? "#topics" : buildUrl("index.html#topics")}">${translate("nav.topics", language)}</a></li>
-            <li><a href="${buildUrl("pages/ai-solver.html")}">${translate("topics.aiSolver.title", language)}</a></li>
             <li><a href="${buildUrl("pages/question-bank.html")}">${translate("topics.questionBank.title", language)}</a></li>
             <li><a href="${buildUrl("pages/unit-converter.html")}">${translate("topics.unitConverter.title", language)}</a></li>
           </ul>
@@ -329,7 +317,7 @@
                 <span class="topic-card__tag">${translate(`moduleTypes.${moduleConfig.type}`, language)}</span>
                 <span class="topic-card__status">${translate(statusKey, language)}</span>
               </div>
-              <div>
+              <div class="topic-card__body">
                 <h3>${translate(`topics.${moduleKey}.title`, language)}</h3>
                 <p>${translate(`topics.${moduleKey}.description`, language)}</p>
               </div>

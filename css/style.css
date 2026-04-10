@@ -683,24 +683,25 @@ main {
 }
 
 .section-block {
-  padding: 4.4rem 0 0;
+  padding: 4.8rem 0 0;
 }
 
 .section-heading {
   max-width: 750px;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.9rem;
 }
 
 .topic-groups {
   display: grid;
-  gap: 1.2rem;
+  gap: 1.5rem;
 }
 
 .topic-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.15rem;
+  align-items: stretch;
+  margin-top: 0;
 }
 
 .topic-card {
@@ -708,8 +709,8 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 218px;
-  padding: 1.15rem;
+  min-height: 230px;
+  padding: 1.25rem;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(123, 172, 228, 0.12);
   transition:
@@ -747,6 +748,24 @@ main {
 
 .topic-card__meta {
   justify-content: space-between;
+}
+
+.topic-card__body {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.topic-group {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.65rem;
+}
+
+.group-heading {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 62ch;
 }
 
 .topic-card__tag,

@@ -396,4 +396,73 @@
       }
     }
   });
+  mergeDeep(root.translations.en, {
+    interactive: {
+      aiInput: {
+        kicker: "AI Text Solver",
+        subtitle: "Type an engineering problem in English or Arabic and let AhmedSolver extract the knowns, detect the target variable, and build a worked solution.",
+        explanation:
+          "This AI input flow sends only the typed problem statement to the secure backend, where OpenAI analyzes the engineering text and returns structured solving steps.",
+        flowLine: "Problem text -> knowns -> unknown -> formula -> step-by-step solution",
+        apiNote: "Run the Express backend first so the page can call /api/solve-text securely.",
+        panelTitle: "Problem Input",
+        problemLabel: "Engineering Problem",
+        problemPlaceholder: "Example: A steel rod 2 m long with area 500 mm^2 carries a tensile load of 60 kN. Find the normal stress.",
+        solveButton: "Solve with AI",
+        resultTitle: "AI Solution",
+        resultPlaceholder: "The AI-generated engineering solution will appear here after analysis.",
+        solutionLabel: "Step-by-step explanation",
+        structuredTitle: "Structured Extraction",
+        knownsTitle: "Known Values",
+        detectedTopic: "Detected topic",
+        unknownLabel: "Target variable",
+        formulaLabel: "Formula used",
+        stepsTitle: "Solution Steps",
+        ready: "Type an engineering problem to begin.",
+        loading: "Analyzing the problem with the secure backend...",
+        success: "AI solution generated successfully.",
+        validationPrompt: "Enter an engineering problem before solving.",
+        errorFallback: "The AI solver could not process this request right now.",
+        noKnowns: "No structured known values were returned yet.",
+        noSteps: "No solution steps are available yet.",
+        knownLabel: "Known",
+        stepLabel: "Step"
+      }
+    }
+  });
+
+  mergeDeep(root.translations.ar, {
+    interactive: {
+      aiInput: {
+        kicker: "محلل نصي بالذكاء الاصطناعي",
+        subtitle: "اكتب مسألة هندسية بالعربية أو الإنجليزية وسيقوم AhmedSolver باستخراج المعطيات وتحديد المطلوب وبناء حل تفصيلي.",
+        explanation:
+          "يرسل هذا المسار النص المكتوب فقط إلى الخادم الآمن، حيث يقوم OpenAI بتحليل المسألة الهندسية وإرجاع خطوات حل منظمة.",
+        flowLine: "نص المسألة -> المعطيات -> المجهول -> المعادلة -> الحل خطوة بخطوة",
+        apiNote: "شغّل خادم Express أولاً حتى تتمكن الصفحة من استدعاء /api/solve-text بشكل آمن.",
+        panelTitle: "إدخال المسألة",
+        problemLabel: "المسألة الهندسية",
+        problemPlaceholder: "مثال: قضيب فولاذي طوله 2 m ومساحته 500 mm^2 يتعرض لحمل شد مقداره 60 kN. أوجد الإجهاد العمودي.",
+        solveButton: "حل بالذكاء الاصطناعي",
+        resultTitle: "حل الذكاء الاصطناعي",
+        resultPlaceholder: "سيظهر هنا الحل الهندسي الذي أنشأه الذكاء الاصطناعي بعد التحليل.",
+        solutionLabel: "الشرح خطوة بخطوة",
+        structuredTitle: "الاستخراج المنظم",
+        knownsTitle: "القيم المعروفة",
+        detectedTopic: "الموضوع المكتشف",
+        unknownLabel: "المتغير المطلوب",
+        formulaLabel: "المعادلة المستخدمة",
+        stepsTitle: "خطوات الحل",
+        ready: "اكتب مسألة هندسية للبدء.",
+        loading: "جارٍ تحليل المسألة عبر الخادم الآمن...",
+        success: "تم إنشاء الحل بالذكاء الاصطناعي بنجاح.",
+        validationPrompt: "أدخل مسألة هندسية قبل بدء الحل.",
+        errorFallback: "تعذر على محلل الذكاء الاصطناعي معالجة هذا الطلب حالياً.",
+        noKnowns: "لم يتم إرجاع قيم معروفة منظمة بعد.",
+        noSteps: "لا توجد خطوات حل متاحة بعد.",
+        knownLabel: "معطى",
+        stepLabel: "خطوة"
+      }
+    }
+  });
 })();

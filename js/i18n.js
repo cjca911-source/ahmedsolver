@@ -195,6 +195,10 @@ window.StrengthSolverI18n = {
           title: "Unit Converter",
           description: "Convert engineering values across force, stress, length, area, and torque."
         },
+        aiInput: {
+          title: "AI Input",
+          description: "Describe an engineering problem in natural language and receive a structured step-by-step solution."
+        },
         questionBank: {
           title: "Question Bank",
           description: "Filter curated practice problems by topic and difficulty."
@@ -426,6 +430,10 @@ window.StrengthSolverI18n = {
         unitConverter: {
           title: "محول الوحدات",
           description: "التحويل بين وحدات القوة والإجهاد والطول والمساحة والعزم."
+        },
+        aiInput: {
+          title: "إدخال بالذكاء الاصطناعي",
+          description: "اكتب مسألة هندسية بلغة طبيعية واحصل على حل منظم خطوة بخطوة."
         },
         questionBank: {
           title: "بنك الأسئلة",

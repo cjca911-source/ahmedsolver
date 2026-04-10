@@ -385,6 +385,18 @@
   color: var(--accent);
 }
 
+.ai-textarea {
+  min-height: 220px;
+  resize: vertical;
+}
+
+.ai-solution-text {
+  margin-top: 0.6rem;
+  color: var(--text);
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
 .canvas-shell {
   overflow: hidden;
   border-radius: var(--radius-md);

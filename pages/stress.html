@@ -37,7 +37,7 @@
             <span class="section-chip" data-i18n="interactive.shared.formula"></span>
             <p data-i18n="interactive.stress.explanation"></p>
             <div class="formula-display">sigma = P / A</div>
-            <p class="hint-line" data-i18n="interactive.stress.inputHint"></p>
+            <p class="hint-line" data-i18n="interactive.stress.solverHint"></p>
           </aside>
         </div>
       </section>
@@ -60,8 +60,9 @@
                     type="number"
                     inputmode="decimal"
                     step="any"
-                    data-i18n-placeholder="interactive.stress.loadValue"
+                    data-i18n-placeholder="interactive.stress.loadPlaceholder"
                   >
+                  <p class="field-help" data-i18n="interactive.stress.loadHint"></p>
                 </div>
 
                 <div class="field">
@@ -78,8 +79,9 @@
                     inputmode="decimal"
                     min="0"
                     step="any"
-                    data-i18n-placeholder="interactive.stress.areaValue"
+                    data-i18n-placeholder="interactive.stress.areaPlaceholder"
                   >
+                  <p class="field-help" data-i18n="interactive.stress.areaHint"></p>
                 </div>
 
                 <div class="field">
@@ -87,10 +89,26 @@
                   <select id="stress-area-unit" class="select-control"></select>
                 </div>
 
+                <div class="field">
+                  <label for="stress-value" data-i18n="interactive.stress.stressValue"></label>
+                  <input
+                    id="stress-value"
+                    class="input-control"
+                    type="number"
+                    inputmode="decimal"
+                    step="any"
+                    data-i18n-placeholder="interactive.stress.stressPlaceholder"
+                  >
+                  <p class="field-help" data-i18n="interactive.stress.stressHint"></p>
+                </div>
+
+                <div class="field">
+                  <label for="stress-unit" data-i18n="interactive.stress.stressUnit"></label>
+                  <select id="stress-unit" class="select-control"></select>
+                </div>
+
                 <div class="field field--full">
-                  <label for="stress-output-unit" data-i18n="interactive.stress.outputUnit"></label>
-                  <select id="stress-output-unit" class="select-control"></select>
-                  <p class="field-help" data-i18n="interactive.stress.inputHint"></p>
+                  <p class="field-help" data-i18n="interactive.stress.solverHint"></p>
                 </div>
               </div>
 

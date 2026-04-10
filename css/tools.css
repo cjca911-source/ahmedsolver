@@ -167,6 +167,14 @@
   box-shadow: 0 0 0 3px rgba(255, 123, 114, 0.14);
 }
 
+.field-unknown .input-control,
+.field-unknown .select-control,
+.field-unknown .text-control {
+  border-color: rgba(255, 59, 59, 0.52);
+  box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.16), 0 0 18px rgba(179, 0, 0, 0.12);
+  background: rgba(179, 0, 0, 0.08);
+}
+
 .action-row {
   display: flex;
   flex-wrap: wrap;

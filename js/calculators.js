@@ -160,10 +160,25 @@
     element.classList.add("is-visible");
   }
 
-  function clearFieldErrors(fieldElements) {
+  function clearFieldStates(fieldElements) {
     fieldElements.forEach(function (fieldElement) {
-      fieldElement.classList.remove("field-error");
+      fieldElement.classList.remove("field-error", "field-unknown");
     });
+  }
+
+  function getBaseUnitKey(category) {
+    return unitCatalog[category] ? unitCatalog[category].baseUnit : "";
+  }
+
+  function getBaseUnitSymbol(category) {
+    const baseUnitDefinition = getUnitDefinition(category, getBaseUnitKey(category));
+    return baseUnitDefinition ? baseUnitDefinition.symbol : "";
+  }
+
+  function formatValueWithUnit(category, value, unitKey, decimals) {
+    const unitDefinition = getUnitDefinition(category, unitKey);
+    const unitSymbol = unitDefinition ? unitDefinition.symbol : unitKey;
+    return `${formatNumber(value, decimals)} ${unitSymbol}`;
   }
 
   function initStressCalculator() {
@@ -177,7 +192,8 @@
     const loadUnitField = form.querySelector("#stress-load-unit");
     const areaField = form.querySelector("#stress-area-value");
     const areaUnitField = form.querySelector("#stress-area-unit");
-    const outputUnitField = form.querySelector("#stress-output-unit");
+    const stressField = form.querySelector("#stress-value");
+    const stressUnitField = form.querySelector("#stress-unit");
     const clearButton = document.getElementById("stress-clear");
     const statusBanner = document.getElementById("stress-status");
     const finalAnswer = document.getElementById("stress-final-answer");
@@ -189,12 +205,89 @@
       result: null
     };
 
-    function renderSummary(result) {
-      const rows = [
-        { label: translate("interactive.stress.loadSummary"), value: result ? `${formatNumber(result.rawLoad, 4)} ${getUnitDefinition("force", result.loadUnit).symbol}` : "--" },
-        { label: translate("interactive.stress.areaSummary"), value: result ? `${formatNumber(result.rawArea, 4)} ${getUnitDefinition("area", result.areaUnit).symbol}` : "--" },
-        { label: translate("interactive.stress.outputSummary"), value: result ? getUnitDefinition("stress", result.outputUnit).symbol : "--" }
+    const fieldConfig = {
+      load: {
+        input: loadField,
+        unit: loadUnitField,
+        category: "force",
+        symbol: "P",
+        unknownLabelKey: "interactive.stress.unknownLoad",
+        summaryLabelKey: "interactive.stress.loadSummary"
+      },
+      area: {
+        input: areaField,
+        unit: areaUnitField,
+        category: "area",
+        symbol: "A",
+        unknownLabelKey: "interactive.stress.unknownArea",
+        summaryLabelKey: "interactive.stress.areaSummary"
+      },
+      stress: {
+        input: stressField,
+        unit: stressUnitField,
+        category: "stress",
+        symbol: "sigma",
+        unknownLabelKey: "interactive.stress.unknownStress",
+        summaryLabelKey: "interactive.stress.stressSummary"
+      }
+    };
+
+    const fieldKeys = Object.keys(fieldConfig);
+
+    function getFieldWrappers(key) {
+      return [
+        fieldConfig[key].input.closest(".field"),
+        fieldConfig[key].unit.closest(".field")
       ];
+    }
+
+    function getAllWrappers() {
+      return fieldKeys.reduce(function (collection, key) {
+        return collection.concat(getFieldWrappers(key));
+      }, []);
+    }
+
+    function getUnknownLabel(key) {
+      return translate(fieldConfig[key].unknownLabelKey);
+    }
+
+    function getSummaryRows(result) {
+      if (!result) {
+        return [
+          { label: translate("interactive.stress.solvedForSummary"), value: "--" },
+          { label: translate("interactive.stress.loadSummary"), value: "--" },
+          { label: translate("interactive.stress.areaSummary"), value: "--" },
+          { label: translate("interactive.stress.stressSummary"), value: "--" }
+        ];
+      }
+
+      return [
+        { label: translate("interactive.stress.solvedForSummary"), value: getUnknownLabel(result.unknownKey) },
+        {
+          label: translate("interactive.stress.loadSummary"),
+          value: formatValueWithUnit("force", result.rawValues.load, result.units.load, 6)
+        },
+        {
+          label: translate("interactive.stress.areaSummary"),
+          value: formatValueWithUnit("area", result.rawValues.area, result.units.area, 6)
+        },
+        {
+          label: translate("interactive.stress.stressSummary"),
+          value: formatValueWithUnit("stress", result.rawValues.stress, result.units.stress, 6)
+        }
+      ];
+    }
+
+    function buildDisplayLine(result) {
+      return `${fieldConfig[result.unknownKey].symbol} = ${formatValueWithUnit(fieldConfig[result.unknownKey].category, result.rawValues[result.unknownKey], result.units[result.unknownKey], 6)}`;
+    }
+
+    function buildBaseResultLine(result) {
+      return `${fieldConfig[result.unknownKey].symbol} = ${formatValueWithUnit(fieldConfig[result.unknownKey].category, result.baseValues[result.unknownKey], getBaseUnitKey(fieldConfig[result.unknownKey].category), 6)}`;
+    }
+
+    function renderSummary(result) {
+      const rows = getSummaryRows(result);
 
       summaryList.innerHTML = rows.map(function (row) {
         return `
@@ -216,23 +309,39 @@
         return;
       }
 
+      const conversionMarkup = buildConversionLines(result.unknownKey, result.rawValues, result.units, result.baseValues).map(function (line) {
+        return `<p>${line}</p>`;
+      }).join("");
+      const unknownLabel = getUnknownLabel(result.unknownKey);
+      const baseResultLine = buildBaseResultLine(result);
+      const displayLine = buildDisplayLine(result);
+
       stepsList.innerHTML = `
         <article class="step-card">
-          <h4>1. ${translate("interactive.stress.stepConvertLoad")}</h4>
-          <p>${formatNumber(result.rawLoad, 6)} ${getUnitDefinition("force", result.loadUnit).symbol} = ${formatNumber(result.loadBase, 6)} N</p>
+          <h4>1. ${translate("interactive.stress.originalFormulaLabel")}</h4>
+          <div class="equation-line">sigma = P / A</div>
         </article>
         <article class="step-card">
-          <h4>2. ${translate("interactive.stress.stepConvertArea")}</h4>
-          <p>${formatNumber(result.rawArea, 6)} ${getUnitDefinition("area", result.areaUnit).symbol} = ${formatNumber(result.areaBase, 6)} m^2</p>
+          <h4>2. ${translate("interactive.stress.detectedUnknownLabel")}</h4>
+          <p>${unknownLabel}</p>
         </article>
         <article class="step-card">
-          <h4>3. ${translate("interactive.stress.stepSubstitute")}</h4>
-          <p>sigma = P / A</p>
-          <div class="equation-line">sigma = ${formatNumber(result.loadBase, 6)} / ${formatNumber(result.areaBase, 6)} = ${formatNumber(result.stressBase, 6)} Pa</div>
+          <h4>3. ${translate("interactive.stress.rearrangedFormulaLabel")}</h4>
+          <div class="equation-line">${getRearrangedFormula(result.unknownKey)}</div>
         </article>
         <article class="step-card">
-          <h4>4. ${translate("interactive.stress.stepConvertOutput")}</h4>
-          <p>${formatNumber(result.stressBase, 6)} Pa to ${formatNumber(result.outputValue, 6)} ${getUnitDefinition("stress", result.outputUnit).symbol}</p>
+          <h4>4. ${translate("interactive.stress.conversionLabel")}</h4>
+          ${conversionMarkup}
+        </article>
+        <article class="step-card">
+          <h4>5. ${translate("interactive.stress.substitutionLabel")}</h4>
+          <p>${translate("interactive.stress.substitutionLineLabel")}</p>
+          <div class="equation-line">${getSubstitutionLine(result.unknownKey, result.baseValues)}</div>
+          <p>${translate("interactive.stress.baseResultLabel")}: ${baseResultLine}</p>
+        </article>
+        <article class="step-card">
+          <h4>6. ${translate("interactive.stress.finalAnswerLabel")}</h4>
+          <div class="equation-line">${displayLine}</div>
         </article>
       `;
     }
@@ -246,70 +355,190 @@
         return;
       }
 
-      finalAnswer.textContent = `${formatNumber(result.outputValue, 6)} ${getUnitDefinition("stress", result.outputUnit).symbol}`;
-      secondaryAnswer.textContent = `${formatNumber(result.stressBase, 6)} Pa`;
+      finalAnswer.textContent = buildDisplayLine(result);
+      secondaryAnswer.textContent = `${translate("interactive.stress.detectedUnknownLabel")}: ${getUnknownLabel(result.unknownKey)} | ${translate("interactive.stress.baseResultLabel")}: ${buildBaseResultLine(result)}`;
       renderSummary(result);
       renderSteps(result);
     }
 
-    function validateInputs() {
-      const loadFieldWrapper = loadField.closest(".field");
-      const areaFieldWrapper = areaField.closest(".field");
+    function setErrorState(keys, messageKey) {
+      keys.forEach(function (key) {
+        getFieldWrappers(key).forEach(function (wrapper) {
+          wrapper.classList.add("field-error");
+        });
+      });
 
-      clearFieldErrors([loadFieldWrapper, areaFieldWrapper]);
+      state.result = null;
+      renderResult(null);
+      setStatus(statusBanner, translate(messageKey), "error");
+    }
 
-      const loadValue = Number(loadField.value);
-      const areaValue = Number(areaField.value);
-      const hasLoad = loadField.value.trim() !== "";
-      const hasArea = areaField.value.trim() !== "";
+    function markUnknownField(key) {
+      getFieldWrappers(key).forEach(function (wrapper) {
+        wrapper.classList.add("field-unknown");
+      });
+    }
 
-      if (!hasLoad || !Number.isFinite(loadValue)) {
-        loadFieldWrapper.classList.add("field-error");
-        state.result = null;
-        renderResult(null);
-        setStatus(statusBanner, translate("interactive.stress.validationLoad"), "error");
+    function getRearrangedFormula(unknownKey) {
+      const formulas = {
+        stress: "sigma = P / A",
+        load: "P = sigma x A",
+        area: "A = P / sigma"
+      };
+
+      return formulas[unknownKey];
+    }
+
+    function getSubstitutionLine(unknownKey, baseValues) {
+      if (unknownKey === "stress") {
+        return `sigma = ${formatNumber(baseValues.load, 6)} ${getBaseUnitSymbol("force")} / ${formatNumber(baseValues.area, 6)} ${getBaseUnitSymbol("area")} = ${formatNumber(baseValues.stress, 6)} ${getBaseUnitSymbol("stress")}`;
+      }
+
+      if (unknownKey === "load") {
+        return `P = (${formatNumber(baseValues.stress, 6)} ${getBaseUnitSymbol("stress")}) x (${formatNumber(baseValues.area, 6)} ${getBaseUnitSymbol("area")}) = ${formatNumber(baseValues.load, 6)} ${getBaseUnitSymbol("force")}`;
+      }
+
+      return `A = ${formatNumber(baseValues.load, 6)} ${getBaseUnitSymbol("force")} / ${formatNumber(baseValues.stress, 6)} ${getBaseUnitSymbol("stress")} = ${formatNumber(baseValues.area, 6)} ${getBaseUnitSymbol("area")}`;
+    }
+
+    function getSolvedMessageKey(unknownKey) {
+      const keys = {
+        stress: "interactive.stress.solvedStressMessage",
+        load: "interactive.stress.solvedLoadMessage",
+        area: "interactive.stress.solvedAreaMessage"
+      };
+
+      return keys[unknownKey];
+    }
+
+    function buildConversionLines(unknownKey, rawValues, units, baseValues) {
+      return fieldKeys.filter(function (key) {
+        return key !== unknownKey;
+      }).map(function (key) {
+        return `${getUnknownLabel(key)}: ${formatValueWithUnit(fieldConfig[key].category, rawValues[key], units[key], 6)} = ${formatValueWithUnit(fieldConfig[key].category, baseValues[key], getBaseUnitKey(fieldConfig[key].category), 6)}`;
+      });
+    }
+
+    function validateAndCollect() {
+      clearFieldStates(getAllWrappers());
+
+      const rawEntries = {};
+      const emptyKeys = [];
+
+      fieldKeys.forEach(function (key) {
+        rawEntries[key] = fieldConfig[key].input.value.trim();
+
+        if (rawEntries[key] === "") {
+          emptyKeys.push(key);
+        }
+      });
+
+      if (emptyKeys.length > 1) {
+        setErrorState(emptyKeys, "interactive.stress.validationInsufficient");
         return null;
       }
 
-      if (!hasArea || !Number.isFinite(areaValue) || areaValue <= 0) {
-        areaFieldWrapper.classList.add("field-error");
-        state.result = null;
-        renderResult(null);
-        setStatus(statusBanner, translate("interactive.stress.validationArea"), "error");
+      if (emptyKeys.length === 0) {
+        setErrorState(fieldKeys, "interactive.stress.validationSingleUnknown");
         return null;
+      }
+
+      const unknownKey = emptyKeys[0];
+      const numericValues = {};
+
+      for (let index = 0; index < fieldKeys.length; index += 1) {
+        const key = fieldKeys[index];
+
+        if (key === unknownKey) {
+          continue;
+        }
+
+        const numericValue = Number(rawEntries[key]);
+
+        if (!Number.isFinite(numericValue)) {
+          setErrorState([key], `interactive.stress.validation${key.charAt(0).toUpperCase()}${key.slice(1)}`);
+          return null;
+        }
+
+        if (key === "area" && numericValue <= 0) {
+          setErrorState([key], "interactive.stress.validationArea");
+          return null;
+        }
+
+        numericValues[key] = numericValue;
       }
 
       return {
-        loadValue: loadValue,
-        areaValue: areaValue
+        unknownKey: unknownKey,
+        numericValues: numericValues
       };
     }
 
     function solveStress() {
-      const validated = validateInputs();
+      const validated = validateAndCollect();
 
       if (!validated) {
         return;
       }
 
-      const loadBase = toBaseValue("force", validated.loadValue, loadUnitField.value);
-      const areaBase = toBaseValue("area", validated.areaValue, areaUnitField.value);
-      const stressBase = loadBase / areaBase;
-      const outputValue = fromBaseValue("stress", stressBase, outputUnitField.value);
-
-      state.result = {
-        rawLoad: validated.loadValue,
-        rawArea: validated.areaValue,
-        loadUnit: loadUnitField.value,
-        areaUnit: areaUnitField.value,
-        outputUnit: outputUnitField.value,
-        loadBase: loadBase,
-        areaBase: areaBase,
-        stressBase: stressBase,
-        outputValue: outputValue
+      const unknownKey = validated.unknownKey;
+      const units = {
+        load: loadUnitField.value,
+        area: areaUnitField.value,
+        stress: stressUnitField.value
+      };
+      const rawValues = {
+        load: validated.numericValues.load,
+        area: validated.numericValues.area,
+        stress: validated.numericValues.stress
+      };
+      const baseValues = {
+        load: validated.numericValues.load != null ? toBaseValue("force", validated.numericValues.load, units.load) : null,
+        area: validated.numericValues.area != null ? toBaseValue("area", validated.numericValues.area, units.area) : null,
+        stress: validated.numericValues.stress != null ? toBaseValue("stress", validated.numericValues.stress, units.stress) : null
       };
 
-      setStatus(statusBanner, translate("interactive.stress.solvedMessage"), "success");
+      if (unknownKey === "area" && baseValues.stress === 0) {
+        setErrorState(["stress"], "interactive.stress.validationStressZeroForArea");
+        return;
+      }
+
+      if (unknownKey === "stress") {
+        baseValues.stress = baseValues.load / baseValues.area;
+      } else if (unknownKey === "load") {
+        baseValues.load = baseValues.stress * baseValues.area;
+      } else {
+        baseValues.area = baseValues.load / baseValues.stress;
+      }
+
+      if (unknownKey === "area" && (!Number.isFinite(baseValues.area) || baseValues.area <= 0)) {
+        setErrorState(["area"], "interactive.stress.validationAreaResult");
+        return;
+      }
+
+      if (!Number.isFinite(baseValues[unknownKey])) {
+        setErrorState([unknownKey], "interactive.shared.validation");
+        return;
+      }
+
+      rawValues[unknownKey] = fromBaseValue(fieldConfig[unknownKey].category, baseValues[unknownKey], units[unknownKey]);
+
+      if (unknownKey === "area" && rawValues.area <= 0) {
+        setErrorState(["area"], "interactive.stress.validationAreaResult");
+        return;
+      }
+
+      clearFieldStates(getAllWrappers());
+      markUnknownField(unknownKey);
+
+      state.result = {
+        unknownKey: unknownKey,
+        units: units,
+        rawValues: rawValues,
+        baseValues: baseValues
+      };
+
+      setStatus(statusBanner, translate(getSolvedMessageKey(unknownKey)), "success");
       renderResult(state.result);
     }
 
@@ -317,12 +546,9 @@
       form.reset();
       loadUnitField.value = "kN";
       areaUnitField.value = "mm2";
-      outputUnitField.value = "MPa";
+      stressUnitField.value = "MPa";
       state.result = null;
-      clearFieldErrors([
-        loadField.closest(".field"),
-        areaField.closest(".field")
-      ]);
+      clearFieldStates(getAllWrappers());
       setStatus(statusBanner, translate("interactive.shared.ready"), "neutral");
       renderResult(null);
     }
@@ -330,15 +556,15 @@
     function syncLanguage() {
       const loadUnit = loadUnitField.value || "kN";
       const areaUnit = areaUnitField.value || "mm2";
-      const outputUnit = outputUnitField.value || "MPa";
+      const stressUnit = stressUnitField.value || "MPa";
 
       populateSelect(loadUnitField, "force", loadUnit);
       populateSelect(areaUnitField, "area", areaUnit);
-      populateSelect(outputUnitField, "stress", outputUnit);
+      populateSelect(stressUnitField, "stress", stressUnit);
 
       if (state.result) {
         renderResult(state.result);
-        setStatus(statusBanner, translate("interactive.stress.solvedMessage"), "success");
+        setStatus(statusBanner, translate(getSolvedMessageKey(state.result.unknownKey)), "success");
       } else {
         renderResult(null);
         setStatus(statusBanner, translate("interactive.shared.ready"), "neutral");
@@ -354,13 +580,33 @@
       resetForm();
     });
 
+    form.addEventListener("input", function () {
+      clearFieldStates(getAllWrappers());
+
+      if (state.result || statusBanner.getAttribute("data-state") !== "neutral") {
+        state.result = null;
+        renderResult(null);
+        setStatus(statusBanner, translate("interactive.shared.ready"), "neutral");
+      }
+    });
+
+    form.addEventListener("change", function () {
+      clearFieldStates(getAllWrappers());
+
+      if (state.result || statusBanner.getAttribute("data-state") !== "neutral") {
+        state.result = null;
+        renderResult(null);
+        setStatus(statusBanner, translate("interactive.shared.ready"), "neutral");
+      }
+    });
+
     document.addEventListener(app.eventName, function () {
       syncLanguage();
     });
 
     loadUnitField.value = "kN";
     areaUnitField.value = "mm2";
-    outputUnitField.value = "MPa";
+    stressUnitField.value = "MPa";
     syncLanguage();
   }
 

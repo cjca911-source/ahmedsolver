@@ -51,63 +51,78 @@
             </div>
 
             <form id="stress-form" novalidate>
-              <div class="field-grid">
-                <div class="field">
-                  <label for="stress-load-value" data-i18n="interactive.stress.loadValue"></label>
-                  <input
-                    id="stress-load-value"
-                    class="input-control"
-                    type="number"
-                    inputmode="decimal"
-                    step="any"
-                    data-i18n-placeholder="interactive.stress.loadPlaceholder"
-                  >
+              <div class="field-grid field-grid--solver">
+                <section class="solver-variable">
+                  <div class="solver-variable__badge">P</div>
+                  <div class="solver-variable__controls">
+                    <div class="field">
+                      <label for="stress-load-value" data-i18n="interactive.stress.loadValue"></label>
+                      <input
+                        id="stress-load-value"
+                        class="input-control"
+                        type="number"
+                        inputmode="decimal"
+                        step="any"
+                        data-i18n-placeholder="interactive.stress.loadPlaceholder"
+                      >
+                    </div>
+
+                    <div class="field">
+                      <label for="stress-load-unit" data-i18n="interactive.stress.loadUnit"></label>
+                      <select id="stress-load-unit" class="select-control"></select>
+                    </div>
+                  </div>
                   <p class="field-help" data-i18n="interactive.stress.loadHint"></p>
-                </div>
+                </section>
 
-                <div class="field">
-                  <label for="stress-load-unit" data-i18n="interactive.stress.loadUnit"></label>
-                  <select id="stress-load-unit" class="select-control"></select>
-                </div>
+                <section class="solver-variable">
+                  <div class="solver-variable__badge">A</div>
+                  <div class="solver-variable__controls">
+                    <div class="field">
+                      <label for="stress-area-value" data-i18n="interactive.stress.areaValue"></label>
+                      <input
+                        id="stress-area-value"
+                        class="input-control"
+                        type="number"
+                        inputmode="decimal"
+                        min="0"
+                        step="any"
+                        data-i18n-placeholder="interactive.stress.areaPlaceholder"
+                      >
+                    </div>
 
-                <div class="field">
-                  <label for="stress-area-value" data-i18n="interactive.stress.areaValue"></label>
-                  <input
-                    id="stress-area-value"
-                    class="input-control"
-                    type="number"
-                    inputmode="decimal"
-                    min="0"
-                    step="any"
-                    data-i18n-placeholder="interactive.stress.areaPlaceholder"
-                  >
+                    <div class="field">
+                      <label for="stress-area-unit" data-i18n="interactive.stress.areaUnit"></label>
+                      <select id="stress-area-unit" class="select-control"></select>
+                    </div>
+                  </div>
                   <p class="field-help" data-i18n="interactive.stress.areaHint"></p>
-                </div>
+                </section>
 
-                <div class="field">
-                  <label for="stress-area-unit" data-i18n="interactive.stress.areaUnit"></label>
-                  <select id="stress-area-unit" class="select-control"></select>
-                </div>
+                <section class="solver-variable">
+                  <div class="solver-variable__badge">σ</div>
+                  <div class="solver-variable__controls">
+                    <div class="field">
+                      <label for="stress-value" data-i18n="interactive.stress.stressValue"></label>
+                      <input
+                        id="stress-value"
+                        class="input-control"
+                        type="number"
+                        inputmode="decimal"
+                        step="any"
+                        data-i18n-placeholder="interactive.stress.stressPlaceholder"
+                      >
+                    </div>
 
-                <div class="field">
-                  <label for="stress-value" data-i18n="interactive.stress.stressValue"></label>
-                  <input
-                    id="stress-value"
-                    class="input-control"
-                    type="number"
-                    inputmode="decimal"
-                    step="any"
-                    data-i18n-placeholder="interactive.stress.stressPlaceholder"
-                  >
+                    <div class="field">
+                      <label for="stress-unit" data-i18n="interactive.stress.stressUnit"></label>
+                      <select id="stress-unit" class="select-control"></select>
+                    </div>
+                  </div>
                   <p class="field-help" data-i18n="interactive.stress.stressHint"></p>
-                </div>
+                </section>
 
-                <div class="field">
-                  <label for="stress-unit" data-i18n="interactive.stress.stressUnit"></label>
-                  <select id="stress-unit" class="select-control"></select>
-                </div>
-
-                <div class="field field--full">
+                <div class="field field--full solver-note">
                   <p class="field-help" data-i18n="interactive.stress.solverHint"></p>
                 </div>
               </div>

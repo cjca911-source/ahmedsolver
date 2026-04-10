@@ -235,10 +235,14 @@
     const fieldKeys = Object.keys(fieldConfig);
 
     function getFieldWrappers(key) {
-      return [
-        fieldConfig[key].input.closest(".field"),
-        fieldConfig[key].unit.closest(".field")
-      ];
+      const wrappers = [
+        fieldConfig[key].input.closest(".solver-variable") || fieldConfig[key].input.closest(".field"),
+        fieldConfig[key].unit.closest(".solver-variable") || fieldConfig[key].unit.closest(".field")
+      ].filter(Boolean);
+
+      return wrappers.filter(function (wrapper, index) {
+        return wrappers.indexOf(wrapper) === index;
+      });
     }
 
     function getAllWrappers() {

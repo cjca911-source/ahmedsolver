@@ -117,9 +117,54 @@
   grid-template-columns: minmax(0, 1.05fr) repeat(2, minmax(0, 1fr));
 }
 
+.field-grid--solver {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
 .field {
   display: grid;
   gap: 0.55rem;
+}
+
+.solver-variable {
+  display: grid;
+  gap: 0.95rem;
+  min-height: 100%;
+  padding: 1.1rem;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 59, 59, 0.14);
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.94), rgba(10, 10, 10, 0.98));
+  box-shadow: 0 0 0 1px rgba(255, 59, 59, 0.03);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+.solver-variable:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 59, 59, 0.22);
+  box-shadow: 0 0 18px rgba(179, 0, 0, 0.08);
+}
+
+.solver-variable__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 14px;
+  background: rgba(179, 0, 0, 0.12);
+  border: 1px solid rgba(255, 59, 59, 0.18);
+  color: #ff7d7d;
+  font-size: 1.08rem;
+  font-weight: 700;
+  box-shadow: 0 0 14px rgba(179, 0, 0, 0.1);
+}
+
+.solver-variable__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(132px, 0.85fr);
+  gap: 0.9rem;
+  align-items: end;
 }
 
 .field-help {
@@ -173,6 +218,20 @@
   border-color: rgba(255, 59, 59, 0.52);
   box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.16), 0 0 18px rgba(179, 0, 0, 0.12);
   background: rgba(179, 0, 0, 0.08);
+}
+
+.solver-variable.field-error {
+  border-color: rgba(255, 123, 114, 0.4);
+  box-shadow: 0 0 0 1px rgba(255, 123, 114, 0.08), 0 0 20px rgba(255, 123, 114, 0.08);
+}
+
+.solver-variable.field-unknown {
+  border-color: rgba(255, 59, 59, 0.34);
+  box-shadow: 0 0 0 1px rgba(255, 59, 59, 0.06), 0 0 22px rgba(179, 0, 0, 0.16);
+}
+
+.solver-note {
+  margin-top: -0.1rem;
 }
 
 .action-row {
@@ -507,7 +566,12 @@
 @media (max-width: 760px) {
   .field-grid,
   .field-grid--triplet,
+  .field-grid--solver,
   .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .solver-variable__controls {
     grid-template-columns: 1fr;
   }
 

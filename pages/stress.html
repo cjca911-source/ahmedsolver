@@ -53,10 +53,15 @@
             <form id="stress-form" novalidate>
               <div class="field-grid field-grid--solver">
                 <section class="solver-variable">
-                  <div class="solver-variable__badge">P</div>
-                  <div class="solver-variable__controls">
+                  <div class="solver-variable__header">
+                    <div class="solver-variable__badge">P</div>
+                    <h3 class="solver-variable__title" data-i18n="interactive.stress.loadValue"></h3>
+                    <p class="solver-variable__description" data-i18n="interactive.stress.loadCardDescription"></p>
+                  </div>
+
+                  <div class="solver-variable__body">
                     <div class="field">
-                      <label for="stress-load-value" data-i18n="interactive.stress.loadValue"></label>
+                      <label for="stress-load-value" data-i18n="interactive.shared.valueLabel"></label>
                       <input
                         id="stress-load-value"
                         class="input-control"
@@ -72,14 +77,20 @@
                       <select id="stress-load-unit" class="select-control"></select>
                     </div>
                   </div>
-                  <p class="field-help" data-i18n="interactive.stress.loadHint"></p>
+
+                  <p class="field-help solver-variable__hint" data-i18n="interactive.stress.loadHint"></p>
                 </section>
 
                 <section class="solver-variable">
-                  <div class="solver-variable__badge">A</div>
-                  <div class="solver-variable__controls">
+                  <div class="solver-variable__header">
+                    <div class="solver-variable__badge">A</div>
+                    <h3 class="solver-variable__title" data-i18n="interactive.stress.areaValue"></h3>
+                    <p class="solver-variable__description" data-i18n="interactive.stress.areaCardDescription"></p>
+                  </div>
+
+                  <div class="solver-variable__body">
                     <div class="field">
-                      <label for="stress-area-value" data-i18n="interactive.stress.areaValue"></label>
+                      <label for="stress-area-value" data-i18n="interactive.shared.valueLabel"></label>
                       <input
                         id="stress-area-value"
                         class="input-control"
@@ -96,14 +107,20 @@
                       <select id="stress-area-unit" class="select-control"></select>
                     </div>
                   </div>
-                  <p class="field-help" data-i18n="interactive.stress.areaHint"></p>
+
+                  <p class="field-help solver-variable__hint" data-i18n="interactive.stress.areaHint"></p>
                 </section>
 
                 <section class="solver-variable">
-                  <div class="solver-variable__badge">σ</div>
-                  <div class="solver-variable__controls">
+                  <div class="solver-variable__header">
+                    <div class="solver-variable__badge">σ</div>
+                    <h3 class="solver-variable__title" data-i18n="interactive.stress.stressValue"></h3>
+                    <p class="solver-variable__description" data-i18n="interactive.stress.stressCardDescription"></p>
+                  </div>
+
+                  <div class="solver-variable__body">
                     <div class="field">
-                      <label for="stress-value" data-i18n="interactive.stress.stressValue"></label>
+                      <label for="stress-value" data-i18n="interactive.shared.valueLabel"></label>
                       <input
                         id="stress-value"
                         class="input-control"
@@ -119,7 +136,8 @@
                       <select id="stress-unit" class="select-control"></select>
                     </div>
                   </div>
-                  <p class="field-help" data-i18n="interactive.stress.stressHint"></p>
+
+                  <p class="field-help solver-variable__hint" data-i18n="interactive.stress.stressHint"></p>
                 </section>
 
                 <div class="field field--full solver-note">

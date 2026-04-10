@@ -119,7 +119,7 @@
 
 .field-grid--solver {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.1rem;
+  gap: 1.25rem;
 }
 
 .field {
@@ -129,14 +129,15 @@
 
 .solver-variable {
   display: grid;
-  gap: 0.95rem;
-  min-height: 100%;
-  padding: 1.1rem;
+  gap: 1rem;
+  min-height: 360px;
+  padding: 1.3rem 1.2rem 1.15rem;
   border-radius: 22px;
   border: 1px solid rgba(255, 59, 59, 0.14);
   background: linear-gradient(180deg, rgba(20, 20, 20, 0.94), rgba(10, 10, 10, 0.98));
   box-shadow: 0 0 0 1px rgba(255, 59, 59, 0.03);
   transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  align-content: start;
 }
 
 .solver-variable:hover {
@@ -160,11 +161,38 @@
   box-shadow: 0 0 14px rgba(179, 0, 0, 0.1);
 }
 
-.solver-variable__controls {
+.solver-variable__header {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(132px, 0.85fr);
-  gap: 0.9rem;
-  align-items: end;
+  gap: 0.7rem;
+  align-content: start;
+  min-height: 124px;
+}
+
+.solver-variable__title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.solver-variable__description {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.solver-variable__body {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.solver-variable__body .field {
+  min-width: 0;
+}
+
+.solver-variable__hint {
+  margin-top: auto;
 }
 
 .field-help {
@@ -561,6 +589,18 @@
   .module-grid {
     grid-template-columns: 1fr;
   }
+
+  .field-grid--solver {
+    grid-template-columns: 1fr;
+  }
+
+  .solver-variable {
+    min-height: auto;
+  }
+
+  .solver-variable__header {
+    min-height: auto;
+  }
 }
 
 @media (max-width: 760px) {
@@ -568,10 +608,6 @@
   .field-grid--triplet,
   .field-grid--solver,
   .metric-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .solver-variable__controls {
     grid-template-columns: 1fr;
   }
 

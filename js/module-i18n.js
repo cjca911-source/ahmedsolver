@@ -370,4 +370,30 @@
       }
     }
   });
+
+  mergeDeep(root.translations.en, {
+    interactive: {
+      shared: {
+        valueLabel: "Value"
+      },
+      stress: {
+        loadCardDescription: "Enter the axial force applied to the member. Leave it empty to solve for the required load.",
+        areaCardDescription: "Enter the resisting cross-sectional area of the member. Leave it empty to solve for the required area.",
+        stressCardDescription: "Enter the normal stress acting on the member. Leave it empty to solve for the resulting stress."
+      }
+    }
+  });
+
+  mergeDeep(root.translations.ar, {
+    interactive: {
+      shared: {
+        valueLabel: "القيمة"
+      },
+      stress: {
+        loadCardDescription: "أدخل القوة المحورية المؤثرة على العنصر. اتركها فارغة إذا أردت حساب الحمل المطلوب.",
+        areaCardDescription: "أدخل مساحة المقطع المقاوم للعنصر. اتركها فارغة إذا أردت حساب المساحة المطلوبة.",
+        stressCardDescription: "أدخل قيمة الإجهاد العمودي المؤثر على العنصر. اتركها فارغة إذا أردت حساب الإجهاد الناتج."
+      }
+    }
+  });
 })();

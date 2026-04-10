@@ -707,7 +707,7 @@
 .diagram-caption {
   fill: var(--text);
   font-size: 13px;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", "Poppins", sans-serif;
 }
 
 .export-preview-card {
@@ -756,4 +756,131 @@
   .export-preview-sheet {
     padding: 1rem;
   }
+}
+
+.hero-side-card,
+.result-card,
+.summary-item,
+.step-card,
+.metric-card,
+.reference-item,
+.table-wrap,
+.canvas-shell,
+.diagram-canvas,
+.question-card,
+.quiz-card,
+.export-preview-sheet,
+.question-card__hint,
+.question-card__answer,
+.quiz-feedback,
+.export-preview-block {
+  border-color: rgba(255, 59, 59, 0.14);
+  box-shadow: 0 0 0 1px rgba(255, 59, 59, 0.03);
+}
+
+.hero-side-card,
+.result-card,
+.step-card,
+.metric-card,
+.reference-item,
+.question-card,
+.quiz-card,
+.export-preview-sheet {
+  background: linear-gradient(180deg, rgba(21, 21, 21, 0.92), rgba(11, 11, 11, 0.96));
+}
+
+.formula-display,
+.helper-code,
+.equation-line {
+  background: rgba(179, 0, 0, 0.08);
+  border-color: rgba(255, 59, 59, 0.2);
+  color: #ff6666;
+}
+
+.canvas-shell {
+  background:
+    radial-gradient(circle at top right, rgba(179, 0, 0, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(12, 12, 12, 0.94), rgba(6, 6, 6, 0.98));
+}
+
+.diagram-canvas,
+.diagram-svg,
+.beam-svg {
+  background:
+    linear-gradient(rgba(179, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(179, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+.input-control,
+.select-control,
+.text-control {
+  border-color: rgba(255, 59, 59, 0.16);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.input-control:focus,
+.select-control:focus,
+.text-control:focus {
+  border-color: rgba(255, 59, 59, 0.48);
+  box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.12);
+}
+
+.status-banner[data-state="success"] {
+  border-color: rgba(255, 59, 59, 0.26);
+  background: rgba(179, 0, 0, 0.08);
+}
+
+.section-chip {
+  background: rgba(179, 0, 0, 0.08);
+  border-color: rgba(255, 59, 59, 0.2);
+  color: #ff8080;
+}
+
+.tool-table th {
+  background: rgba(179, 0, 0, 0.06);
+}
+
+.tool-table th,
+.tool-table td,
+.force-chip-panel,
+.empty-state {
+  border-color: rgba(255, 59, 59, 0.14);
+}
+
+.force-chip__remove,
+.table-action {
+  border-color: rgba(255, 59, 59, 0.24);
+  background: rgba(179, 0, 0, 0.08);
+  color: #ffc2c2;
+}
+
+.force-chip__remove:hover,
+.table-action:hover,
+.table-action:focus-visible {
+  background: rgba(179, 0, 0, 0.16);
+}
+
+.ai-upload-preview {
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 59, 59, 0.14);
+  background: linear-gradient(180deg, rgba(22, 22, 22, 0.94), rgba(10, 10, 10, 0.96));
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+}
+
+.ai-upload-preview__image {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+}
+
+.brand-logo,
+.diagram-svg,
+.beam-svg {
+  filter: drop-shadow(0 0 12px rgba(179, 0, 0, 0.12));
 }

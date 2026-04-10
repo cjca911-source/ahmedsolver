@@ -21,6 +21,7 @@ window.StrengthSolverI18n = {
         brandCaption: "Smart Engineering Platform for Strength of Materials",
         home: "Home",
         topics: "Topics",
+        aiSolver: "AI Solver",
         tools: "Platform",
         roadmap: "Roadmap",
         featured: "Stress Page",
@@ -195,6 +196,10 @@ window.StrengthSolverI18n = {
           title: "Unit Converter",
           description: "Convert engineering values across force, stress, length, area, and torque."
         },
+        aiSolver: {
+          title: "AI Solver",
+          description: "Upload a problem image to extract text, detect the topic, and prepare a guided solution."
+        },
         questionBank: {
           title: "Question Bank",
           description: "Filter curated practice problems by topic and difficulty."
@@ -253,6 +258,7 @@ window.StrengthSolverI18n = {
         brandCaption: "منصة هندسية ذكية لمقاومة المواد",
         home: "الرئيسية",
         topics: "الموضوعات",
+        aiSolver: "محلل المسائل بالذكاء الاصطناعي",
         tools: "المنصة",
         roadmap: "الخطة",
         featured: "صفحة الإجهاد",
@@ -426,6 +432,10 @@ window.StrengthSolverI18n = {
         unitConverter: {
           title: "محول الوحدات",
           description: "التحويل بين وحدات القوة والإجهاد والطول والمساحة والعزم."
+        },
+        aiSolver: {
+          title: "محلل المسائل بالذكاء الاصطناعي",
+          description: "ارفع صورة لمسألة لاستخراج النص واكتشاف الموضوع وإعداد حل موجه."
         },
         questionBank: {
           title: "بنك الأسئلة",

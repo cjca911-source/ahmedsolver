@@ -62,6 +62,14 @@
       formula: "value x (from / to)",
       ready: true
     },
+    aiSolver: {
+      slug: "ai-solver",
+      path: "pages/ai-solver.html",
+      group: "tools",
+      type: "utility",
+      formula: "Image -> OCR -> Solve",
+      ready: true
+    },
     questionBank: {
       slug: "question-bank",
       path: "pages/question-bank.html",
@@ -84,7 +92,7 @@
   const topicGroups = {
     core: ["stress", "strain", "hookesLaw", "axialDeformation", "shearStress", "torsion", "bending", "thermalStress"],
     visual: ["beamReactions", "mohrsCircle", "fbd", "beamDiagrams"],
-    tools: ["unitConverter", "questionBank", "quiz", "pdfExport"]
+    tools: ["unitConverter", "aiSolver", "questionBank", "quiz", "pdfExport"]
   };
 
   function getStoredLanguage() {
@@ -169,6 +177,18 @@
     return `<a class="${className}${activeClass}" href="${href}"${currentAttribute}>${label}</a>`;
   }
 
+  function createBrandLogo() {
+    return `
+      <svg viewBox="0 0 64 64" class="brand-logo" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="34" r="17" class="brand-logo__gear"></circle>
+        <circle cx="32" cy="34" r="8" class="brand-logo__hub"></circle>
+        <path class="brand-logo__tooth" d="M30 7h4v8h-4zM30 49h4v8h-4zM7 30h8v4H7zM49 30h8v4h-8zM13.8 15.9l2.8-2.8 5.7 5.7-2.8 2.8zM41.7 43.8l2.8-2.8 5.7 5.7-2.8 2.8zM41.6 18.8l5.7-5.7 2.8 2.8-5.7 5.7zM13.7 47l5.7-5.7 2.8 2.8-5.7 5.7z"></path>
+        <path class="brand-logo__helmet" d="M16 31c0-9.9 7.8-18 17.4-18S51 21.1 51 31v2H16z"></path>
+        <path class="brand-logo__brim" d="M12 33h40a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4z"></path>
+      </svg>
+    `;
+  }
+
   function renderNavbar(language) {
     const navbarTarget = document.getElementById("site-navbar");
 
@@ -178,12 +198,14 @@
 
     const homeHref = isHomePage() ? "#top" : buildUrl("index.html");
     const topicsHref = isHomePage() ? "#topics" : buildUrl("index.html#topics");
+    const aiSolverHref = buildUrl("pages/ai-solver.html");
     const toolsHref = isHomePage() ? "#platform-tools" : buildUrl("index.html#platform-tools");
     const roadmapHref = isHomePage() ? "#roadmap" : buildUrl("index.html#roadmap");
     const currentModuleKey = getCurrentModuleKey();
     const currentModule = currentModuleKey ? modules[currentModuleKey] : null;
     const isTopicsActive = !!currentModule && (currentModule.group === "core" || currentModule.group === "visual");
-    const isToolsActive = !!currentModule && currentModule.group === "tools";
+    const isAiSolverActive = currentModuleKey === "aiSolver";
+    const isToolsActive = !!currentModule && currentModule.group === "tools" && !isAiSolverActive;
     const isQuizActive = currentModuleKey === "quiz";
     const isFeaturedActive = currentModuleKey === "stress";
 
@@ -191,7 +213,7 @@
     navbarTarget.innerHTML = `
       <div class="nav-shell">
         <a class="brand-mark" href="${homeHref}">
-          <span class="brand-icon">AS</span>
+          <span class="brand-icon">${createBrandLogo()}</span>
           <span class="brand-copy">
             <strong>${translate("meta.appName", language)}</strong>
             <span>${translate("nav.brandCaption", language)}</span>
@@ -213,6 +235,7 @@
           <ul class="nav-links">
             ${createNavLink(homeHref, translate("nav.home", language), isHomePage(), isHomePage())}
             ${createNavLink(topicsHref, translate("nav.topics", language), isTopicsActive, false)}
+            ${createNavLink(aiSolverHref, translate("nav.aiSolver", language), isAiSolverActive, false)}
             ${createNavLink(toolsHref, translate("nav.tools", language), isToolsActive, false)}
             ${createNavLink(roadmapHref, translate("nav.roadmap", language), false, false)}
           </ul>
@@ -264,6 +287,7 @@
           <ul class="footer-links">
             <li><a href="${isHomePage() ? "#top" : buildUrl("index.html")}">${translate("nav.home", language)}</a></li>
             <li><a href="${isHomePage() ? "#topics" : buildUrl("index.html#topics")}">${translate("nav.topics", language)}</a></li>
+            <li><a href="${buildUrl("pages/ai-solver.html")}">${translate("topics.aiSolver.title", language)}</a></li>
             <li><a href="${buildUrl("pages/question-bank.html")}">${translate("topics.questionBank.title", language)}</a></li>
             <li><a href="${buildUrl("pages/unit-converter.html")}">${translate("topics.unitConverter.title", language)}</a></li>
           </ul>
@@ -500,8 +524,3 @@
     applyLanguage(getLanguage());
   });
 })();
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof applyLanguage === "function") {
-        applyLanguage("en"); // أو "ar"
-    }
-});

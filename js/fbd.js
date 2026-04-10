@@ -64,7 +64,7 @@
       statusState: "neutral"
     };
 
-    const palette = ["#5dd3ff", "#ffc857", "#ff7b72", "#7fffd4", "#c7f464", "#7da7ff"];
+    const palette = ["#ff4d4d", "#ff7a7a", "#d10000", "#ff9f9f", "#b30000", "#ffd2d2"];
 
     function createForce(forceInput) {
       const radians = (forceInput.angle * Math.PI) / 180;
@@ -206,7 +206,7 @@
 
       for (let x = 0; x <= width; x += spacing) {
         context.beginPath();
-        context.strokeStyle = x % (spacing * 5) === 0 ? "rgba(123, 172, 228, 0.14)" : "rgba(123, 172, 228, 0.07)";
+        context.strokeStyle = x % (spacing * 5) === 0 ? "rgba(179, 0, 0, 0.16)" : "rgba(179, 0, 0, 0.08)";
         context.lineWidth = x % (spacing * 5) === 0 ? 1.3 : 1;
         context.moveTo(x, 0);
         context.lineTo(x, height);
@@ -215,7 +215,7 @@
 
       for (let y = 0; y <= height; y += spacing) {
         context.beginPath();
-        context.strokeStyle = y % (spacing * 5) === 0 ? "rgba(123, 172, 228, 0.14)" : "rgba(123, 172, 228, 0.07)";
+        context.strokeStyle = y % (spacing * 5) === 0 ? "rgba(179, 0, 0, 0.16)" : "rgba(179, 0, 0, 0.08)";
         context.lineWidth = y % (spacing * 5) === 0 ? 1.3 : 1;
         context.moveTo(0, y);
         context.lineTo(width, y);
@@ -231,7 +231,7 @@
       const visibleWidth = canvas.getBoundingClientRect().width || (canvas.width / (window.devicePixelRatio || 1));
 
       context.save();
-      context.font = "600 12px Space Grotesk, sans-serif";
+      context.font = "600 12px Montserrat, sans-serif";
 
       const tagWidth = lines.reduce(function (longest, line) {
         return Math.max(longest, context.measureText(line).width);
@@ -240,7 +240,7 @@
       const tagX = Math.max(10, Math.min(anchorX, visibleWidth - tagWidth - 20));
       const tagY = Math.max(10, anchorY - tagHeight);
 
-      context.fillStyle = "rgba(5, 16, 28, 0.92)";
+      context.fillStyle = "rgba(12, 12, 12, 0.94)";
       context.strokeStyle = color;
       context.lineWidth = 1.4;
       context.beginPath();
@@ -248,8 +248,8 @@
       context.fill();
       context.stroke();
 
-      context.fillStyle = "#eff6ff";
-      context.font = "600 12px Space Grotesk, sans-serif";
+      context.fillStyle = "#fcfcfc";
+      context.font = "600 12px Montserrat, sans-serif";
       lines.forEach(function (line, index) {
         context.fillText(line, tagX + paddingX, tagY + 18 + (index * lineHeight));
       });
@@ -305,8 +305,8 @@
 
     function drawAxes(width, height, centerX, centerY) {
       context.save();
-      context.strokeStyle = "rgba(123, 172, 228, 0.75)";
-      context.fillStyle = "rgba(123, 172, 228, 0.92)";
+      context.strokeStyle = "rgba(255, 59, 59, 0.76)";
+      context.fillStyle = "rgba(255, 59, 59, 0.92)";
       context.lineWidth = 2;
 
       context.beginPath();
@@ -319,14 +319,14 @@
       context.lineTo(centerX, 30);
       context.stroke();
 
-      drawArrow(width - 70, centerY, width - 30, centerY, "rgba(123, 172, 228, 0.92)", {
+      drawArrow(width - 70, centerY, width - 30, centerY, "rgba(255, 59, 59, 0.92)", {
         labelLines: ["x"],
         headLength: 12,
         lineWidth: 2.5,
         offsetDistance: 18
       });
 
-      drawArrow(centerX, 70, centerX, 30, "rgba(123, 172, 228, 0.92)", {
+      drawArrow(centerX, 70, centerX, 30, "rgba(255, 59, 59, 0.92)", {
         labelLines: ["y"],
         headLength: 12,
         lineWidth: 2.5,
@@ -358,8 +358,8 @@
 
       if (!state.forces.length) {
         context.save();
-        context.fillStyle = "rgba(255, 255, 255, 0.72)";
-        context.font = "500 16px Space Grotesk, sans-serif";
+        context.fillStyle = "rgba(255, 255, 255, 0.78)";
+        context.font = "500 16px Poppins, sans-serif";
         context.fillText(translate("interactive.fbd.emptyList"), 38, 42);
         context.restore();
         return;
@@ -391,7 +391,7 @@
         const endX = centerX + (Math.cos(resultantAngle) * summary.resultant * scale);
         const endY = centerY - (Math.sin(resultantAngle) * summary.resultant * scale);
 
-        drawArrow(centerX, centerY, endX, endY, "#ffc857", {
+        drawArrow(centerX, centerY, endX, endY, "#ffffff", {
           labelLines: [
             "R",
             `${formatNumber(summary.resultant, 2)} N`,

@@ -89,6 +89,12 @@
   }
 
   function buildSolutionSteps(result) {
+    if (result && !result.structured && typeof result.result === "string" && result.result.trim()) {
+      return result.result.split(/\n+/).filter(Boolean).map(function (step, index) {
+        return `<article class="step-card"><h4>${index + 1}. ${esc(app.t("interactive.aiInput.stepLabel", app.getLanguage()))}</h4><p>${esc(step)}</p></article>`;
+      }).join("");
+    }
+
     const steps = result && result.structured && Array.isArray(result.structured.steps)
       ? result.structured.steps
       : [];
@@ -120,6 +126,11 @@
     const status = statusMessage();
     const result = state.result;
     const structured = result && result.structured ? result.structured : null;
+    const solutionText = result
+      ? (typeof result.solution === "string" && result.solution.trim()
+        ? result.solution
+        : (typeof result.result === "string" && result.result.trim() ? result.result : ""))
+      : "";
     const summaryRows = structured ? [
       {
         label: app.t("interactive.aiInput.detectedTopic", app.getLanguage()),
@@ -196,7 +207,7 @@
             <div class="result-block" aria-live="polite">
               <div class="result-card">
                 <div class="field-title">${esc(app.t("interactive.aiInput.solutionLabel", app.getLanguage()))}</div>
-                <div class="ai-solution-text">${result ? esc(result.solution) : esc(app.t("interactive.aiInput.resultPlaceholder", app.getLanguage()))}</div>
+                <div class="ai-solution-text">${solutionText ? esc(solutionText) : esc(app.t("interactive.aiInput.resultPlaceholder", app.getLanguage()))}</div>
               </div>
 
               ${summaryRows.length ? `<div class="result-card"><div class="field-title">${esc(app.t("interactive.shared.summary", app.getLanguage()))}</div><div class="summary-list">${summaryRows.map(function (item) { return `<div class="summary-item"><span>${esc(item.label)}</span><strong>${esc(item.value)}</strong></div>`; }).join("")}</div></div>` : ""}
@@ -257,7 +268,7 @@
       render();
 
       try {
-        const response = await fetch("http://localhost:3000/api/solve-text", {
+        const response = await fetch("http://127.0.0.1:3000/api/solve-text", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -265,7 +276,15 @@
           body: JSON.stringify({ prompt: prompt })
         });
 
-        const payload = await response.json();
+      const text = await response.text();
+console.log("RAW RESPONSE:", text);
+
+let payload;
+try {
+  payload = JSON.parse(text);
+} catch (e) {
+  throw new Error("Server did not return valid JSON: " + text);
+}
 
         if (!response.ok) {
           throw new Error(payload.error || app.t("interactive.aiInput.errorFallback", app.getLanguage()));

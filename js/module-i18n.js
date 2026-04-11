@@ -402,9 +402,9 @@
         kicker: "AI Text Solver",
         subtitle: "Type an engineering problem in English or Arabic and let AhmedSolver extract the knowns, detect the target variable, and build a worked solution.",
         explanation:
-          "This AI input flow sends only the typed problem statement to the secure backend, where OpenAI analyzes the engineering text and returns structured solving steps.",
+          "This AI input flow sends only the typed problem statement to the local backend, where Ollama analyzes the engineering text and returns a step-by-step response.",
         flowLine: "Problem text -> knowns -> unknown -> formula -> step-by-step solution",
-        apiNote: "Run the Express backend first so the page can call /api/solve-text securely.",
+        apiNote: "Run the Express backend with Ollama first so the page can call /api/solve-text locally.",
         panelTitle: "Problem Input",
         problemLabel: "Engineering Problem",
         problemPlaceholder: "Example: A steel rod 2 m long with area 500 mm^2 carries a tensile load of 60 kN. Find the normal stress.",
@@ -419,7 +419,7 @@
         formulaLabel: "Formula used",
         stepsTitle: "Solution Steps",
         ready: "Type an engineering problem to begin.",
-        loading: "Analyzing the problem with the secure backend...",
+        loading: "Analyzing the problem with local Ollama...",
         success: "AI solution generated successfully.",
         validationPrompt: "Enter an engineering problem before solving.",
         errorFallback: "The AI solver could not process this request right now.",
@@ -437,9 +437,9 @@
         kicker: "محلل نصي بالذكاء الاصطناعي",
         subtitle: "اكتب مسألة هندسية بالعربية أو الإنجليزية وسيقوم AhmedSolver باستخراج المعطيات وتحديد المطلوب وبناء حل تفصيلي.",
         explanation:
-          "يرسل هذا المسار النص المكتوب فقط إلى الخادم الآمن، حيث يقوم OpenAI بتحليل المسألة الهندسية وإرجاع خطوات حل منظمة.",
+          "يرسل هذا المسار النص المكتوب فقط إلى الخادم المحلي، حيث يقوم Ollama بتحليل المسألة الهندسية وإرجاع استجابة خطوة بخطوة.",
         flowLine: "نص المسألة -> المعطيات -> المجهول -> المعادلة -> الحل خطوة بخطوة",
-        apiNote: "شغّل خادم Express أولاً حتى تتمكن الصفحة من استدعاء /api/solve-text بشكل آمن.",
+        apiNote: "شغّل خادم Express مع Ollama أولاً حتى تتمكن الصفحة من استدعاء /api/solve-text محلياً.",
         panelTitle: "إدخال المسألة",
         problemLabel: "المسألة الهندسية",
         problemPlaceholder: "مثال: قضيب فولاذي طوله 2 m ومساحته 500 mm^2 يتعرض لحمل شد مقداره 60 kN. أوجد الإجهاد العمودي.",
@@ -462,6 +462,27 @@
         noSteps: "لا توجد خطوات حل متاحة بعد.",
         knownLabel: "معطى",
         stepLabel: "خطوة"
+      }
+    }
+  });
+  mergeDeep(root.translations.en, {
+    interactive: {
+      aiInput: {
+        explanation:
+          "This AI input flow sends only the typed problem statement to the local backend, where Ollama analyzes the engineering text and returns a step-by-step response.",
+        apiNote: "Run the Express backend with Ollama first so the page can call /api/solve-text locally.",
+        loading: "Analyzing the problem with local Ollama..."
+      }
+    }
+  });
+
+  mergeDeep(root.translations.ar, {
+    interactive: {
+      aiInput: {
+        explanation:
+          "يُرسل هذا المسار النص المكتوب فقط إلى الخادم المحلي، حيث يقوم Ollama بتحليل المسألة الهندسية وإرجاع استجابة خطوة بخطوة.",
+        apiNote: "شغّل خادم Express مع Ollama أولاً حتى تتمكن الصفحة من استدعاء /api/solve-text محلياً.",
+        loading: "جارٍ تحليل المسألة عبر Ollama المحلي..."
       }
     }
   });

@@ -521,6 +521,6 @@
       }
     });
 
-    applyLanguage(getLanguage());
+   applyLanguage(getLanguage());
   });
 })();

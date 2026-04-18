@@ -130,7 +130,9 @@
 
   const state = {
     values: {},
-    result: null
+    result: null,
+    statusState: "neutral",
+    statusMessage: ""
   };
 
   function pair(en, ar) {
@@ -422,6 +424,27 @@
     if (changed) {
       state.result = null;
     }
+  }
+
+  function setStatusState(message, nextState) {
+    state.statusMessage = message || "";
+    state.statusState = nextState || "neutral";
+  }
+
+  function currentStatusMessage(viewExists) {
+    if (state.statusMessage) {
+      return state.statusMessage;
+    }
+
+    return viewExists ? successMessage() : readyMessage();
+  }
+
+  function currentStatusState(viewExists) {
+    if (state.statusMessage) {
+      return state.statusState || "neutral";
+    }
+
+    return viewExists ? "success" : "neutral";
   }
 
   function assertNonZero(value, label) {
@@ -2061,7 +2084,7 @@
                 <button type="button" class="button button-secondary" id="solver-clear">${esc(app.t("common.clear", lang()))}</button>
               </div>
 
-              <div class="status-banner is-visible" id="solver-status" data-state="${view ? "success" : "neutral"}">${esc(view ? successMessage() : readyMessage())}</div>
+              <div class="status-banner is-visible" id="solver-status" data-state="${esc(currentStatusState(Boolean(view)))}">${esc(currentStatusMessage(Boolean(view)))}</div>
             </form>
           </article>
 
@@ -2131,10 +2154,14 @@
       const hadResult = Boolean(state.result);
       captureCurrentFormState(config);
       clearFieldStates();
-      status.textContent = hadResult
-        ? text(pair("Inputs changed. Solve again to refresh the result.", "تم تعديل القيم. اضغط احسب مرة أخرى لتحديث النتيجة."))
-        : readyMessage();
-      status.setAttribute("data-state", "neutral");
+      setStatusState(
+        hadResult
+          ? text(pair("Inputs changed. Solve again to refresh the result.", "تم تعديل القيم. اضغط احسب مرة أخرى لتحديث النتيجة."))
+          : readyMessage(),
+        "neutral"
+      );
+      status.textContent = state.statusMessage;
+      status.setAttribute("data-state", state.statusState);
     }
 
     form.addEventListener("input", function () {
@@ -2156,6 +2183,7 @@
       try {
         const payload = parseSolverInputs(config, form);
         state.result = calculateSolverResult(config, payload);
+        setStatusState(successMessage(), "success");
         logSolverDebug("Solve success", {
           slug: slug,
           unknownField: state.result.unknownKey,
@@ -2165,22 +2193,24 @@
         render();
       } catch (error) {
         state.result = null;
+        setStatusState(error && error.message ? error.message : inconsistentInputMessage(), "error");
         logSolverDebug("Solve failed", {
           slug: slug,
           reason: error && error.message ? error.message : "unknown-error"
         });
-        status.textContent = error && error.message ? error.message : inconsistentInputMessage();
-        status.setAttribute("data-state", "error");
+        render();
       }
     });
 
     root.querySelector("#solver-clear").addEventListener("click", function () {
       state.values = {};
       state.result = null;
+      setStatusState(readyMessage(), "neutral");
       render();
     });
   }
 
+  setStatusState(readyMessage(), "neutral");
   render();
   document.addEventListener(app.eventName, function () {
     captureCurrentFormState(config);

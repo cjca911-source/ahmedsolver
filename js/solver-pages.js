@@ -134,6 +134,7 @@
     statusState: "neutral",
     statusMessage: ""
   };
+  const missingControlCache = {};
 
   function pair(en, ar) {
     return { en: en, ar: ar };
@@ -302,6 +303,88 @@
     };
   }
 
+  function warnMissingControl(name, context) {
+    const key = `${context}:${name}`;
+
+    if (missingControlCache[key]) {
+      return;
+    }
+
+    missingControlCache[key] = true;
+
+    if (typeof console !== "undefined" && typeof console.warn === "function") {
+      console.warn(`[AhmedSolver Solver] Missing form control "${name}" in ${context}.`);
+    }
+  }
+
+  function getNamedControl(form, name, context) {
+    if (!form || !form.elements) {
+      warnMissingControl(name, `${context}:no-form`);
+      return null;
+    }
+
+    let control = null;
+
+    if (typeof form.elements.namedItem === "function") {
+      control = form.elements.namedItem(name);
+    } else if (Object.prototype.hasOwnProperty.call(form.elements, name)) {
+      control = form.elements[name];
+    }
+
+    if (!control) {
+      warnMissingControl(name, context);
+      return null;
+    }
+
+    return control;
+  }
+
+  function getControlValue(control) {
+    if (!control) {
+      return undefined;
+    }
+
+    if (typeof control.value === "string") {
+      return control.value;
+    }
+
+    if (typeof control.value === "number") {
+      return String(control.value);
+    }
+
+    return undefined;
+  }
+
+  function readNormalizedControlValue(form, name, context) {
+    const control = getNamedControl(form, name, context);
+    const rawValue = getControlValue(control);
+
+    return {
+      control: control,
+      normalized: normalizeInputValue(rawValue)
+    };
+  }
+
+  function describeControl(control) {
+    if (!control) {
+      return { found: false };
+    }
+
+    return {
+      found: true,
+      id: control.id || "",
+      name: control.name || "",
+      type: control.type || control.tagName || "unknown"
+    };
+  }
+
+  function missingFieldMessage(fieldConfig) {
+    return text(pair(
+      `A required input field is missing from the page: ${text(fieldConfig.title)}.`,
+      `يوجد حقل إدخال مطلوب مفقود من الصفحة: ${text(fieldConfig.title)}.`
+    ));
+  }
+
   function collectRawInputSnapshot(form) {
     const snapshot = {};
 
@@ -384,24 +467,27 @@
         return;
       }
 
-      const input = form.elements[fieldConfig.name];
-      const unit = form.elements[`${fieldConfig.name}Unit`];
-      values[fieldConfig.name] = input ? (input.value.trim() === "" ? null : input.value.trim()) : null;
-      values[`${fieldConfig.name}Unit`] = unit ? unit.value : fieldConfig.defaultUnit;
+      const inputRead = readNormalizedControlValue(form, fieldConfig.name, `${config.moduleKey}:capture:input`);
+      const unitRead = readNormalizedControlValue(form, `${fieldConfig.name}Unit`, `${config.moduleKey}:capture:unit`);
+
+      values[fieldConfig.name] = inputRead.normalized.isEmpty ? null : inputRead.normalized.normalized;
+      values[`${fieldConfig.name}Unit`] = unitRead.control && typeof getControlValue(unitRead.control) !== "undefined"
+        ? getControlValue(unitRead.control)
+        : fieldConfig.defaultUnit;
     });
   }
 
   function captureBendingExtras(form, values) {
-    values.inertiaMode = form.elements.inertiaMode ? form.elements.inertiaMode.value : (values.inertiaMode || "direct");
-    values.inertiaShape = form.elements.inertiaShape ? form.elements.inertiaShape.value : (values.inertiaShape || "rectangle");
-    values.inertiaDimensionUnit = form.elements.inertiaDimensionUnit ? form.elements.inertiaDimensionUnit.value : (values.inertiaDimensionUnit || "mm");
-    values.inertiaUnit = form.elements.inertiaUnit ? form.elements.inertiaUnit.value : (values.inertiaUnit || "mm4");
-    values.inertia = form.elements.inertia ? (form.elements.inertia.value.trim() === "" ? null : form.elements.inertia.value.trim()) : null;
-    values.shapeWidth = form.elements.shapeWidth ? (form.elements.shapeWidth.value.trim() === "" ? null : form.elements.shapeWidth.value.trim()) : null;
-    values.shapeHeight = form.elements.shapeHeight ? (form.elements.shapeHeight.value.trim() === "" ? null : form.elements.shapeHeight.value.trim()) : null;
-    values.shapeDiameter = form.elements.shapeDiameter ? (form.elements.shapeDiameter.value.trim() === "" ? null : form.elements.shapeDiameter.value.trim()) : null;
-    values.shapeOuterDiameter = form.elements.shapeOuterDiameter ? (form.elements.shapeOuterDiameter.value.trim() === "" ? null : form.elements.shapeOuterDiameter.value.trim()) : null;
-    values.shapeInnerDiameter = form.elements.shapeInnerDiameter ? (form.elements.shapeInnerDiameter.value.trim() === "" ? null : form.elements.shapeInnerDiameter.value.trim()) : null;
+    values.inertiaMode = getControlValue(getNamedControl(form, "inertiaMode", "bending:capture:mode")) || (values.inertiaMode || "direct");
+    values.inertiaShape = getControlValue(getNamedControl(form, "inertiaShape", "bending:capture:shape")) || (values.inertiaShape || "rectangle");
+    values.inertiaDimensionUnit = getControlValue(getNamedControl(form, "inertiaDimensionUnit", "bending:capture:dimension-unit")) || (values.inertiaDimensionUnit || "mm");
+    values.inertiaUnit = getControlValue(getNamedControl(form, "inertiaUnit", "bending:capture:inertia-unit")) || (values.inertiaUnit || "mm4");
+    values.inertia = readNormalizedControlValue(form, "inertia", "bending:capture:inertia").normalized.isEmpty ? null : readNormalizedControlValue(form, "inertia", "bending:capture:inertia").normalized.normalized;
+    values.shapeWidth = readNormalizedControlValue(form, "shapeWidth", "bending:capture:shapeWidth").normalized.isEmpty ? null : readNormalizedControlValue(form, "shapeWidth", "bending:capture:shapeWidth").normalized.normalized;
+    values.shapeHeight = readNormalizedControlValue(form, "shapeHeight", "bending:capture:shapeHeight").normalized.isEmpty ? null : readNormalizedControlValue(form, "shapeHeight", "bending:capture:shapeHeight").normalized.normalized;
+    values.shapeDiameter = readNormalizedControlValue(form, "shapeDiameter", "bending:capture:shapeDiameter").normalized.isEmpty ? null : readNormalizedControlValue(form, "shapeDiameter", "bending:capture:shapeDiameter").normalized.normalized;
+    values.shapeOuterDiameter = readNormalizedControlValue(form, "shapeOuterDiameter", "bending:capture:shapeOuterDiameter").normalized.isEmpty ? null : readNormalizedControlValue(form, "shapeOuterDiameter", "bending:capture:shapeOuterDiameter").normalized.normalized;
+    values.shapeInnerDiameter = readNormalizedControlValue(form, "shapeInnerDiameter", "bending:capture:shapeInnerDiameter").normalized.isEmpty ? null : readNormalizedControlValue(form, "shapeInnerDiameter", "bending:capture:shapeInnerDiameter").normalized.normalized;
   }
 
   function captureCurrentFormState(config) {
@@ -468,12 +554,22 @@
 
   function parseStandardField(fieldConfig, form, values, emptyFields) {
     const wrapper = getFieldWrapper(fieldConfig.name);
-    const input = form.elements[fieldConfig.name];
-    const normalizedInput = normalizeInputValue(input ? input.value : "");
-
-    values[`${fieldConfig.name}Unit`] = form.elements[`${fieldConfig.name}Unit`]
-      ? form.elements[`${fieldConfig.name}Unit`].value
+    const inputRead = readNormalizedControlValue(form, fieldConfig.name, `${slug}:solve:input`);
+    const unitRead = readNormalizedControlValue(form, `${fieldConfig.name}Unit`, `${slug}:solve:unit`);
+    const normalizedInput = inputRead.normalized;
+    const unitValue = unitRead.control && typeof getControlValue(unitRead.control) !== "undefined"
+      ? getControlValue(unitRead.control)
       : fieldConfig.defaultUnit;
+
+    if (!inputRead.control) {
+      logSolverDebug("Validation failed", {
+        field: fieldConfig.name,
+        reason: "missing-dom-input"
+      });
+      throw new Error(missingFieldMessage(fieldConfig));
+    }
+
+    values[`${fieldConfig.name}Unit`] = unitValue;
 
     logSolverDebug("Field normalization", {
       field: fieldConfig.name,
@@ -606,19 +702,24 @@
     const values = {};
     const emptyFields = [];
     const meta = {};
+    const domAudit = {};
 
     config.fields.forEach(function (fieldConfig) {
       if (fieldConfig.name === "inertia") {
         return;
       }
 
+      domAudit[fieldConfig.name] = {
+        input: describeControl(getNamedControl(form, fieldConfig.name, `${config.moduleKey}:audit:input`)),
+        unit: describeControl(getNamedControl(form, `${fieldConfig.name}Unit`, `${config.moduleKey}:audit:unit`))
+      };
       parseStandardField(fieldConfig, form, values, emptyFields);
     });
 
-    values.inertiaMode = form.elements.inertiaMode ? form.elements.inertiaMode.value : "direct";
-    values.inertiaShape = form.elements.inertiaShape ? form.elements.inertiaShape.value : "rectangle";
-    values.inertiaDimensionUnit = form.elements.inertiaDimensionUnit ? form.elements.inertiaDimensionUnit.value : "mm";
-    values.inertiaUnit = form.elements.inertiaUnit ? form.elements.inertiaUnit.value : "mm4";
+    values.inertiaMode = getControlValue(getNamedControl(form, "inertiaMode", "bending:solve:mode")) || "direct";
+    values.inertiaShape = getControlValue(getNamedControl(form, "inertiaShape", "bending:solve:shape")) || "rectangle";
+    values.inertiaDimensionUnit = getControlValue(getNamedControl(form, "inertiaDimensionUnit", "bending:solve:dimension-unit")) || "mm";
+    values.inertiaUnit = getControlValue(getNamedControl(form, "inertiaUnit", "bending:solve:inertia-unit")) || "mm4";
 
     logSolverDebug("Bending extras", {
       inertiaMode: values.inertiaMode,
@@ -639,11 +740,11 @@
         inertiaShape: values.inertiaShape,
         inertiaDimensionUnit: values.inertiaDimensionUnit,
         inertiaUnit: values.inertiaUnit,
-        shapeWidth: form.elements.shapeWidth ? form.elements.shapeWidth.value.trim() : null,
-        shapeHeight: form.elements.shapeHeight ? form.elements.shapeHeight.value.trim() : null,
-        shapeDiameter: form.elements.shapeDiameter ? form.elements.shapeDiameter.value.trim() : null,
-        shapeOuterDiameter: form.elements.shapeOuterDiameter ? form.elements.shapeOuterDiameter.value.trim() : null,
-        shapeInnerDiameter: form.elements.shapeInnerDiameter ? form.elements.shapeInnerDiameter.value.trim() : null
+        shapeWidth: readNormalizedControlValue(form, "shapeWidth", "bending:solve:shapeWidth").normalized.normalized,
+        shapeHeight: readNormalizedControlValue(form, "shapeHeight", "bending:solve:shapeHeight").normalized.normalized,
+        shapeDiameter: readNormalizedControlValue(form, "shapeDiameter", "bending:solve:shapeDiameter").normalized.normalized,
+        shapeOuterDiameter: readNormalizedControlValue(form, "shapeOuterDiameter", "bending:solve:shapeOuterDiameter").normalized.normalized,
+        shapeInnerDiameter: readNormalizedControlValue(form, "shapeInnerDiameter", "bending:solve:shapeInnerDiameter").normalized.normalized
       });
 
       if (!preview || !preview.complete) {
@@ -700,7 +801,8 @@
 
     logSolverDebug("Unknown detected", {
       field: emptyFields[0],
-      emptyFields: emptyFields.slice()
+      emptyFields: emptyFields.slice(),
+      domAudit: domAudit
     });
 
     return {
@@ -713,8 +815,13 @@
   function parseDefaultSubmission(config, form) {
     const values = {};
     const emptyFields = [];
+    const domAudit = {};
 
     config.fields.forEach(function (fieldConfig) {
+      domAudit[fieldConfig.name] = {
+        input: describeControl(getNamedControl(form, fieldConfig.name, `${config.moduleKey}:audit:input`)),
+        unit: describeControl(getNamedControl(form, `${fieldConfig.name}Unit`, `${config.moduleKey}:audit:unit`))
+      };
       parseStandardField(fieldConfig, form, values, emptyFields);
     });
 
@@ -751,7 +858,8 @@
 
     logSolverDebug("Unknown detected", {
       field: emptyFields[0],
-      emptyFields: emptyFields.slice()
+      emptyFields: emptyFields.slice(),
+      domAudit: domAudit
     });
 
     return {
@@ -766,6 +874,7 @@
 
     logSolverDebug("Solve attempt started", {
       slug: slug,
+      expectedVariableKeys: config.fields.map(function (fieldConfig) { return fieldConfig.name; }),
       rawInputs: collectRawInputSnapshot(form),
       normalizedInputs: JSON.parse(JSON.stringify(state.values || {}))
     });

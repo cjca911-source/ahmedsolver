@@ -11,7 +11,7 @@
 
   const unitCatalog = {
     force: {
-      baseUnit: "N",
+      baseKey: "N",
       units: {
         N: { symbol: "N", factor: 1, label: { en: "newton", ar: "نيوتن" } },
         kN: { symbol: "kN", factor: 1000, label: { en: "kilonewton", ar: "كيلو نيوتن" } },
@@ -19,7 +19,7 @@
       }
     },
     stress: {
-      baseUnit: "Pa",
+      baseKey: "Pa",
       units: {
         Pa: { symbol: "Pa", factor: 1, label: { en: "pascal", ar: "باسكال" } },
         kPa: { symbol: "kPa", factor: 1000, label: { en: "kilopascal", ar: "كيلو باسكال" } },
@@ -29,7 +29,7 @@
       }
     },
     length: {
-      baseUnit: "m",
+      baseKey: "m",
       units: {
         mm: { symbol: "mm", factor: 0.001, label: { en: "millimeter", ar: "ملليمتر" } },
         cm: { symbol: "cm", factor: 0.01, label: { en: "centimeter", ar: "سنتيمتر" } },
@@ -39,7 +39,7 @@
       }
     },
     area: {
-      baseUnit: "m2",
+      baseKey: "m2",
       units: {
         mm2: { symbol: "mm^2", factor: 1e-6, label: { en: "square millimeter", ar: "ملليمتر مربع" } },
         cm2: { symbol: "cm^2", factor: 1e-4, label: { en: "square centimeter", ar: "سنتيمتر مربع" } },
@@ -48,7 +48,7 @@
       }
     },
     inertia: {
-      baseUnit: "m4",
+      baseKey: "m4",
       units: {
         mm4: { symbol: "mm^4", factor: 1e-12, label: { en: "mm to the fourth", ar: "ملليمتر للقوة الرابعة" } },
         cm4: { symbol: "cm^4", factor: 1e-8, label: { en: "cm to the fourth", ar: "سنتيمتر للقوة الرابعة" } },
@@ -57,15 +57,15 @@
       }
     },
     torque: {
-      baseUnit: "Nm",
+      baseKey: "Nm",
       units: {
-        Nm: { symbol: "N*m", factor: 1, label: { en: "newton-meter", ar: "نيوتن.متر" } },
-        kNm: { symbol: "kN*m", factor: 1000, label: { en: "kilonewton-meter", ar: "كيلو نيوتن.متر" } },
-        lbfft: { symbol: "lbf*ft", factor: 1.3558179483314, label: { en: "pound-foot", ar: "رطل.قدم" } }
+        Nm: { symbol: "N·m", factor: 1, label: { en: "newton-meter", ar: "نيوتن.متر" } },
+        kNm: { symbol: "kN·m", factor: 1000, label: { en: "kilonewton-meter", ar: "كيلو نيوتن.متر" } },
+        lbfft: { symbol: "lbf·ft", factor: 1.3558179483314, label: { en: "pound-foot", ar: "رطل.قدم" } }
       }
     },
     strain: {
-      baseUnit: "ratio",
+      baseKey: "ratio",
       units: {
         ratio: { symbol: "m/m", factor: 1, label: { en: "ratio", ar: "نسبة" } },
         microstrain: { symbol: "µε", factor: 1e-6, label: { en: "microstrain", ar: "مايكروسترين" } },
@@ -73,7 +73,7 @@
       }
     },
     tempDiff: {
-      baseUnit: "C",
+      baseKey: "C",
       units: {
         C: { symbol: "°C", factor: 1, label: { en: "degree Celsius", ar: "درجة مئوية" } },
         K: { symbol: "K", factor: 1, label: { en: "kelvin difference", ar: "فرق كلفن" } },
@@ -81,11 +81,49 @@
       }
     },
     thermalCoeff: {
-      baseUnit: "perC",
+      baseKey: "perC",
       units: {
         perC: { symbol: "/°C", factor: 1, label: { en: "per degree Celsius", ar: "لكل درجة مئوية" } },
         perK: { symbol: "/K", factor: 1, label: { en: "per kelvin", ar: "لكل كلفن" } },
         perF: { symbol: "/°F", factor: 1.8, label: { en: "per degree Fahrenheit", ar: "لكل درجة فهرنهايت" } }
+      }
+    }
+  };
+
+  const inertiaShapeCatalog = {
+    rectangle: {
+      title: { en: "Rectangle", ar: "مستطيل" },
+      formula: "I = (b × h^3) / 12",
+      fields: [
+        { name: "shapeWidth", label: { en: "Width (b)", ar: "العرض (b)" } },
+        { name: "shapeHeight", label: { en: "Height (h)", ar: "الارتفاع (h)" } }
+      ],
+      calculate: function (dimensions) {
+        return (dimensions.shapeWidth * Math.pow(dimensions.shapeHeight, 3)) / 12;
+      }
+    },
+    circle: {
+      title: { en: "Circle", ar: "دائرة" },
+      formula: "I = (π × d^4) / 64",
+      fields: [
+        { name: "shapeDiameter", label: { en: "Diameter (d)", ar: "القطر (d)" } }
+      ],
+      calculate: function (dimensions) {
+        return (Math.PI * Math.pow(dimensions.shapeDiameter, 4)) / 64;
+      }
+    },
+    hollowCircle: {
+      title: { en: "Hollow circle", ar: "دائرة مجوفة" },
+      formula: "I = (π × (D^4 - d^4)) / 64",
+      fields: [
+        { name: "shapeOuterDiameter", label: { en: "Outer diameter (D)", ar: "القطر الخارجي (D)" } },
+        { name: "shapeInnerDiameter", label: { en: "Inner diameter (d)", ar: "القطر الداخلي (d)" } }
+      ],
+      calculate: function (dimensions) {
+        return (Math.PI * (Math.pow(dimensions.shapeOuterDiameter, 4) - Math.pow(dimensions.shapeInnerDiameter, 4))) / 64;
+      },
+      validate: function (dimensions) {
+        return dimensions.shapeInnerDiameter < dimensions.shapeOuterDiameter;
       }
     }
   };
@@ -97,6 +135,17 @@
 
   function pair(en, ar) {
     return { en: en, ar: ar };
+  }
+
+  function note(titleEn, titleAr, textEn, textAr) {
+    return {
+      title: pair(titleEn, titleAr),
+      text: pair(textEn, textAr)
+    };
+  }
+
+  function field(config) {
+    return config;
   }
 
   function lang() {
@@ -160,6 +209,66 @@
     return `${num(value, decimals)} ${unit ? unit.symbol : ""}`.trim();
   }
 
+  function baseUnitSymbol(category) {
+    const baseKey = unitCatalog[category] ? unitCatalog[category].baseKey : null;
+    const unit = baseKey ? unitDef(category, baseKey) : null;
+    return unit ? unit.symbol : "";
+  }
+
+  function readyMessage() {
+    return text(pair(
+      "Leave exactly one variable empty and AhmedSolver will solve for it.",
+      "اترك متغيراً واحداً فارغاً تماماً وسيقوم AhmedSolver بحله."
+    ));
+  }
+
+  function successMessage() {
+    return text(pair(
+      "Solution completed with engineering checks.",
+      "اكتمل الحل مع التحقق الهندسي."
+    ));
+  }
+
+  function insufficientDataMessage() {
+    return text(pair(
+      "Insufficient data. Leave exactly one field empty.",
+      "البيانات غير كافية. اترك خانة واحدة فقط فارغة."
+    ));
+  }
+
+  function leaveOneEmptyMessage() {
+    return text(pair(
+      "All fields are filled. Leave one variable empty so AhmedSolver can solve for it.",
+      "جميع الحقول ممتلئة. اترك متغيراً واحداً فارغاً حتى يقوم AhmedSolver بحله."
+    ));
+  }
+
+  function invalidFieldMessage(fieldConfig) {
+    return lang() === "ar"
+      ? `أدخل قيمة صحيحة لـ ${text(fieldConfig.title)}.`
+      : `Enter a valid value for ${text(fieldConfig.title)}.`;
+  }
+
+  function positiveFieldMessage(fieldConfig) {
+    return lang() === "ar"
+      ? `يجب أن تكون قيمة ${text(fieldConfig.title)} أكبر من الصفر.`
+      : `${text(fieldConfig.title)} must be greater than zero.`;
+  }
+
+  function zeroDividerMessage(label) {
+    return lang() === "ar"
+      ? `لا يمكن أن تكون قيمة ${label} صفراً في هذه الصيغة المعاد ترتيبها.`
+      : `${label} cannot be zero for this rearranged formula.`;
+  }
+
+  function valueLabel() {
+    return text(pair("Value", "القيمة"));
+  }
+
+  function unitHeading() {
+    return text(pair("Unit", "الوحدة"));
+  }
+
   function saveReport(report) {
     try {
       const current = JSON.parse(window.localStorage.getItem(exportStorageKey) || "[]");
@@ -196,16 +305,48 @@
     return `<div class="step-card"><h4>${esc(text(item.title))}</h4><p>${esc(text(item.text))}</p></div>`;
   }
 
-  function getFieldValue(field) {
-    return state.values[field.name];
+  function getFieldValue(fieldConfig) {
+    return state.values[fieldConfig.name];
   }
 
-  function getFieldUnit(field) {
-    return state.values[`${field.name}Unit`] || field.defaultUnit;
+  function getFieldUnit(fieldConfig) {
+    return state.values[`${fieldConfig.name}Unit`] || fieldConfig.defaultUnit;
   }
 
   function getFieldWrapper(fieldName) {
     return root.querySelector(`[data-field="${fieldName}"]`);
+  }
+
+  function clearFieldStates() {
+    root.querySelectorAll("[data-field]").forEach(function (node) {
+      node.classList.remove("field-error", "field-unknown");
+    });
+  }
+
+  function defaultCaptureState(config, form, values) {
+    config.fields.forEach(function (fieldConfig) {
+      if (fieldConfig.customType) {
+        return;
+      }
+
+      const input = form.elements[fieldConfig.name];
+      const unit = form.elements[`${fieldConfig.name}Unit`];
+      values[fieldConfig.name] = input ? (input.value.trim() === "" ? null : input.value.trim()) : null;
+      values[`${fieldConfig.name}Unit`] = unit ? unit.value : fieldConfig.defaultUnit;
+    });
+  }
+
+  function captureBendingExtras(form, values) {
+    values.inertiaMode = form.elements.inertiaMode ? form.elements.inertiaMode.value : (values.inertiaMode || "direct");
+    values.inertiaShape = form.elements.inertiaShape ? form.elements.inertiaShape.value : (values.inertiaShape || "rectangle");
+    values.inertiaDimensionUnit = form.elements.inertiaDimensionUnit ? form.elements.inertiaDimensionUnit.value : (values.inertiaDimensionUnit || "mm");
+    values.inertiaUnit = form.elements.inertiaUnit ? form.elements.inertiaUnit.value : (values.inertiaUnit || "mm4");
+    values.inertia = form.elements.inertia ? (form.elements.inertia.value.trim() === "" ? null : form.elements.inertia.value.trim()) : null;
+    values.shapeWidth = form.elements.shapeWidth ? (form.elements.shapeWidth.value.trim() === "" ? null : form.elements.shapeWidth.value.trim()) : null;
+    values.shapeHeight = form.elements.shapeHeight ? (form.elements.shapeHeight.value.trim() === "" ? null : form.elements.shapeHeight.value.trim()) : null;
+    values.shapeDiameter = form.elements.shapeDiameter ? (form.elements.shapeDiameter.value.trim() === "" ? null : form.elements.shapeDiameter.value.trim()) : null;
+    values.shapeOuterDiameter = form.elements.shapeOuterDiameter ? (form.elements.shapeOuterDiameter.value.trim() === "" ? null : form.elements.shapeOuterDiameter.value.trim()) : null;
+    values.shapeInnerDiameter = form.elements.shapeInnerDiameter ? (form.elements.shapeInnerDiameter.value.trim() === "" ? null : form.elements.shapeInnerDiameter.value.trim()) : null;
   }
 
   function captureCurrentFormState(config) {
@@ -215,89 +356,19 @@
       return;
     }
 
-    let changed = false;
+    const nextValues = {};
+    defaultCaptureState(config, form, nextValues);
 
-    config.fields.forEach(function (field) {
-      const input = form.elements[field.name];
-      const unit = form.elements[`${field.name}Unit`];
-      const rawValue = input ? input.value.trim() : "";
-      const normalizedValue = rawValue === "" ? null : rawValue;
-      const currentStoredValue = state.values[field.name] == null ? null : String(state.values[field.name]);
-      const currentStoredUnit = state.values[`${field.name}Unit`] || field.defaultUnit;
+    if (typeof config.captureExtraState === "function") {
+      config.captureExtraState(form, nextValues);
+    }
 
-      if (currentStoredValue !== normalizedValue) {
-        changed = true;
-      }
-
-      if (unit && currentStoredUnit !== unit.value) {
-        changed = true;
-      }
-
-      state.values[field.name] = normalizedValue;
-      state.values[`${field.name}Unit`] = unit ? unit.value : field.defaultUnit;
-    });
+    const changed = JSON.stringify(nextValues) !== JSON.stringify(state.values);
+    state.values = nextValues;
 
     if (changed) {
       state.result = null;
     }
-  }
-
-  function solverHint() {
-    return text(pair(
-      "Enter the known values and leave exactly one field empty. AhmedSolver will detect the unknown automatically.",
-      "أدخل القيم المعروفة واترك خانة واحدة فقط فارغة. سيكتشف AhmedSolver المتغير المجهول تلقائياً."
-    ));
-  }
-
-  function readyMessage() {
-    return text(pair(
-      "Leave one variable empty to solve automatically.",
-      "اترك متغيراً واحداً فارغاً ليتم الحل تلقائياً."
-    ));
-  }
-
-  function successMessage() {
-    return text(pair(
-      "Single-unknown solution completed successfully.",
-      "تم حل المتغير المجهول بنجاح."
-    ));
-  }
-
-  function insufficientDataMessage() {
-    return text(pair(
-      "Insufficient data. Leave exactly one field empty.",
-      "البيانات غير كافية. اترك خانة واحدة فقط فارغة."
-    ));
-  }
-
-  function leaveOneEmptyMessage() {
-    return text(pair(
-      "All fields are filled. Leave one variable empty so AhmedSolver can solve for it.",
-      "جميع الحقول ممتلئة. اترك متغيراً واحداً فارغاً ليقوم AhmedSolver بحله."
-    ));
-  }
-
-  function invalidFieldMessage(field) {
-    return lang() === "ar"
-      ? `أدخل قيمة صحيحة لـ ${text(field.title)}.`
-      : `Enter a valid value for ${text(field.title)}.`;
-  }
-
-  function positiveFieldMessage(field) {
-    return lang() === "ar"
-      ? `يجب أن تكون قيمة ${text(field.title)} أكبر من الصفر.`
-      : `${text(field.title)} must be greater than zero.`;
-  }
-
-  function zeroDividerMessage(label) {
-    return lang() === "ar"
-      ? `لا يمكن أن تكون قيمة ${label} صفراً في هذه الصيغة المعاد ترتيبها.`
-      : `${label} cannot be zero for this rearranged formula.`;
-  }
-
-  function baseUnitSymbol(category) {
-    const definition = unitDef(category, unitCatalog[category].baseUnit);
-    return definition ? definition.symbol : "";
   }
 
   function assertNonZero(value, label) {
@@ -308,46 +379,211 @@
     return value;
   }
 
-  function parseSolverInputs(config, form) {
-    const values = {};
-    const emptyFields = [];
+  function parseNumber(rawValue) {
+    if (rawValue == null || rawValue === "") {
+      return null;
+    }
 
-    config.fields.forEach(function (field) {
-      const wrapper = getFieldWrapper(field.name);
-      const input = form.elements[field.name];
-      const rawValue = input.value.trim();
+    const value = Number(rawValue);
+    return Number.isFinite(value) ? value : NaN;
+  }
 
-      values[`${field.name}Unit`] = form.elements[`${field.name}Unit`].value;
+  function parseStandardField(fieldConfig, form, values, emptyFields) {
+    const wrapper = getFieldWrapper(fieldConfig.name);
+    const input = form.elements[fieldConfig.name];
+    const rawValue = input ? input.value.trim() : "";
 
+    values[`${fieldConfig.name}Unit`] = form.elements[`${fieldConfig.name}Unit`]
+      ? form.elements[`${fieldConfig.name}Unit`].value
+      : fieldConfig.defaultUnit;
+
+    if (!rawValue) {
+      values[fieldConfig.name] = null;
+      emptyFields.push(fieldConfig.name);
+      return;
+    }
+
+    const numericValue = Number(rawValue);
+
+    if (!Number.isFinite(numericValue)) {
       if (wrapper) {
-        wrapper.classList.remove("field-error", "field-unknown");
+        wrapper.classList.add("field-error");
       }
 
-      if (!rawValue) {
-        values[field.name] = null;
-        emptyFields.push(field.name);
+      throw new Error(invalidFieldMessage(fieldConfig));
+    }
+
+    if (fieldConfig.positive && numericValue <= 0) {
+      if (wrapper) {
+        wrapper.classList.add("field-error");
+      }
+
+      throw new Error(positiveFieldMessage(fieldConfig));
+    }
+
+    values[fieldConfig.name] = numericValue;
+  }
+
+  function buildShapePreview(sourceValues) {
+    const mode = sourceValues.inertiaMode || "direct";
+
+    if (mode !== "shape") {
+      return null;
+    }
+
+    const shapeKey = sourceValues.inertiaShape || "rectangle";
+    const shapeConfig = inertiaShapeCatalog[shapeKey];
+    const dimensionUnit = sourceValues.inertiaDimensionUnit || "mm";
+    const outputUnit = sourceValues.inertiaUnit || "mm4";
+    const parsedDimensions = {};
+    const dimensionRows = [];
+    let invalidField = null;
+    let missingField = null;
+
+    shapeConfig.fields.forEach(function (dimensionField) {
+      const rawValue = sourceValues[dimensionField.name];
+      const parsed = parseNumber(rawValue);
+
+      if (parsed === null) {
+        missingField = missingField || dimensionField;
         return;
       }
 
-      const numericValue = Number(rawValue);
+      if (!Number.isFinite(parsed) || parsed <= 0) {
+        invalidField = invalidField || dimensionField;
+        return;
+      }
 
-      if (!Number.isFinite(numericValue)) {
+      parsedDimensions[dimensionField.name] = toBase("length", parsed, dimensionUnit);
+      dimensionRows.push(`${text(dimensionField.label)} = ${withUnit("length", dimensionUnit, parsed, 6)}`);
+    });
+
+    if (invalidField) {
+      return {
+        mode: mode,
+        complete: false,
+        error: lang() === "ar"
+          ? `أدخل بعداً صحيحاً وموجباً لـ ${text(invalidField.label)}.`
+          : `Enter a valid positive dimension for ${text(invalidField.label)}.`
+      };
+    }
+
+    if (missingField) {
+      return {
+        mode: mode,
+        complete: false
+      };
+    }
+
+    if (typeof shapeConfig.validate === "function" && !shapeConfig.validate(parsedDimensions)) {
+      return {
+        mode: mode,
+        complete: false,
+        error: text(pair(
+          "Inner diameter must be smaller than outer diameter.",
+          "يجب أن يكون القطر الداخلي أصغر من القطر الخارجي."
+        ))
+      };
+    }
+
+    const baseValue = shapeConfig.calculate(parsedDimensions);
+    const displayValue = fromBase("inertia", baseValue, outputUnit);
+
+    return {
+      mode: mode,
+      complete: true,
+      shapeKey: shapeKey,
+      shapeTitle: shapeConfig.title,
+      formula: shapeConfig.formula,
+      baseValue: baseValue,
+      displayValue: displayValue,
+      outputUnit: outputUnit,
+      dimensionUnit: dimensionUnit,
+      dimensionRows: dimensionRows
+    };
+  }
+
+  function parseBendingSubmission(config, form) {
+    const values = {};
+    const emptyFields = [];
+    const meta = {};
+
+    config.fields.forEach(function (fieldConfig) {
+      if (fieldConfig.name === "inertia") {
+        return;
+      }
+
+      parseStandardField(fieldConfig, form, values, emptyFields);
+    });
+
+    values.inertiaMode = form.elements.inertiaMode ? form.elements.inertiaMode.value : "direct";
+    values.inertiaShape = form.elements.inertiaShape ? form.elements.inertiaShape.value : "rectangle";
+    values.inertiaDimensionUnit = form.elements.inertiaDimensionUnit ? form.elements.inertiaDimensionUnit.value : "mm";
+    values.inertiaUnit = form.elements.inertiaUnit ? form.elements.inertiaUnit.value : "mm4";
+
+    const inertiaWrapper = getFieldWrapper("inertia");
+
+    if (values.inertiaMode === "direct") {
+      parseStandardField(config.fields.find(function (fieldConfig) {
+        return fieldConfig.name === "inertia";
+      }), form, values, emptyFields);
+    } else {
+      const preview = buildShapePreview({
+        inertiaMode: values.inertiaMode,
+        inertiaShape: values.inertiaShape,
+        inertiaDimensionUnit: values.inertiaDimensionUnit,
+        inertiaUnit: values.inertiaUnit,
+        shapeWidth: form.elements.shapeWidth ? form.elements.shapeWidth.value.trim() : null,
+        shapeHeight: form.elements.shapeHeight ? form.elements.shapeHeight.value.trim() : null,
+        shapeDiameter: form.elements.shapeDiameter ? form.elements.shapeDiameter.value.trim() : null,
+        shapeOuterDiameter: form.elements.shapeOuterDiameter ? form.elements.shapeOuterDiameter.value.trim() : null,
+        shapeInnerDiameter: form.elements.shapeInnerDiameter ? form.elements.shapeInnerDiameter.value.trim() : null
+      });
+
+      if (!preview || !preview.complete) {
+        if (inertiaWrapper) {
+          inertiaWrapper.classList.add("field-error");
+        }
+
+        throw new Error(preview && preview.error ? preview.error : text(pair(
+          "Complete the section dimensions or switch to direct I entry.",
+          "أكمل أبعاد المقطع أو ارجع إلى إدخال I مباشرة."
+        )));
+      }
+
+      values.inertia = preview.displayValue;
+      meta.inertia = preview;
+    }
+
+    if (emptyFields.length > 1) {
+      emptyFields.forEach(function (fieldName) {
+        const wrapper = getFieldWrapper(fieldName);
+
         if (wrapper) {
           wrapper.classList.add("field-error");
         }
+      });
 
-        throw new Error(invalidFieldMessage(field));
-      }
+      throw new Error(insufficientDataMessage());
+    }
 
-      if (field.positive && numericValue <= 0) {
-        if (wrapper) {
-          wrapper.classList.add("field-error");
-        }
+    if (emptyFields.length === 0) {
+      throw new Error(leaveOneEmptyMessage());
+    }
 
-        throw new Error(positiveFieldMessage(field));
-      }
+    return {
+      values: values,
+      unknownKey: emptyFields[0],
+      meta: meta
+    };
+  }
 
-      values[field.name] = numericValue;
+  function parseDefaultSubmission(config, form) {
+    const values = {};
+    const emptyFields = [];
+
+    config.fields.forEach(function (fieldConfig) {
+      parseStandardField(fieldConfig, form, values, emptyFields);
     });
 
     if (emptyFields.length > 1) {
@@ -368,24 +604,74 @@
 
     return {
       values: values,
-      unknownKey: emptyFields[0]
+      unknownKey: emptyFields[0],
+      meta: {}
     };
+  }
+
+  function parseSolverInputs(config, form) {
+    clearFieldStates();
+
+    if (typeof config.parseSubmission === "function") {
+      return config.parseSubmission(config, form);
+    }
+
+    return parseDefaultSubmission(config, form);
+  }
+
+  function pushWarning(list, kind, title, message) {
+    const resolvedTitle = text(title);
+    const resolvedMessage = text(message);
+    const signature = `${kind}|${resolvedTitle}|${resolvedMessage}`;
+
+    if (list.some(function (item) { return item.signature === signature; })) {
+      return;
+    }
+
+    list.push({
+      kind: kind,
+      title: resolvedTitle,
+      message: resolvedMessage,
+      signature: signature
+    });
+  }
+
+  function addMaterialWarning(list, title, condition) {
+    if (!condition) {
+      return;
+    }
+
+    pushWarning(list, "warning", title, pair(
+      "This result may be mathematically correct but not realistic for common engineering materials.",
+      "قد تكون هذه النتيجة صحيحة رياضياً لكنها غير واقعية للمواد الهندسية الشائعة."
+    ));
+  }
+
+  function addUnitsWarning(list, title, condition) {
+    if (!condition) {
+      return;
+    }
+
+    pushWarning(list, "review", title, pair(
+      "Check units or dimensions: the value seems outside common engineering ranges.",
+      "تحقق من الوحدات أو الأبعاد: تبدو القيمة خارج النطاقات الهندسية الشائعة."
+    ));
   }
 
   function calculateSolverResult(config, payload) {
     const values = payload.values;
     const unknownKey = payload.unknownKey;
     const baseValues = {};
-    const unknownField = config.fields.find(function (field) {
-      return field.name === unknownKey;
+    const unknownField = config.fields.find(function (fieldConfig) {
+      return fieldConfig.name === unknownKey;
     });
 
-    config.fields.forEach(function (field) {
-      if (values[field.name] == null) {
+    config.fields.forEach(function (fieldConfig) {
+      if (values[fieldConfig.name] == null) {
         return;
       }
 
-      baseValues[field.name] = toBase(field.category, values[field.name], values[`${field.name}Unit`]);
+      baseValues[fieldConfig.name] = toBase(fieldConfig.category, values[fieldConfig.name], values[`${fieldConfig.name}Unit`]);
     });
 
     const solvedBaseValue = config.solve[unknownKey](baseValues);
@@ -411,58 +697,120 @@
       unknownKey: unknownKey,
       unknownField: unknownField,
       solvedBaseValue: solvedBaseValue,
-      solvedDisplayValue: solvedDisplayValue
+      solvedDisplayValue: solvedDisplayValue,
+      meta: payload.meta || {},
+      engineeringWarnings: []
     };
 
     if (typeof config.decorateResult === "function") {
       config.decorateResult(result);
     }
 
+    if (typeof config.engineeringChecks === "function") {
+      config.engineeringChecks(result, result.engineeringWarnings);
+    }
+
     return result;
   }
 
   function buildConversionLines(config, result) {
-    return config.fields.filter(function (field) {
-      return field.name !== result.unknownKey;
-    }).map(function (field) {
-      const rawValue = result.values[field.name];
-      const unitKey = result.values[`${field.name}Unit`];
-      const baseValue = result.baseValues[field.name];
-      return `${text(field.title)} = ${withUnit(field.category, unitKey, rawValue, 6)} = ${num(baseValue, 6)} ${baseUnitSymbol(field.category)}`;
+    const lines = [];
+
+    if (typeof config.preConversionLines === "function") {
+      config.preConversionLines(result).forEach(function (line) {
+        lines.push(line);
+      });
+    }
+
+    config.fields.forEach(function (fieldConfig) {
+      if (fieldConfig.name === result.unknownKey) {
+        return;
+      }
+
+      const rawValue = result.values[fieldConfig.name];
+      const unitKey = result.values[`${fieldConfig.name}Unit`];
+      const baseValue = result.baseValues[fieldConfig.name];
+      lines.push(`${text(fieldConfig.title)} = ${withUnit(fieldConfig.category, unitKey, rawValue, 6)} = ${num(baseValue, 6)} ${baseUnitSymbol(fieldConfig.category)}`);
     });
+
+    return lines;
   }
 
   function buildSummary(config, result) {
-    const solvedSuffix = text(pair(" (solved)", " (محسوب)"));
-
-    return config.fields.map(function (field) {
-      const unitKey = result.values[`${field.name}Unit`];
-      const displayValue = field.name === result.unknownKey
-        ? result.solvedDisplayValue
-        : result.values[field.name];
+    return config.fields.map(function (fieldConfig) {
+      const unitKey = result.values[`${fieldConfig.name}Unit`];
+      const displayValue = fieldConfig.name === result.unknownKey ? result.solvedDisplayValue : result.values[fieldConfig.name];
+      const solvedSuffix = fieldConfig.name === result.unknownKey ? text(pair(" (solved)", " (محسوب)")) : "";
+      const shapeSuffix = fieldConfig.name === "inertia" && result.meta.inertia && result.meta.inertia.mode === "shape"
+        ? text(pair(" (from shape)", " (من الشكل)"))
+        : "";
 
       return {
-        label: `${text(field.title)}${field.name === result.unknownKey ? solvedSuffix : ""}`,
-        value: withUnit(field.category, unitKey, displayValue, 6)
+        label: `${text(fieldConfig.title)}${solvedSuffix}${shapeSuffix}`,
+        value: withUnit(fieldConfig.category, unitKey, displayValue, 6)
       };
     });
+  }
+
+  function buildValidationView(result) {
+    if (result.engineeringWarnings.length) {
+      return {
+        state: "warning",
+        summary: text(pair(
+          "AhmedSolver found one or more values that need engineering review.",
+          "اكتشف AhmedSolver قيمة أو أكثر تحتاج إلى مراجعة هندسية."
+        )),
+        warnings: result.engineeringWarnings
+      };
+    }
+
+    return {
+      state: "ok",
+      summary: text(pair(
+        "No obvious realism warnings were detected. Continue to compare against actual material limits and design requirements.",
+        "لم تظهر تحذيرات واضحة في الواقعية الهندسية. استمر في المقارنة مع حدود المواد ومتطلبات التصميم الفعلية."
+      )),
+      warnings: []
+    };
+  }
+
+  function renderValidationCard(validation) {
+    const badgeText = validation.state === "warning"
+      ? text(pair("Engineering review", "مراجعة هندسية"))
+      : text(pair("Checks passed", "التحقق سليم"));
+
+    return `
+      <div class="result-card result-card--validation" data-state="${esc(validation.state)}">
+        <div class="field-title">${esc(text(pair("Engineering validation", "التحقق الهندسي")))}</div>
+        <div class="validation-summary">
+          <span class="validation-badge">${esc(badgeText)}</span>
+          <p>${esc(validation.summary)}</p>
+        </div>
+        ${validation.warnings.length ? `<div class="validation-list">${validation.warnings.map(function (warning) {
+          return `<article class="validation-item" data-kind="${esc(warning.kind)}"><h4>${esc(warning.title)}</h4><p>${esc(warning.message)}</p></article>`;
+        }).join("")}</div>` : ""}
+      </div>
+    `;
   }
 
   function buildSolverView(config, result) {
     const unknownField = result.unknownField;
     const unitKey = result.values[`${result.unknownKey}Unit`];
-    const baseAnswer = `${num(result.solvedBaseValue, 6)} ${baseUnitSymbol(unknownField.category)}`;
     const finalAnswer = `${unknownField.badge} = ${withUnit(unknownField.category, unitKey, result.solvedDisplayValue, 6)}`;
+    const baseAnswer = `${num(result.solvedBaseValue, 6)} ${baseUnitSymbol(unknownField.category)}`;
     const conversionLines = buildConversionLines(config, result);
     const summary = buildSummary(config, result);
     const metrics = typeof config.metrics === "function" ? config.metrics(result) : [];
+    const validation = buildValidationView(result);
+    const preSteps = typeof config.preSteps === "function" ? config.preSteps(result) : [];
 
     return {
       final: finalAnswer,
       secondary: `${text(pair("Detected unknown", "المتغير المجهول"))}: ${text(unknownField.title)} | ${text(pair("Base SI result", "النتيجة بوحدة الأساس"))}: ${baseAnswer}`,
       summary: summary,
       metrics: metrics,
-      steps: [
+      validation: validation,
+      steps: preSteps.concat([
         {
           title: text(pair("Original formula", "المعادلة الأصلية")),
           body: `<div class="equation-line">${esc(config.formula)}</div>`
@@ -487,7 +835,7 @@
           title: text(pair("Final answer", "الإجابة النهائية")),
           body: `<p>${esc(finalAnswer)}<br>${esc(`${text(pair("Base SI result", "النتيجة بوحدة الأساس"))}: ${baseAnswer}`)}</p>`
         }
-      ],
+      ]),
       exportInputs: summary.map(function (item) {
         return `${item.label}: ${item.value}`;
       }),
@@ -495,57 +843,57 @@
       exportSteps: [
         `${text(pair("Original formula", "المعادلة الأصلية"))}: ${config.formula}`,
         `${text(pair("Detected unknown", "المتغير المجهول"))}: ${text(unknownField.title)}`,
-        `${text(pair("Rearranged formula", "إعادة ترتيب المعادلة"))}: ${config.rearranged[result.unknownKey]}`
-      ].concat(conversionLines).concat([
-        config.substitution[result.unknownKey](result),
+        `${text(pair("Rearranged formula", "إعادة ترتيب المعادلة"))}: ${config.rearranged[result.unknownKey]}`,
+        `${text(pair("Convert known values to base units", "تحويل القيم المعروفة إلى وحدات الأساس"))}: ${conversionLines.join(" | ")}`,
+        `${text(pair("Numerical substitution", "التعويض العددي"))}: ${config.substitution[result.unknownKey](result)}`,
         `${text(pair("Final answer", "الإجابة النهائية"))}: ${finalAnswer}`,
-        `${text(pair("Base SI result", "النتيجة بوحدة الأساس"))}: ${baseAnswer}`
-      ])
+        `${text(pair("Engineering validation", "التحقق الهندسي"))}: ${validation.summary}`
+      ]
     };
   }
 
-  function renderSolverField(field) {
-    const value = getFieldValue(field);
-    const unitValue = getFieldUnit(field);
-    const isUnknown = state.result && state.result.unknownKey === field.name ? " field-unknown" : "";
-    const description = text(field.description || pair(
-      "Enter the value in the selected unit, or leave this variable empty to solve for it.",
-      "أدخل القيمة بالوحدة المختارة، أو اترك هذا المتغير فارغاً ليتم حله."
+  function renderStandardField(fieldConfig) {
+    const value = getFieldValue(fieldConfig);
+    const unitValue = getFieldUnit(fieldConfig);
+    const isUnknown = state.result && state.result.unknownKey === fieldConfig.name ? " field-unknown" : "";
+    const description = text(fieldConfig.description || pair(
+      "Enter the value in the selected unit, or leave this card empty to solve for it.",
+      "أدخل القيمة بالوحدة المختارة، أو اترك هذه البطاقة فارغة ليتم حلها."
     ));
-    const hint = text(field.hint || pair(
-      "Leave this card empty only when it is the unknown variable.",
-      "اترك هذه البطاقة فارغة فقط عندما تكون هي المتغير المجهول."
+    const hint = text(fieldConfig.hint || pair(
+      "Leave this variable empty only when it is the unknown.",
+      "اترك هذا المتغير فارغاً فقط عندما يكون هو المجهول."
     ));
 
     return `
-      <section class="solver-variable${isUnknown}" data-field="${esc(field.name)}">
+      <section class="solver-variable${isUnknown}" data-field="${esc(fieldConfig.name)}">
         <div class="solver-variable__header">
-          <div class="solver-variable__badge">${esc(field.badge)}</div>
-          <h3 class="solver-variable__title">${esc(text(field.title))}</h3>
+          <div class="solver-variable__badge">${esc(fieldConfig.badge)}</div>
+          <h3 class="solver-variable__title">${esc(text(fieldConfig.title))}</h3>
           <p class="solver-variable__description">${esc(description)}</p>
         </div>
         <div class="solver-variable__body">
           <div class="field">
-            <label for="solver-${esc(field.name)}">${esc(text(pair("Value", "القيمة")))}</label>
+            <label for="solver-${esc(fieldConfig.name)}">${esc(valueLabel())}</label>
             <input
-              id="solver-${esc(field.name)}"
-              name="${esc(field.name)}"
+              id="solver-${esc(fieldConfig.name)}"
+              name="${esc(fieldConfig.name)}"
               class="input-control"
               type="number"
               inputmode="decimal"
               step="any"
-              ${field.positive ? 'min="0"' : ""}
+              ${fieldConfig.positive ? 'min="0"' : ""}
               value="${value == null ? "" : esc(value)}"
-              placeholder="${esc(text(pair("Enter a value or leave empty to solve", "أدخل قيمة أو اترك الحقل فارغاً للحل")))}"
+              placeholder="${esc(text(fieldConfig.placeholder || pair("Enter a value or leave empty to solve", "أدخل قيمة أو اترك الحقل فارغاً للحل")))}"
             >
           </div>
           <div class="field">
-            <label for="solver-${esc(field.name)}-unit">${esc(text(pair("Unit", "الوحدة")))}</label>
+            <label for="solver-${esc(fieldConfig.name)}-unit">${esc(unitHeading())}</label>
             <select
-              id="solver-${esc(field.name)}-unit"
-              name="${esc(field.name)}Unit"
+              id="solver-${esc(fieldConfig.name)}-unit"
+              name="${esc(fieldConfig.name)}Unit"
               class="select-control"
-              data-unit-category="${esc(field.category)}"
+              data-unit-category="${esc(fieldConfig.category)}"
               data-selected="${esc(unitValue)}"
             ></select>
           </div>
@@ -555,150 +903,379 @@
     `;
   }
 
+  function renderInertiaField(fieldConfig) {
+    const isUnknown = state.result && state.result.unknownKey === fieldConfig.name ? " field-unknown" : "";
+    const mode = state.values.inertiaMode || "direct";
+    const shape = state.values.inertiaShape || "rectangle";
+    const inertiaUnit = state.values.inertiaUnit || fieldConfig.defaultUnit;
+    const dimensionUnit = state.values.inertiaDimensionUnit || "mm";
+    const preview = buildShapePreview({
+      inertiaMode: mode,
+      inertiaShape: shape,
+      inertiaDimensionUnit: dimensionUnit,
+      inertiaUnit: inertiaUnit,
+      shapeWidth: state.values.shapeWidth,
+      shapeHeight: state.values.shapeHeight,
+      shapeDiameter: state.values.shapeDiameter,
+      shapeOuterDiameter: state.values.shapeOuterDiameter,
+      shapeInnerDiameter: state.values.shapeInnerDiameter
+    });
+    const shapeConfig = inertiaShapeCatalog[shape];
+
+    return `
+      <section class="solver-variable${isUnknown}" data-field="${esc(fieldConfig.name)}">
+        <div class="solver-variable__header">
+          <div class="solver-variable__badge">${esc(fieldConfig.badge)}</div>
+          <h3 class="solver-variable__title">${esc(text(fieldConfig.title))}</h3>
+          <p class="solver-variable__description">${esc(text(fieldConfig.description))}</p>
+        </div>
+        <div class="solver-variable__body">
+          <div class="field">
+            <label>${esc(text(pair("Moment of inertia input mode", "طريقة إدخال عزم العطالة")))}</label>
+            <div class="solver-toggle">
+              <label class="solver-toggle__option">
+                <input type="radio" name="inertiaMode" value="direct"${mode === "direct" ? " checked" : ""}>
+                <span>${esc(text(pair("Enter I directly", "إدخال I مباشرة")))}</span>
+              </label>
+              <label class="solver-toggle__option">
+                <input type="radio" name="inertiaMode" value="shape"${mode === "shape" ? " checked" : ""}>
+                <span>${esc(text(pair("Calculate I from shape", "حساب I من الشكل")))}</span>
+              </label>
+            </div>
+          </div>
+
+          ${mode === "direct" ? `
+            <div class="field">
+              <label for="solver-inertia">${esc(valueLabel())}</label>
+              <input
+                id="solver-inertia"
+                name="inertia"
+                class="input-control"
+                type="number"
+                inputmode="decimal"
+                step="any"
+                min="0"
+                value="${state.values.inertia == null ? "" : esc(state.values.inertia)}"
+                placeholder="${esc(text(pair("Leave empty to solve for I", "اتركه فارغاً لحساب I")))}"
+              >
+            </div>
+            <div class="field">
+              <label for="solver-inertia-unit">${esc(unitHeading())}</label>
+              <select
+                id="solver-inertia-unit"
+                name="inertiaUnit"
+                class="select-control"
+                data-unit-category="inertia"
+                data-selected="${esc(inertiaUnit)}"
+              ></select>
+            </div>
+          ` : `
+            <div class="field">
+              <label for="solver-inertia-shape">${esc(text(pair("Section shape", "شكل المقطع")))}</label>
+              <select id="solver-inertia-shape" name="inertiaShape" class="select-control">
+                ${Object.keys(inertiaShapeCatalog).map(function (shapeKey) {
+                  return `<option value="${esc(shapeKey)}"${shapeKey === shape ? " selected" : ""}>${esc(text(inertiaShapeCatalog[shapeKey].title))}</option>`;
+                }).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label for="solver-inertia-dimension-unit">${esc(text(pair("Dimension unit", "وحدة الأبعاد")))}</label>
+              <select
+                id="solver-inertia-dimension-unit"
+                name="inertiaDimensionUnit"
+                class="select-control"
+                data-unit-category="length"
+                data-selected="${esc(dimensionUnit)}"
+              ></select>
+            </div>
+            <div class="shape-field-grid">
+              ${shapeConfig.fields.map(function (dimensionField) {
+                const rawValue = state.values[dimensionField.name];
+                return `
+                  <div class="field">
+                    <label for="solver-${esc(dimensionField.name)}">${esc(text(dimensionField.label))}</label>
+                    <input
+                      id="solver-${esc(dimensionField.name)}"
+                      name="${esc(dimensionField.name)}"
+                      class="input-control"
+                      type="number"
+                      inputmode="decimal"
+                      min="0"
+                      step="any"
+                      value="${rawValue == null ? "" : esc(rawValue)}"
+                      placeholder="${esc(text(pair("Enter dimension", "أدخل البعد")))}"
+                    >
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            <div class="field">
+              <label for="solver-inertia-unit">${esc(text(pair("Computed I unit", "وحدة I المحسوب")))}</label>
+              <select
+                id="solver-inertia-unit"
+                name="inertiaUnit"
+                class="select-control"
+                data-unit-category="inertia"
+                data-selected="${esc(inertiaUnit)}"
+              ></select>
+            </div>
+            <div class="inertia-preview">
+              <h4>${esc(text(pair("Shape-based inertia preview", "معاينة عزم العطالة من الشكل")))}</h4>
+              <div class="equation-line">${esc(shapeConfig.formula)}</div>
+              ${preview && preview.complete ? `
+                <p>${preview.dimensionRows.map(esc).join("<br>")}</p>
+                <p><strong>${esc(text(pair("Computed I", "قيمة I المحسوبة")))}:</strong> ${esc(withUnit("inertia", inertiaUnit, preview.displayValue, 6))}</p>
+              ` : `<p>${esc(preview && preview.error ? preview.error : text(pair(
+                "Enter the section dimensions to calculate I automatically.",
+                "أدخل أبعاد المقطع ليتم حساب I تلقائياً."
+              )))}</p>`}
+            </div>
+          `}
+        </div>
+        <p class="field-help solver-variable__hint">${esc(mode === "direct"
+          ? text(pair("Leave this card empty only if you want AhmedSolver to solve for I itself.", "اترك هذه البطاقة فارغة فقط إذا أردت من AhmedSolver حل I نفسه."))
+          : text(pair("Shape mode treats I as a computed known value. Leave another variable empty to solve the bending equation.", "وضع الشكل يعتبر I قيمة معلومة محسوبة. اترك متغيراً آخر فارغاً لحل معادلة الانحناء.")))}</p>
+      </section>
+    `;
+  }
+
+  function renderSolverField(fieldConfig) {
+    if (fieldConfig.customType === "inertia") {
+      return renderInertiaField(fieldConfig);
+    }
+
+    return renderStandardField(fieldConfig);
+  }
+
+  function createStressWarningChecks(result, warnings, areaKey, stressKey) {
+    const stressValue = Math.abs(result.baseValues[stressKey]);
+    const areaValue = areaKey ? result.baseValues[areaKey] : null;
+
+    addMaterialWarning(warnings, pair("Stress level warning", "تحذير مستوى الإجهاد"), stressValue > 1.5e9);
+    addUnitsWarning(warnings, pair("Stress level review", "مراجعة مستوى الإجهاد"), stressValue > 5e9);
+
+    if (areaValue != null) {
+      addUnitsWarning(warnings, pair("Area realism check", "فحص واقعية المساحة"), areaValue < 1e-10 || areaValue > 1);
+    }
+  }
+
+  function createLengthWarningChecks(warnings, value, title) {
+    addUnitsWarning(warnings, title, value < 1e-5 || value > 100);
+  }
+
   const solverConfigs = {
-    "strain": {
+    stress: {
+      moduleKey: "stress",
+      formula: "σ = P / A",
+      subtitle: pair(
+        "Solve normal stress, applied load, or area by leaving one variable empty.",
+        "احسب الإجهاد العمودي أو الحمل أو المساحة عبر ترك متغير واحد فارغاً."
+      ),
+      explanation: pair(
+        "Normal stress links axial load to the resisting cross-sectional area of the member.",
+        "يربط الإجهاد العمودي الحمل المحوري بمساحة المقطع المقاومة للعضو."
+      ),
+      resultPlaceholder: pair(
+        "The solved stress variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في الإجهاد مع التحقق الهندسي والخطوات كاملة."
+      ),
+      notes: [
+        note("Sign convention", "إشارة الحمل", "Use positive load for tension and negative load for compression when the load is known.", "استخدم حملاً موجباً للشد وحملاً سالباً للضغط عندما يكون الحمل معلوماً."),
+        note("Area meaning", "معنى المساحة", "Use the net resisting area that actually carries the axial force.", "استخدم المساحة الصافية المقاومة التي تنقل الحمل المحوري فعلياً.")
+      ],
+      fields: [
+        field({
+          name: "load",
+          badge: "P",
+          title: pair("Applied load (P)", "الحمل المؤثر (P)"),
+          description: pair("Known axial force acting on the member.", "القوة المحورية المعلومة المؤثرة على العضو."),
+          category: "force",
+          defaultUnit: "kN",
+          placeholder: pair("Leave empty to solve for P", "اتركه فارغاً لحساب P")
+        }),
+        field({
+          name: "area",
+          badge: "A",
+          title: pair("Area (A)", "المساحة (A)"),
+          description: pair("Net cross-sectional area resisting the load.", "مساحة المقطع الصافية المقاومة للحمل."),
+          category: "area",
+          defaultUnit: "mm2",
+          positive: true,
+          placeholder: pair("Leave empty to solve for A", "اتركها فارغة لحساب A")
+        }),
+        field({
+          name: "stress",
+          badge: "σ",
+          title: pair("Normal stress (σ)", "الإجهاد العمودي (σ)"),
+          description: pair("Average normal stress on the loaded section.", "الإجهاد العمودي المتوسط على المقطع المحمل."),
+          category: "stress",
+          defaultUnit: "MPa",
+          placeholder: pair("Leave empty to solve for σ", "اتركه فارغاً لحساب σ")
+        })
+      ],
+      rearranged: {
+        stress: "σ = P / A",
+        load: "P = σ × A",
+        area: "A = P / σ"
+      },
+      solve: {
+        stress: function (base) {
+          return base.load / base.area;
+        },
+        load: function (base) {
+          return base.stress * base.area;
+        },
+        area: function (base) {
+          return base.load / assertNonZero(base.stress, text(pair("Normal stress (σ)", "الإجهاد العمودي (σ)")));
+        }
+      },
+      substitution: {
+        stress: function (result) {
+          return `σ = ${num(result.baseValues.load, 6)} / ${num(result.baseValues.area, 6)} = ${num(result.solvedBaseValue, 6)} Pa`;
+        },
+        load: function (result) {
+          return `P = ${num(result.baseValues.stress, 6)} × ${num(result.baseValues.area, 6)} = ${num(result.solvedBaseValue, 6)} N`;
+        },
+        area: function (result) {
+          return `A = ${num(result.baseValues.load, 6)} / ${num(result.baseValues.stress, 6)} = ${num(result.solvedBaseValue, 6)} m^2`;
+        }
+      },
+      engineeringChecks: function (result, warnings) {
+        createStressWarningChecks(result, warnings, "area", "stress");
+        addUnitsWarning(warnings, pair("Load realism check", "فحص واقعية الحمل"), Math.abs(result.baseValues.load) > 1e8);
+      }
+    },
+    strain: {
       moduleKey: "strain",
       formula: "ε = ΔL / L",
       subtitle: pair(
-        "Solve normal strain, change in length, or original length by leaving one variable empty.",
-        "احسب الانفعال العمودي أو التغير في الطول أو الطول الأصلي من خلال ترك متغير واحد فارغاً."
+        "Solve strain, change in length, or original length by leaving one variable empty.",
+        "احسب الانفعال أو التغير في الطول أو الطول الأصلي عبر ترك متغير واحد فارغاً."
       ),
       explanation: pair(
-        "Normal strain is a dimensionless measure of deformation relative to the original member length.",
-        "الانفعال العمودي هو مقياس لا بعدي للتشوه نسبةً إلى الطول الأصلي للعضو."
+        "Normal strain measures deformation relative to the original length of the member.",
+        "يقيس الانفعال العمودي مقدار التشوه نسبةً إلى الطول الأصلي للعضو."
       ),
       resultPlaceholder: pair(
-        "The solved strain variable and full steps will appear here.",
-        "سيظهر هنا المتغير المحسوب للانفعال مع خطوات الحل كاملة."
+        "The solved strain variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في الانفعال مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Sign convention", "إشارة الانفعال"),
-          text: pair(
-            "Positive strain indicates elongation, while negative strain indicates shortening.",
-            "الانفعال الموجب يدل على الاستطالة، بينما الانفعال السالب يدل على النقصان في الطول."
-          )
-        },
-        {
-          title: pair("Unit consistency", "توافق الوحدات"),
-          text: pair(
-            "AhmedSolver converts both lengths automatically, but the physical interpretation still depends on consistent measurements.",
-            "يقوم AhmedSolver بتحويل الطولين تلقائياً، لكن التفسير الفيزيائي يبقى معتمداً على اتساق القياسات."
-          )
-        }
+        note("Elastic interpretation", "التفسير المرن", "Small strains usually correspond to elastic behavior for common structural materials.", "الانفعالات الصغيرة غالباً ما تتوافق مع السلوك المرن للمواد الإنشائية الشائعة."),
+        note("Length consistency", "اتساق الأطوال", "AhmedSolver converts lengths automatically, but your dimensions should still match the physical problem.", "يقوم AhmedSolver بتحويل الأطوال تلقائياً، لكن يجب أن تظل الأبعاد متسقة مع المسألة الفعلية.")
       ],
       fields: [
-        {
+        field({
           name: "deltaLength",
           badge: "ΔL",
           title: pair("Change in length (ΔL)", "التغير في الطول (ΔL)"),
-          description: pair("Member elongation or shortening over the loaded length.", "استطالة العضو أو قصره على طول الجزء المحمل."),
+          description: pair("Total elongation or shortening of the member.", "الاستطالة أو النقصان الكلي في طول العضو."),
           category: "length",
-          defaultUnit: "mm"
-        },
-        {
-          name: "originalLength",
+          defaultUnit: "mm",
+          placeholder: pair("Leave empty to solve for ΔL", "اتركه فارغاً لحساب ΔL")
+        }),
+        field({
+          name: "length",
           badge: "L",
           title: pair("Original length (L)", "الطول الأصلي (L)"),
-          description: pair("Gauge length before any deformation occurs.", "طول القياس قبل حدوث أي تشوه."),
+          description: pair("Reference length before deformation occurs.", "الطول المرجعي قبل حدوث التشوه."),
           category: "length",
           defaultUnit: "m",
-          positive: true
-        },
-        {
+          positive: true,
+          placeholder: pair("Leave empty to solve for L", "اتركه فارغاً لحساب L")
+        }),
+        field({
           name: "strain",
           badge: "ε",
           title: pair("Normal strain (ε)", "الانفعال العمودي (ε)"),
-          description: pair("Dimensionless deformation relative to the original length.", "تشوه لا بعدي نسبةً إلى الطول الأصلي."),
+          description: pair("Dimensionless deformation ratio.", "نسبة التشوه اللابعدية."),
           category: "strain",
-          defaultUnit: "microstrain"
-        }
+          defaultUnit: "microstrain",
+          placeholder: pair("Leave empty to solve for ε", "اتركه فارغاً لحساب ε")
+        })
       ],
       rearranged: {
         strain: "ε = ΔL / L",
         deltaLength: "ΔL = ε × L",
-        originalLength: "L = ΔL / ε"
+        length: "L = ΔL / ε"
       },
       solve: {
         strain: function (base) {
-          return base.deltaLength / base.originalLength;
+          return base.deltaLength / base.length;
         },
         deltaLength: function (base) {
-          return base.strain * base.originalLength;
+          return base.strain * base.length;
         },
-        originalLength: function (base) {
+        length: function (base) {
           return base.deltaLength / assertNonZero(base.strain, text(pair("Normal strain (ε)", "الانفعال العمودي (ε)")));
         }
       },
       substitution: {
         strain: function (result) {
-          return `ε = ${num(result.baseValues.deltaLength, 6)} / ${num(result.baseValues.originalLength, 6)} = ${num(result.solvedBaseValue, 6)} m/m`;
+          return `ε = ${num(result.baseValues.deltaLength, 6)} / ${num(result.baseValues.length, 6)} = ${num(result.solvedBaseValue, 6)} m/m`;
         },
         deltaLength: function (result) {
-          return `ΔL = ${num(result.baseValues.strain, 6)} × ${num(result.baseValues.originalLength, 6)} = ${num(result.solvedBaseValue, 6)} m`;
+          return `ΔL = ${num(result.baseValues.strain, 6)} × ${num(result.baseValues.length, 6)} = ${num(result.solvedBaseValue, 6)} m`;
         },
-        originalLength: function (result) {
+        length: function (result) {
           return `L = ${num(result.baseValues.deltaLength, 6)} / ${num(result.baseValues.strain, 6)} = ${num(result.solvedBaseValue, 6)} m`;
         }
+      },
+      engineeringChecks: function (result, warnings) {
+        const strainMagnitude = Math.abs(result.baseValues.strain);
+        addMaterialWarning(warnings, pair("Strain realism check", "فحص واقعية الانفعال"), strainMagnitude > 0.02);
+        addUnitsWarning(warnings, pair("Large deformation review", "مراجعة التشوه الكبير"), Math.abs(result.baseValues.deltaLength) > Math.abs(result.baseValues.length));
+        createLengthWarningChecks(warnings, result.baseValues.length, pair("Original length review", "مراجعة الطول الأصلي"));
       }
     },
     "hookes-law": {
       moduleKey: "hookesLaw",
       formula: "σ = E × ε",
       subtitle: pair(
-        "Solve stress, elastic modulus, or strain using Hooke's Law by leaving one field empty.",
-        "احسب الإجهاد أو معامل المرونة أو الانفعال باستخدام قانون هوك عبر ترك حقل واحد فارغاً."
+        "Solve stress, elastic modulus, or strain using Hooke's Law by leaving one variable empty.",
+        "احسب الإجهاد أو معامل المرونة أو الانفعال باستخدام قانون هوك عبر ترك متغير واحد فارغاً."
       ),
       explanation: pair(
-        "Hooke's Law relates stress and strain in the elastic range of a material.",
-        "يربط قانون هوك بين الإجهاد والانفعال ضمن المجال المرن للمادة."
+        "Hooke's Law is valid while the material response remains in the linear elastic range.",
+        "يكون قانون هوك صالحاً عندما تبقى استجابة المادة ضمن المجال المرن الخطي."
       ),
       resultPlaceholder: pair(
-        "The solved Hooke's Law variable and the full derivation will appear here.",
-        "سيظهر هنا المتغير المحسوب في قانون هوك مع الاشتقاق الكامل."
+        "The solved Hooke's Law variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في قانون هوك مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Elastic range", "المجال المرن"),
-          text: pair(
-            "The relation σ = E × ε is valid while the material remains in its linear elastic region.",
-            "العلاقة σ = E × ε تكون صحيحة ما دامت المادة ضمن المجال المرن الخطي."
-          )
-        },
-        {
-          title: pair("Strain units", "وحدات الانفعال"),
-          text: pair(
-            "Microstrain and percent are converted automatically into the base ratio before solving.",
-            "يتم تحويل المايكروسترين والنسبة المئوية تلقائياً إلى النسبة الأساسية قبل الحل."
-          )
-        }
+        note("Elastic limit", "الحد المرن", "If strain becomes too large, the linear relation may no longer represent the material accurately.", "إذا أصبح الانفعال كبيراً جداً فقد لا تمثل العلاقة الخطية المادة بدقة."),
+        note("Material stiffness", "صلابة المادة", "Use an elastic modulus consistent with the chosen material and temperature.", "استخدم معامل مرونة متوافقاً مع المادة ودرجة الحرارة المختارتين.")
       ],
       fields: [
-        {
+        field({
           name: "stress",
           badge: "σ",
           title: pair("Normal stress (σ)", "الإجهاد العمودي (σ)"),
-          description: pair("Material stress produced within the elastic range.", "الإجهاد المتولد في المادة ضمن المجال المرن."),
+          description: pair("Stress developed under elastic loading.", "الإجهاد المتولد تحت تحميل مرن."),
           category: "stress",
-          defaultUnit: "MPa"
-        },
-        {
+          defaultUnit: "MPa",
+          placeholder: pair("Leave empty to solve for σ", "اتركه فارغاً لحساب σ")
+        }),
+        field({
           name: "elasticModulus",
           badge: "E",
           title: pair("Elastic modulus (E)", "معامل المرونة (E)"),
-          description: pair("Material stiffness that links stress to strain.", "صلابة المادة التي تربط الإجهاد بالانفعال."),
+          description: pair("Young's modulus for the material.", "معامل يونغ للمادة."),
           category: "stress",
           defaultUnit: "GPa",
-          positive: true
-        },
-        {
+          positive: true,
+          placeholder: pair("Leave empty to solve for E", "اتركه فارغاً لحساب E")
+        }),
+        field({
           name: "strain",
           badge: "ε",
           title: pair("Normal strain (ε)", "الانفعال العمودي (ε)"),
-          description: pair("Dimensionless deformation used in Hooke's Law.", "التشوه اللابعدي المستخدم في قانون هوك."),
+          description: pair("Elastic strain corresponding to the stress level.", "الانفعال المرن الموافق لمستوى الإجهاد."),
           category: "strain",
-          defaultUnit: "microstrain"
-        }
+          defaultUnit: "microstrain",
+          placeholder: pair("Leave empty to solve for ε", "اتركه فارغاً لحساب ε")
+        })
       ],
       rearranged: {
         stress: "σ = E × ε",
@@ -726,83 +1303,81 @@
         strain: function (result) {
           return `ε = ${num(result.baseValues.stress, 6)} / ${num(result.baseValues.elasticModulus, 6)} = ${num(result.solvedBaseValue, 6)} m/m`;
         }
+      },
+      engineeringChecks: function (result, warnings) {
+        createStressWarningChecks(result, warnings, null, "stress");
+        addMaterialWarning(warnings, pair("Strain realism check", "فحص واقعية الانفعال"), Math.abs(result.baseValues.strain) > 0.02);
+        addUnitsWarning(warnings, pair("Elastic modulus review", "مراجعة معامل المرونة"), result.baseValues.elasticModulus < 1e8 || result.baseValues.elasticModulus > 5e11);
       }
     },
     "axial-deformation": {
       moduleKey: "axialDeformation",
       formula: "ΔL = (P × L) / (A × E)",
       subtitle: pair(
-        "Solve any single unknown in the axial deformation equation by leaving that variable empty.",
-        "احسب أي متغير مجهول واحد في معادلة الاستطالة المحورية من خلال ترك ذلك المتغير فارغاً."
+        "Solve any one missing variable in the axial deformation equation by leaving it empty.",
+        "احسب أي متغير مفقود واحد في معادلة الاستطالة المحورية عبر تركه فارغاً."
       ),
       explanation: pair(
-        "This equation models elastic axial deformation for a prismatic member under direct load.",
-        "تمثل هذه المعادلة التشوه المحوري المرن لعضو منشوري تحت حمل مباشر."
+        "This relation models elastic axial deformation for a prismatic member under direct load.",
+        "تمثل هذه العلاقة الاستطالة المحورية المرنة لعضو منشوري تحت حمل مباشر."
       ),
       resultPlaceholder: pair(
-        "The solved axial variable and full engineering steps will appear here.",
-        "سيظهر هنا المتغير المحوري المحسوب مع الخطوات الهندسية الكاملة."
+        "The solved axial variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في الاستطالة المحورية مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Member assumptions", "افتراضات العضو"),
-          text: pair(
-            "The relation assumes a uniform cross-section, constant material properties, and elastic behavior.",
-            "تفترض العلاقة أن المقطع ثابت وأن خصائص المادة ثابتة وأن السلوك مرن."
-          )
-        },
-        {
-          title: pair("Stiffness effect", "تأثير الصلابة"),
-          text: pair(
-            "A larger area or larger elastic modulus reduces the axial deformation under the same load.",
-            "المساحة الأكبر أو معامل المرونة الأكبر يقللان من الاستطالة المحورية تحت نفس الحمل."
-          )
-        }
+        note("Uniform member", "عضو منتظم", "This equation assumes a prismatic member with uniform area and elastic modulus along the length.", "تفترض هذه المعادلة عضواً منشورياً بمساحة ومعامل مرونة منتظمين على الطول."),
+        note("Small deformation", "تشوه صغير", "The formulation is most reliable when deformation remains small relative to the member length.", "تكون الصيغة أكثر موثوقية عندما يبقى التشوه صغيراً مقارنة بطول العضو.")
       ],
       fields: [
-        {
-          name: "load",
-          badge: "P",
-          title: pair("Applied load (P)", "الحمل المطبق (P)"),
-          description: pair("Direct axial force acting on the member.", "القوة المحورية المباشرة المؤثرة على العضو."),
-          category: "force",
-          defaultUnit: "kN"
-        },
-        {
-          name: "length",
-          badge: "L",
-          title: pair("Member length (L)", "طول العضو (L)"),
-          description: pair("Loaded member length measured along the axis.", "طول العضو المحمل المقاس على امتداد المحور."),
-          category: "length",
-          defaultUnit: "m",
-          positive: true
-        },
-        {
-          name: "area",
-          badge: "A",
-          title: pair("Area (A)", "المساحة (A)"),
-          description: pair("Cross-sectional area resisting the axial load.", "المساحة المقطعية المقاومة للحمل المحوري."),
-          category: "area",
-          defaultUnit: "mm2",
-          positive: true
-        },
-        {
-          name: "elasticModulus",
-          badge: "E",
-          title: pair("Elastic modulus (E)", "معامل المرونة (E)"),
-          description: pair("Material stiffness used in the axial deformation model.", "صلابة المادة المستخدمة في نموذج التشوه المحوري."),
-          category: "stress",
-          defaultUnit: "GPa",
-          positive: true
-        },
-        {
+        field({
           name: "deltaLength",
           badge: "ΔL",
           title: pair("Axial deformation (ΔL)", "الاستطالة المحورية (ΔL)"),
-          description: pair("Total change in member length due to the axial load.", "التغير الكلي في طول العضو بسبب الحمل المحوري."),
+          description: pair("Net elastic elongation or shortening of the member.", "الاستطالة أو النقصان المرن الصافي للعضو."),
           category: "length",
-          defaultUnit: "mm"
-        }
+          defaultUnit: "mm",
+          placeholder: pair("Leave empty to solve for ΔL", "اتركه فارغاً لحساب ΔL")
+        }),
+        field({
+          name: "load",
+          badge: "P",
+          title: pair("Applied load (P)", "الحمل المؤثر (P)"),
+          description: pair("Axial load applied to the member.", "الحمل المحوري المؤثر على العضو."),
+          category: "force",
+          defaultUnit: "kN",
+          placeholder: pair("Leave empty to solve for P", "اتركه فارغاً لحساب P")
+        }),
+        field({
+          name: "length",
+          badge: "L",
+          title: pair("Original length (L)", "الطول الأصلي (L)"),
+          description: pair("Member length before loading.", "طول العضو قبل التحميل."),
+          category: "length",
+          defaultUnit: "m",
+          positive: true,
+          placeholder: pair("Leave empty to solve for L", "اتركه فارغاً لحساب L")
+        }),
+        field({
+          name: "area",
+          badge: "A",
+          title: pair("Area (A)", "المساحة (A)"),
+          description: pair("Uniform cross-sectional area of the member.", "المساحة المقطعية المنتظمة للعضو."),
+          category: "area",
+          defaultUnit: "mm2",
+          positive: true,
+          placeholder: pair("Leave empty to solve for A", "اتركها فارغة لحساب A")
+        }),
+        field({
+          name: "elasticModulus",
+          badge: "E",
+          title: pair("Elastic modulus (E)", "معامل المرونة (E)"),
+          description: pair("Young's modulus for the member material.", "معامل يونغ لمادة العضو."),
+          category: "stress",
+          defaultUnit: "GPa",
+          positive: true,
+          placeholder: pair("Leave empty to solve for E", "اتركه فارغاً لحساب E")
+        })
       ],
       rearranged: {
         deltaLength: "ΔL = (P × L) / (A × E)",
@@ -819,13 +1394,13 @@
           return (base.deltaLength * base.area * base.elasticModulus) / base.length;
         },
         length: function (base) {
-          return (base.deltaLength * base.area * base.elasticModulus) / assertNonZero(base.load, text(pair("Applied load (P)", "الحمل المطبق (P)")));
+          return (base.deltaLength * base.area * base.elasticModulus) / assertNonZero(base.load, text(pair("Applied load (P)", "الحمل المؤثر (P)")));
         },
         area: function (base) {
-          return (base.load * base.length) / (assertNonZero(base.deltaLength, text(pair("Axial deformation (ΔL)", "الاستطالة المحورية (ΔL)"))) * base.elasticModulus);
+          return (base.load * base.length) / assertNonZero(base.deltaLength * base.elasticModulus, text(pair("ΔL × E", "ΔL × E")));
         },
         elasticModulus: function (base) {
-          return (base.load * base.length) / (base.area * assertNonZero(base.deltaLength, text(pair("Axial deformation (ΔL)", "الاستطالة المحورية (ΔL)"))));
+          return (base.load * base.length) / assertNonZero(base.area * base.deltaLength, text(pair("A × ΔL", "A × ΔL")));
         }
       },
       substitution: {
@@ -844,65 +1419,78 @@
         elasticModulus: function (result) {
           return `E = (${num(result.baseValues.load, 6)} × ${num(result.baseValues.length, 6)}) / (${num(result.baseValues.area, 6)} × ${num(result.baseValues.deltaLength, 6)}) = ${num(result.solvedBaseValue, 6)} Pa`;
         }
+      },
+      decorateResult: function (result) {
+        result.axialStressBase = result.baseValues.load / result.baseValues.area;
+        result.axialStrainBase = result.baseValues.deltaLength / result.baseValues.length;
+      },
+      metrics: function (result) {
+        return [
+          {
+            label: text(pair("Implied axial stress", "الإجهاد المحوري الضمني")),
+            value: withUnit("stress", "MPa", fromBase("stress", result.axialStressBase, "MPa"), 6)
+          },
+          {
+            label: text(pair("Implied axial strain", "الانفعال المحوري الضمني")),
+            value: withUnit("strain", "microstrain", fromBase("strain", result.axialStrainBase, "microstrain"), 6)
+          }
+        ];
+      },
+      engineeringChecks: function (result, warnings) {
+        createStressWarningChecks({ baseValues: { area: result.baseValues.area, stress: result.axialStressBase } }, warnings, "area", "stress");
+        addMaterialWarning(warnings, pair("Axial strain review", "مراجعة الانفعال المحوري"), Math.abs(result.axialStrainBase) > 0.02);
+        addUnitsWarning(warnings, pair("Deformation review", "مراجعة الاستطالة"), Math.abs(result.baseValues.deltaLength) > Math.abs(result.baseValues.length));
+        addUnitsWarning(warnings, pair("Elastic modulus review", "مراجعة معامل المرونة"), result.baseValues.elasticModulus < 1e8 || result.baseValues.elasticModulus > 5e11);
       }
     },
     "shear-stress": {
       moduleKey: "shearStress",
       formula: "τ = V / A",
       subtitle: pair(
-        "Solve shear stress, shear force, or resisting area by leaving one variable empty.",
-        "احسب إجهاد القص أو قوة القص أو المساحة المقاومة عبر ترك متغير واحد فارغاً."
+        "Solve average shear stress, direct shear force, or resisting area by leaving one variable empty.",
+        "احسب إجهاد القص المتوسط أو قوة القص المباشرة أو المساحة المقاومة عبر ترك متغير واحد فارغاً."
       ),
       explanation: pair(
-        "Average shear stress is found by dividing the direct shear force by the resisting area.",
-        "يُحسب إجهاد القص المتوسط بقسمة قوة القص المباشرة على المساحة المقاومة."
+        "Average shear stress is the direct shear force divided by the resisting area.",
+        "إجهاد القص المتوسط يساوي قوة القص المباشرة مقسومة على المساحة المقاومة."
       ),
       resultPlaceholder: pair(
-        "The solved shear variable and the worked solution will appear here.",
-        "سيظهر هنا متغير القص المحسوب مع الحل التفصيلي."
+        "The solved shear variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في القص مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Average value", "القيمة المتوسطة"),
-          text: pair(
-            "This equation gives the average shear stress over the resisting area.",
-            "تعطي هذه المعادلة إجهاد القص المتوسط على كامل المساحة المقاومة."
-          )
-        },
-        {
-          title: pair("Area matters", "أثر المساحة"),
-          text: pair(
-            "A larger resisting area lowers the average shear stress under the same shear force.",
-            "المساحة المقاومة الأكبر تقلل إجهاد القص المتوسط تحت نفس قوة القص."
-          )
-        }
+        note("Average value", "قيمة متوسطة", "This relation gives average shear stress and does not capture the full nonuniform distribution in all shapes.", "تعطي هذه العلاقة إجهاد قص متوسطاً ولا تمثل التوزيع غير المنتظم بالكامل في جميع الأشكال."),
+        note("Area selection", "اختيار المساحة", "Use the area that actually resists the direct shear path.", "استخدم المساحة التي تقاوم مسار القص المباشر فعلياً.")
       ],
       fields: [
-        {
+        field({
           name: "shearForce",
           badge: "V",
           title: pair("Shear force (V)", "قوة القص (V)"),
           description: pair("Direct shear force acting on the section.", "قوة القص المباشرة المؤثرة على المقطع."),
           category: "force",
-          defaultUnit: "kN"
-        },
-        {
+          defaultUnit: "kN",
+          placeholder: pair("Leave empty to solve for V", "اتركه فارغاً لحساب V")
+        }),
+        field({
           name: "area",
           badge: "A",
-          title: pair("Resisting area (A)", "المساحة المقاومة (A)"),
-          description: pair("Area resisting the applied shear force.", "المساحة التي تقاوم قوة القص المطبقة."),
+          title: pair("Area (A)", "المساحة (A)"),
+          description: pair("Area resisting the direct shear force.", "المساحة المقاومة لقوة القص المباشرة."),
           category: "area",
           defaultUnit: "mm2",
-          positive: true
-        },
-        {
+          positive: true,
+          placeholder: pair("Leave empty to solve for A", "اتركها فارغة لحساب A")
+        }),
+        field({
           name: "tau",
           badge: "τ",
           title: pair("Shear stress (τ)", "إجهاد القص (τ)"),
-          description: pair("Average shear stress developed on the resisting area.", "إجهاد القص المتوسط المتولد على المساحة المقاومة."),
+          description: pair("Average direct shear stress.", "إجهاد القص المباشر المتوسط."),
           category: "stress",
-          defaultUnit: "MPa"
-        }
+          defaultUnit: "MPa",
+          placeholder: pair("Leave empty to solve for τ", "اتركه فارغاً لحساب τ")
+        })
       ],
       rearranged: {
         tau: "τ = V / A",
@@ -930,74 +1518,70 @@
         area: function (result) {
           return `A = ${num(result.baseValues.shearForce, 6)} / ${num(result.baseValues.tau, 6)} = ${num(result.solvedBaseValue, 6)} m^2`;
         }
+      },
+      engineeringChecks: function (result, warnings) {
+        createStressWarningChecks({ baseValues: { area: result.baseValues.area, stress: result.baseValues.tau } }, warnings, "area", "stress");
+        addUnitsWarning(warnings, pair("Shear force review", "مراجعة قوة القص"), Math.abs(result.baseValues.shearForce) > 1e8);
       }
     },
-    "torsion": {
+    torsion: {
       moduleKey: "torsion",
       formula: "τ = (T × r) / J",
       subtitle: pair(
-        "Solve torsional shear stress or any one missing torsion variable from the same equation.",
-        "احسب إجهاد القص الالتوائي أو أي متغير مفقود واحد من نفس معادلة الالتواء."
+        "Solve torsional shear stress or any one missing torsion variable by leaving it empty.",
+        "احسب إجهاد القص الالتوائي أو أي متغير التواء مفقود عبر تركه فارغاً."
       ),
       explanation: pair(
-        "The torsion relation links torque, radius, and polar moment of inertia to the resulting shear stress.",
-        "تربط علاقة الالتواء بين العزم ونصف القطر والعزم القطبي وبين إجهاد القص الناتج."
+        "The torsion relation links torque, outer radius, and polar moment to the resulting shear stress.",
+        "تربط علاقة الالتواء العزم ونصف القطر الخارجي والعزم القطبي بإجهاد القص الناتج."
       ),
       resultPlaceholder: pair(
-        "The solved torsion variable and step-by-step work will appear here.",
-        "سيظهر هنا المتغير المحسوب في الالتواء مع خطوات الحل."
+        "The solved torsion variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في الالتواء مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Outer radius", "نصف القطر الخارجي"),
-          text: pair(
-            "Using the outer radius gives the maximum torsional shear stress in a circular shaft.",
-            "استخدام نصف القطر الخارجي يعطي إجهاد القص الالتوائي الأعظمي في العمود الدائري."
-          )
-        },
-        {
-          title: pair("Section resistance", "مقاومة المقطع"),
-          text: pair(
-            "A larger polar moment of inertia reduces torsional stress for the same torque.",
-            "العزم القطبي الأكبر يقلل الإجهاد الالتوائي عند نفس قيمة العزم."
-          )
-        }
+        note("Section assumption", "افتراض المقطع", "Use this relation for circular shafts where the torsion formula is directly applicable.", "استخدم هذه العلاقة للأعمدة الدائرية حيث تكون صيغة الالتواء قابلة للتطبيق مباشرة."),
+        note("Outer radius", "نصف القطر الخارجي", "The highest shear stress occurs at the outer radius of the shaft.", "يحدث أكبر إجهاد قص عند نصف القطر الخارجي للعمود.")
       ],
       fields: [
-        {
+        field({
+          name: "tau",
+          badge: "τ",
+          title: pair("Shear stress (τ)", "إجهاد القص (τ)"),
+          description: pair("Torsional shear stress at the chosen radius.", "إجهاد القص الالتوائي عند نصف القطر المختار."),
+          category: "stress",
+          defaultUnit: "MPa",
+          placeholder: pair("Leave empty to solve for τ", "اتركه فارغاً لحساب τ")
+        }),
+        field({
           name: "torque",
           badge: "T",
           title: pair("Torque (T)", "العزم (T)"),
-          description: pair("Applied twisting moment on the shaft.", "عزم الالتواء المطبق على العمود."),
+          description: pair("Applied torque carried by the shaft.", "العزم المطبق الذي يحمله العمود."),
           category: "torque",
-          defaultUnit: "kNm"
-        },
-        {
+          defaultUnit: "kNm",
+          placeholder: pair("Leave empty to solve for T", "اتركه فارغاً لحساب T")
+        }),
+        field({
           name: "radius",
           badge: "r",
           title: pair("Radius (r)", "نصف القطر (r)"),
-          description: pair("Distance from the shaft center to the evaluation point.", "المسافة من مركز العمود إلى نقطة التقييم."),
+          description: pair("Distance from the shaft center to the evaluated point.", "المسافة من مركز العمود إلى النقطة المقيمة."),
           category: "length",
           defaultUnit: "mm",
-          positive: true
-        },
-        {
+          positive: true,
+          placeholder: pair("Leave empty to solve for r", "اتركه فارغاً لحساب r")
+        }),
+        field({
           name: "polarInertia",
           badge: "J",
-          title: pair("Polar inertia (J)", "العزم القطبي (J)"),
-          description: pair("Polar moment of inertia of the shaft section.", "العزم القطبي لعطالة مقطع العمود."),
+          title: pair("Polar moment (J)", "العزم القطبي (J)"),
+          description: pair("Polar moment of inertia of the shaft section.", "عزم العطالة القطبي لمقطع العمود."),
           category: "inertia",
           defaultUnit: "mm4",
-          positive: true
-        },
-        {
-          name: "tau",
-          badge: "τ",
-          title: pair("Torsional shear stress (τ)", "إجهاد القص الالتوائي (τ)"),
-          description: pair("Maximum or evaluated torsional shear stress.", "إجهاد القص الالتوائي المحسوب أو الأعظمي."),
-          category: "stress",
-          defaultUnit: "MPa"
-        }
+          positive: true,
+          placeholder: pair("Leave empty to solve for J", "اتركه فارغاً لحساب J")
+        })
       ],
       rearranged: {
         tau: "τ = (T × r) / J",
@@ -1010,13 +1594,13 @@
           return (base.torque * base.radius) / base.polarInertia;
         },
         torque: function (base) {
-          return (base.tau * base.polarInertia) / base.radius;
+          return (base.tau * base.polarInertia) / assertNonZero(base.radius, text(pair("Radius (r)", "نصف القطر (r)")));
         },
         radius: function (base) {
           return (base.tau * base.polarInertia) / assertNonZero(base.torque, text(pair("Torque (T)", "العزم (T)")));
         },
         polarInertia: function (base) {
-          return (base.torque * base.radius) / assertNonZero(base.tau, text(pair("Torsional shear stress (τ)", "إجهاد القص الالتوائي (τ)")));
+          return (base.torque * base.radius) / assertNonZero(base.tau, text(pair("Shear stress (τ)", "إجهاد القص (τ)")));
         }
       },
       substitution: {
@@ -1024,7 +1608,7 @@
           return `τ = (${num(result.baseValues.torque, 6)} × ${num(result.baseValues.radius, 6)}) / ${num(result.baseValues.polarInertia, 6)} = ${num(result.solvedBaseValue, 6)} Pa`;
         },
         torque: function (result) {
-          return `T = (${num(result.baseValues.tau, 6)} × ${num(result.baseValues.polarInertia, 6)}) / ${num(result.baseValues.radius, 6)} = ${num(result.solvedBaseValue, 6)} N*m`;
+          return `T = (${num(result.baseValues.tau, 6)} × ${num(result.baseValues.polarInertia, 6)}) / ${num(result.baseValues.radius, 6)} = ${num(result.solvedBaseValue, 6)} N·m`;
         },
         radius: function (result) {
           return `r = (${num(result.baseValues.tau, 6)} × ${num(result.baseValues.polarInertia, 6)}) / ${num(result.baseValues.torque, 6)} = ${num(result.solvedBaseValue, 6)} m`;
@@ -1032,6 +1616,12 @@
         polarInertia: function (result) {
           return `J = (${num(result.baseValues.torque, 6)} × ${num(result.baseValues.radius, 6)}) / ${num(result.baseValues.tau, 6)} = ${num(result.solvedBaseValue, 6)} m^4`;
         }
+      },
+      engineeringChecks: function (result, warnings) {
+        addMaterialWarning(warnings, pair("Torsional stress warning", "تحذير إجهاد الالتواء"), Math.abs(result.baseValues.tau) > 1.2e9);
+        addUnitsWarning(warnings, pair("Radius review", "مراجعة نصف القطر"), result.baseValues.radius < 1e-6 || result.baseValues.radius > 5);
+        addUnitsWarning(warnings, pair("Polar moment review", "مراجعة العزم القطبي"), result.baseValues.polarInertia < 1e-16 || result.baseValues.polarInertia > 10);
+        addUnitsWarning(warnings, pair("Torque review", "مراجعة العزم"), Math.abs(result.baseValues.torque) > 1e8);
       }
     },
     "bending-stress": {
@@ -1039,66 +1629,61 @@
       formula: "σ = (M × y) / I",
       subtitle: pair(
         "Solve bending stress or any one missing bending variable by leaving exactly one field empty.",
-        "احسب إجهاد الانحناء أو أي متغير مفقود واحد في الانحناء من خلال ترك حقل واحد فارغاً."
+        "احسب إجهاد الانحناء أو أي متغير انحناء مفقود عبر ترك حقل واحد فارغاً تماماً."
       ),
       explanation: pair(
-        "Flexural stress depends on bending moment, distance from the neutral axis, and section inertia.",
+        "Flexural stress depends on bending moment, distance from the neutral axis, and the section moment of inertia.",
         "يعتمد إجهاد الانحناء على عزم الانحناء والمسافة عن المحور المتعادل وعزم عطالة المقطع."
       ),
       resultPlaceholder: pair(
-        "The solved bending variable and the full derivation will appear here.",
-        "سيظهر هنا المتغير المحسوب في الانحناء مع الاشتقاق الكامل."
+        "The solved bending variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير المحسوب في الانحناء مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Distance sign", "إشارة المسافة"),
-          text: pair(
-            "The sign of y depends on your chosen coordinate convention relative to the neutral axis.",
-            "تعتمد إشارة y على اتفاقية المحاور التي تعتمدها بالنسبة إلى المحور المتعادل."
-          )
-        },
-        {
-          title: pair("Section stiffness", "صلابة المقطع"),
-          text: pair(
-            "Increasing the second moment of area reduces flexural stress for the same bending moment.",
-            "زيادة عزم العطالة للمقطع تقلل إجهاد الانحناء عند نفس عزم الانحناء."
-          )
-        }
+        note("Neutral axis distance", "المسافة عن المحور المتعادل", "Use the distance from the neutral axis to the fiber where stress is being evaluated.", "استخدم المسافة من المحور المتعادل إلى الليف الذي يتم تقييم الإجهاد عنده."),
+        note("Section property", "خاصية المقطع", "If the section shape is known, AhmedSolver can calculate I automatically from the entered dimensions.", "إذا كان شكل المقطع معروفاً، يمكن لـ AhmedSolver حساب I تلقائياً من الأبعاد المدخلة.")
       ],
+      captureExtraState: captureBendingExtras,
+      parseSubmission: parseBendingSubmission,
       fields: [
-        {
+        field({
           name: "moment",
           badge: "M",
           title: pair("Bending moment (M)", "عزم الانحناء (M)"),
-          description: pair("Internal or applied bending moment at the section.", "عزم الانحناء الداخلي أو المطبق عند المقطع."),
+          description: pair("Bending moment at the section of interest.", "عزم الانحناء عند المقطع المدروس."),
           category: "torque",
-          defaultUnit: "kNm"
-        },
-        {
+          defaultUnit: "kNm",
+          placeholder: pair("Leave empty to solve for M", "اتركه فارغاً لحساب M")
+        }),
+        field({
           name: "distance",
           badge: "y",
           title: pair("Distance from neutral axis (y)", "المسافة عن المحور المتعادل (y)"),
-          description: pair("Location of the evaluated fiber from the neutral axis.", "موضع الليف المراد تقييمه بالنسبة إلى المحور المتعادل."),
+          description: pair("Distance from the neutral axis to the evaluated fiber.", "المسافة من المحور المتعادل إلى الليف المقيم."),
           category: "length",
-          defaultUnit: "mm"
-        },
-        {
+          defaultUnit: "mm",
+          positive: true,
+          placeholder: pair("Leave empty to solve for y", "اتركه فارغاً لحساب y")
+        }),
+        field({
           name: "inertia",
           badge: "I",
           title: pair("Second moment of area (I)", "عزم العطالة (I)"),
-          description: pair("Section property governing resistance to bending.", "خاصية مقطعية تتحكم في مقاومة الانحناء."),
+          description: pair("Section property that governs resistance to bending.", "خاصية المقطع التي تتحكم في مقاومة الانحناء."),
           category: "inertia",
           defaultUnit: "mm4",
-          positive: true
-        },
-        {
+          positive: true,
+          customType: "inertia"
+        }),
+        field({
           name: "stress",
           badge: "σ",
           title: pair("Bending stress (σ)", "إجهاد الانحناء (σ)"),
           description: pair("Flexural stress at the selected distance from the neutral axis.", "إجهاد الانحناء عند المسافة المحددة عن المحور المتعادل."),
           category: "stress",
-          defaultUnit: "MPa"
-        }
+          defaultUnit: "MPa",
+          placeholder: pair("Leave empty to solve for σ", "اتركه فارغاً لحساب σ")
+        })
       ],
       rearranged: {
         stress: "σ = (M × y) / I",
@@ -1125,7 +1710,7 @@
           return `σ = (${num(result.baseValues.moment, 6)} × ${num(result.baseValues.distance, 6)}) / ${num(result.baseValues.inertia, 6)} = ${num(result.solvedBaseValue, 6)} Pa`;
         },
         moment: function (result) {
-          return `M = (${num(result.baseValues.stress, 6)} × ${num(result.baseValues.inertia, 6)}) / ${num(result.baseValues.distance, 6)} = ${num(result.solvedBaseValue, 6)} N*m`;
+          return `M = (${num(result.baseValues.stress, 6)} × ${num(result.baseValues.inertia, 6)}) / ${num(result.baseValues.distance, 6)} = ${num(result.solvedBaseValue, 6)} N·m`;
         },
         distance: function (result) {
           return `y = (${num(result.baseValues.stress, 6)} × ${num(result.baseValues.inertia, 6)}) / ${num(result.baseValues.moment, 6)} = ${num(result.solvedBaseValue, 6)} m`;
@@ -1133,74 +1718,105 @@
         inertia: function (result) {
           return `I = (${num(result.baseValues.moment, 6)} × ${num(result.baseValues.distance, 6)}) / ${num(result.baseValues.stress, 6)} = ${num(result.solvedBaseValue, 6)} m^4`;
         }
+      },
+      preSteps: function (result) {
+        if (!result.meta.inertia || result.meta.inertia.mode !== "shape") {
+          return [];
+        }
+
+        return [
+          {
+            title: text(pair("Compute I from the selected shape", "احسب I من الشكل المختار")),
+            body: `<div class="equation-line">${esc(result.meta.inertia.formula)}</div><p>${result.meta.inertia.dimensionRows.map(esc).join("<br>")}<br><strong>${esc(text(pair("Computed I", "قيمة I المحسوبة")))}:</strong> ${esc(withUnit("inertia", result.meta.inertia.outputUnit, result.meta.inertia.displayValue, 6))}</p>`
+          }
+        ];
+      },
+      metrics: function (result) {
+        const metrics = [];
+
+        if (result.meta.inertia && result.meta.inertia.mode === "shape") {
+          metrics.push({
+            label: text(pair("Computed I from shape", "قيمة I من الشكل")),
+            value: withUnit("inertia", result.meta.inertia.outputUnit, result.meta.inertia.displayValue, 6)
+          });
+        }
+
+        return metrics;
+      },
+      preConversionLines: function (result) {
+        if (!result.meta.inertia || result.meta.inertia.mode !== "shape") {
+          return [];
+        }
+
+        return [
+          `${text(pair("Selected shape", "الشكل المختار"))}: ${text(result.meta.inertia.shapeTitle)}`
+        ];
+      },
+      engineeringChecks: function (result, warnings) {
+        addMaterialWarning(warnings, pair("Bending stress warning", "تحذير إجهاد الانحناء"), Math.abs(result.baseValues.stress) > 1.5e9);
+        addUnitsWarning(warnings, pair("Distance review", "مراجعة المسافة y"), result.baseValues.distance < 1e-6 || result.baseValues.distance > 5);
+        addUnitsWarning(warnings, pair("Moment of inertia review", "مراجعة عزم العطالة"), result.baseValues.inertia < 1e-16 || result.baseValues.inertia > 10);
+        addUnitsWarning(warnings, pair("Bending moment review", "مراجعة عزم الانحناء"), Math.abs(result.baseValues.moment) > 1e8);
       }
     },
     "thermal-stress": {
       moduleKey: "thermalStress",
       formula: "σ = E × α × ΔT",
       subtitle: pair(
-        "Solve restrained thermal stress or any one missing thermal variable from the same relation.",
-        "احسب الإجهاد الحراري المقيد أو أي متغير حراري مفقود واحد من نفس العلاقة."
+        "Solve restrained thermal stress or any one missing thermal variable by leaving it empty.",
+        "احسب الإجهاد الحراري المقيد أو أي متغير حراري مفقود عبر تركه فارغاً."
       ),
       explanation: pair(
-        "This stress equation assumes the member is restrained against free thermal expansion or contraction.",
-        "تفترض معادلة الإجهاد هذه أن العضو مقيد ضد التمدد أو الانكماش الحراري الحر."
+        "This relation assumes the member is restrained against free thermal expansion or contraction.",
+        "تفترض هذه العلاقة أن العضو مقيد ضد التمدد أو الانكماش الحراري الحر."
       ),
       resultPlaceholder: pair(
-        "The solved thermal variable and the derived thermal strain will appear here.",
-        "سيظهر هنا المتغير الحراري المحسوب مع الانفعال الحراري المشتق."
+        "The solved thermal variable, engineering checks, and full steps will appear here.",
+        "سيظهر هنا المتغير الحراري المحسوب مع التحقق الهندسي والخطوات كاملة."
       ),
       notes: [
-        {
-          title: pair("Restrained condition", "حالة التقييد"),
-          text: pair(
-            "Thermal stress develops only when expansion or contraction is restrained.",
-            "يتولد الإجهاد الحراري فقط عندما يكون التمدد أو الانكماش مقيداً."
-          )
-        },
-        {
-          title: pair("Thermal strain", "الانفعال الحراري"),
-          text: pair(
-            "Even when solving for stress, the page also reports the thermal strain ε_th = α × ΔT.",
-            "حتى عند حل الإجهاد، تعرض الصفحة أيضاً الانفعال الحراري ε_th = α × ΔT."
-          )
-        }
+        note("Restrained condition", "حالة التقييد", "Thermal stress develops only when the member cannot freely expand or contract.", "يتولد الإجهاد الحراري فقط عندما لا يستطيع العضو التمدد أو الانكماش بحرية."),
+        note("Temperature compatibility", "توافق درجات الحرارة", "Use a temperature difference value, not an absolute temperature, in this equation.", "استخدم فرق درجة الحرارة وليس درجة حرارة مطلقة في هذه المعادلة.")
       ],
       fields: [
-        {
+        field({
           name: "stress",
           badge: "σ",
           title: pair("Thermal stress (σ)", "الإجهاد الحراري (σ)"),
-          description: pair("Restrained stress caused by temperature change.", "الإجهاد المقيد الناتج عن التغير الحراري."),
+          description: pair("Restrained stress caused by the temperature change.", "الإجهاد المقيد الناتج عن التغير الحراري."),
           category: "stress",
-          defaultUnit: "MPa"
-        },
-        {
+          defaultUnit: "MPa",
+          placeholder: pair("Leave empty to solve for σ", "اتركه فارغاً لحساب σ")
+        }),
+        field({
           name: "elasticModulus",
           badge: "E",
           title: pair("Elastic modulus (E)", "معامل المرونة (E)"),
-          description: pair("Material stiffness used in thermal stress calculations.", "صلابة المادة المستخدمة في حسابات الإجهاد الحراري."),
+          description: pair("Young's modulus used in the thermal stress relation.", "معامل يونغ المستخدم في علاقة الإجهاد الحراري."),
           category: "stress",
           defaultUnit: "GPa",
-          positive: true
-        },
-        {
+          positive: true,
+          placeholder: pair("Leave empty to solve for E", "اتركه فارغاً لحساب E")
+        }),
+        field({
           name: "alpha",
           badge: "α",
-          title: pair("Thermal coefficient (α)", "معامل التمدد الحراري (α)"),
+          title: pair("Thermal expansion coefficient (α)", "معامل التمدد الحراري (α)"),
           description: pair("Coefficient of thermal expansion for the material.", "معامل التمدد الحراري للمادة."),
           category: "thermalCoeff",
           defaultUnit: "perC",
-          positive: true
-        },
-        {
+          positive: true,
+          placeholder: pair("Leave empty to solve for α", "اتركه فارغاً لحساب α")
+        }),
+        field({
           name: "deltaT",
           badge: "ΔT",
           title: pair("Temperature change (ΔT)", "التغير الحراري (ΔT)"),
-          description: pair("Temperature increase or decrease experienced by the member.", "الزيادة أو النقصان الحراري الذي يتعرض له العضو."),
+          description: pair("Increase or decrease in temperature experienced by the member.", "الزيادة أو النقصان الحراري الذي يتعرض له العضو."),
           category: "tempDiff",
-          defaultUnit: "C"
-        }
+          defaultUnit: "C",
+          placeholder: pair("Leave empty to solve for ΔT", "اتركه فارغاً لحساب ΔT")
+        })
       ],
       rearranged: {
         stress: "σ = E × α × ΔT",
@@ -1246,25 +1862,32 @@
             value: withUnit("strain", "microstrain", fromBase("strain", result.thermalStrainBase, "microstrain"), 6)
           }
         ];
+      },
+      engineeringChecks: function (result, warnings) {
+        addMaterialWarning(warnings, pair("Thermal stress warning", "تحذير الإجهاد الحراري"), Math.abs(result.baseValues.stress) > 1.5e9);
+        addMaterialWarning(warnings, pair("Thermal strain review", "مراجعة الانفعال الحراري"), Math.abs(result.thermalStrainBase) > 0.03);
+        addUnitsWarning(warnings, pair("Elastic modulus review", "مراجعة معامل المرونة"), result.baseValues.elasticModulus < 1e8 || result.baseValues.elasticModulus > 5e11);
+        addUnitsWarning(warnings, pair("Expansion coefficient review", "مراجعة معامل التمدد"), result.baseValues.alpha < 1e-7 || result.baseValues.alpha > 1e-4);
+        addUnitsWarning(warnings, pair("Temperature change review", "مراجعة التغير الحراري"), Math.abs(result.baseValues.deltaT) > 1000);
       }
     }
   };
 
   const slug = root.getAttribute("data-tool-slug");
+  const config = solverConfigs[slug];
 
-  if (!solverConfigs[slug]) {
+  if (!config) {
     return;
   }
 
   function render() {
-    const config = solverConfigs[slug];
     const view = state.result ? buildSolverView(config, state.result) : null;
 
     root.innerHTML = `
       <section class="page-hero fade-in-up">
         <div class="page-hero__split">
           <div>
-            <span class="page-badge">${esc(text(pair("Single-Unknown Solver", "محلل المتغير المجهول")))}</span>
+            <span class="page-badge">${esc(text(pair("Engineering Solver", "محلل هندسي")))}</span>
             <h1>${esc(app.t(`topics.${config.moduleKey}.title`, lang()))}</h1>
             <p>${esc(text(config.subtitle))}</p>
             <div class="placeholder-actions">
@@ -1277,7 +1900,7 @@
             <span class="section-chip">${esc(app.t("interactive.shared.formula", lang()))}</span>
             <p>${esc(text(config.explanation))}</p>
             <div class="formula-display">${esc(config.formula)}</div>
-            <p class="hint-line">${esc(solverHint())}</p>
+            <p class="hint-line">${esc(readyMessage())}</p>
           </aside>
         </div>
       </section>
@@ -1294,7 +1917,7 @@
               <div class="field-grid field-grid--solver">
                 ${config.fields.map(renderSolverField).join("")}
                 <div class="field field--full solver-note">
-                  <p class="field-help">${esc(solverHint())}</p>
+                  <p class="field-help">${esc(readyMessage())}</p>
                 </div>
               </div>
 
@@ -1326,6 +1949,8 @@
                 <div class="field-title">${esc(app.t("interactive.shared.summary", lang()))}</div>
                 <div class="summary-list">${view ? view.summary.map(summaryRow).join("") : `<div class="empty-state"><p>${esc(text(config.resultPlaceholder))}</p></div>`}</div>
               </div>
+
+              ${view ? renderValidationCard(view.validation) : ""}
             </div>
           </article>
         </div>
@@ -1360,19 +1985,24 @@
       const category = select.getAttribute("data-unit-category");
       const selected = select.getAttribute("data-selected");
       select.innerHTML = Object.keys(unitCatalog[category].units).map(function (key) {
-        return `<option value="${key}"${key === selected ? " selected" : ""}>${unitLabel(category, key)}</option>`;
+        return `<option value="${key}"${key === selected ? " selected" : ""}>${esc(unitLabel(category, key))}</option>`;
       }).join("");
     });
 
     const form = root.querySelector("#solver-form");
     const status = root.querySelector("#solver-status");
 
+    form.addEventListener("change", function () {
+      captureCurrentFormState(config);
+      render();
+    });
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
+      captureCurrentFormState(config);
 
       try {
         const payload = parseSolverInputs(config, form);
-        state.values = payload.values;
         state.result = calculateSolverResult(config, payload);
         saveReport(buildExportPayload(config, buildSolverView(config, state.result)));
         render();
@@ -1391,7 +2021,7 @@
 
   render();
   document.addEventListener(app.eventName, function () {
-    captureCurrentFormState(solverConfigs[slug]);
+    captureCurrentFormState(config);
     render();
   });
 })();

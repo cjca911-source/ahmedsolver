@@ -231,22 +231,22 @@
 
   function insufficientDataMessage() {
     return text(pair(
-      "Insufficient data. Leave exactly one field empty.",
-      "البيانات غير كافية. اترك خانة واحدة فقط فارغة."
+      "Insufficient data: more than one variable is empty.",
+      "البيانات غير كافية: أكثر من متغير واحد فارغ."
     ));
   }
 
   function leaveOneEmptyMessage() {
     return text(pair(
-      "All fields are filled. Leave one variable empty so AhmedSolver can solve for it.",
-      "جميع الحقول ممتلئة. اترك متغيراً واحداً فارغاً حتى يقوم AhmedSolver بحله."
+      "Please leave exactly one variable empty to solve.",
+      "يرجى ترك متغير واحد فقط فارغاً من أجل الحل."
     ));
   }
 
   function invalidFieldMessage(fieldConfig) {
     return lang() === "ar"
-      ? `أدخل قيمة صحيحة لـ ${text(fieldConfig.title)}.`
-      : `Enter a valid value for ${text(fieldConfig.title)}.`;
+      ? `تنسيق الرقم غير صالح في ${text(fieldConfig.title)}.`
+      : `Invalid number format in ${text(fieldConfig.title)}.`;
   }
 
   function positiveFieldMessage(fieldConfig) {
@@ -267,6 +267,59 @@
 
   function unitHeading() {
     return text(pair("Unit", "الوحدة"));
+  }
+
+  function inconsistentInputMessage() {
+    return text(pair(
+      "Could not solve due to inconsistent inputs.",
+      "تعذر الحل بسبب قيم غير متسقة."
+    ));
+  }
+
+  function logSolverDebug(message, details) {
+    if (typeof console === "undefined" || typeof console.log !== "function") {
+      return;
+    }
+
+    if (typeof details === "undefined") {
+      console.log(`[AhmedSolver Solver] ${message}`);
+      return;
+    }
+
+    console.log(`[AhmedSolver Solver] ${message}`, details);
+  }
+
+  function normalizeInputValue(rawValue) {
+    const raw = rawValue == null ? "" : String(rawValue);
+    const trimmed = raw.trim();
+
+    return {
+      raw: raw,
+      normalized: trimmed,
+      isEmpty: trimmed === ""
+    };
+  }
+
+  function collectRawInputSnapshot(form) {
+    const snapshot = {};
+
+    Array.from(form.elements).forEach(function (element) {
+      if (!element || !element.name) {
+        return;
+      }
+
+      if (element.type === "radio") {
+        if (element.checked) {
+          snapshot[element.name] = element.value;
+        }
+
+        return;
+      }
+
+      snapshot[element.name] = typeof element.value === "string" ? element.value : "";
+    });
+
+    return snapshot;
   }
 
   function saveReport(report) {
@@ -380,35 +433,52 @@
   }
 
   function parseNumber(rawValue) {
-    if (rawValue == null || rawValue === "") {
+    const normalized = normalizeInputValue(rawValue);
+
+    if (normalized.isEmpty) {
       return null;
     }
 
-    const value = Number(rawValue);
+    const value = Number(normalized.normalized);
     return Number.isFinite(value) ? value : NaN;
   }
 
   function parseStandardField(fieldConfig, form, values, emptyFields) {
     const wrapper = getFieldWrapper(fieldConfig.name);
     const input = form.elements[fieldConfig.name];
-    const rawValue = input ? input.value.trim() : "";
+    const normalizedInput = normalizeInputValue(input ? input.value : "");
 
     values[`${fieldConfig.name}Unit`] = form.elements[`${fieldConfig.name}Unit`]
       ? form.elements[`${fieldConfig.name}Unit`].value
       : fieldConfig.defaultUnit;
 
-    if (!rawValue) {
+    logSolverDebug("Field normalization", {
+      field: fieldConfig.name,
+      raw: normalizedInput.raw,
+      normalized: normalizedInput.normalized,
+      isEmpty: normalizedInput.isEmpty,
+      unit: values[`${fieldConfig.name}Unit`]
+    });
+
+    if (normalizedInput.isEmpty) {
       values[fieldConfig.name] = null;
       emptyFields.push(fieldConfig.name);
       return;
     }
 
-    const numericValue = Number(rawValue);
+    const numericValue = parseNumber(normalizedInput.normalized);
 
     if (!Number.isFinite(numericValue)) {
       if (wrapper) {
         wrapper.classList.add("field-error");
       }
+
+      logSolverDebug("Validation failed", {
+        field: fieldConfig.name,
+        reason: "invalid-number-format",
+        raw: normalizedInput.raw,
+        normalized: normalizedInput.normalized
+      });
 
       throw new Error(invalidFieldMessage(fieldConfig));
     }
@@ -417,6 +487,12 @@
       if (wrapper) {
         wrapper.classList.add("field-error");
       }
+
+      logSolverDebug("Validation failed", {
+        field: fieldConfig.name,
+        reason: "non-positive-value",
+        value: numericValue
+      });
 
       throw new Error(positiveFieldMessage(fieldConfig));
     }
@@ -521,6 +597,13 @@
     values.inertiaDimensionUnit = form.elements.inertiaDimensionUnit ? form.elements.inertiaDimensionUnit.value : "mm";
     values.inertiaUnit = form.elements.inertiaUnit ? form.elements.inertiaUnit.value : "mm4";
 
+    logSolverDebug("Bending extras", {
+      inertiaMode: values.inertiaMode,
+      inertiaShape: values.inertiaShape,
+      inertiaDimensionUnit: values.inertiaDimensionUnit,
+      inertiaUnit: values.inertiaUnit
+    });
+
     const inertiaWrapper = getFieldWrapper("inertia");
 
     if (values.inertiaMode === "direct") {
@@ -545,6 +628,12 @@
           inertiaWrapper.classList.add("field-error");
         }
 
+        logSolverDebug("Validation failed", {
+          field: "inertia",
+          reason: "shape-preview-incomplete",
+          preview: preview || null
+        });
+
         throw new Error(preview && preview.error ? preview.error : text(pair(
           "Complete the section dimensions or switch to direct I entry.",
           "أكمل أبعاد المقطع أو ارجع إلى إدخال I مباشرة."
@@ -556,6 +645,11 @@
     }
 
     if (emptyFields.length > 1) {
+      logSolverDebug("Unknown detection failed", {
+        reason: "multiple-empty-fields",
+        emptyFields: emptyFields.slice()
+      });
+
       emptyFields.forEach(function (fieldName) {
         const wrapper = getFieldWrapper(fieldName);
 
@@ -568,8 +662,23 @@
     }
 
     if (emptyFields.length === 0) {
+      logSolverDebug("Unknown detection failed", {
+        reason: "no-empty-fields"
+      });
+
       throw new Error(leaveOneEmptyMessage());
     }
+
+    const unknownWrapper = getFieldWrapper(emptyFields[0]);
+
+    if (unknownWrapper) {
+      unknownWrapper.classList.add("field-unknown");
+    }
+
+    logSolverDebug("Unknown detected", {
+      field: emptyFields[0],
+      emptyFields: emptyFields.slice()
+    });
 
     return {
       values: values,
@@ -587,6 +696,11 @@
     });
 
     if (emptyFields.length > 1) {
+      logSolverDebug("Unknown detection failed", {
+        reason: "multiple-empty-fields",
+        emptyFields: emptyFields.slice()
+      });
+
       emptyFields.forEach(function (fieldName) {
         const wrapper = getFieldWrapper(fieldName);
 
@@ -599,8 +713,23 @@
     }
 
     if (emptyFields.length === 0) {
+      logSolverDebug("Unknown detection failed", {
+        reason: "no-empty-fields"
+      });
+
       throw new Error(leaveOneEmptyMessage());
     }
+
+    const unknownWrapper = getFieldWrapper(emptyFields[0]);
+
+    if (unknownWrapper) {
+      unknownWrapper.classList.add("field-unknown");
+    }
+
+    logSolverDebug("Unknown detected", {
+      field: emptyFields[0],
+      emptyFields: emptyFields.slice()
+    });
 
     return {
       values: values,
@@ -611,6 +740,12 @@
 
   function parseSolverInputs(config, form) {
     clearFieldStates();
+
+    logSolverDebug("Solve attempt started", {
+      slug: slug,
+      rawInputs: collectRawInputSnapshot(form),
+      normalizedInputs: JSON.parse(JSON.stringify(state.values || {}))
+    });
 
     if (typeof config.parseSubmission === "function") {
       return config.parseSubmission(config, form);
@@ -1991,10 +2126,27 @@
 
     const form = root.querySelector("#solver-form");
     const status = root.querySelector("#solver-status");
-
-    form.addEventListener("change", function () {
+    
+    function markInputsChanged() {
+      const hadResult = Boolean(state.result);
       captureCurrentFormState(config);
-      render();
+      clearFieldStates();
+      status.textContent = hadResult
+        ? text(pair("Inputs changed. Solve again to refresh the result.", "تم تعديل القيم. اضغط احسب مرة أخرى لتحديث النتيجة."))
+        : readyMessage();
+      status.setAttribute("data-state", "neutral");
+    }
+
+    form.addEventListener("input", function () {
+      markInputsChanged();
+    });
+
+    form.addEventListener("change", function (event) {
+      markInputsChanged();
+
+      if (event.target && ["inertiaMode", "inertiaShape", "inertiaDimensionUnit", "inertiaUnit"].indexOf(event.target.name) !== -1) {
+        render();
+      }
     });
 
     form.addEventListener("submit", function (event) {
@@ -2004,10 +2156,20 @@
       try {
         const payload = parseSolverInputs(config, form);
         state.result = calculateSolverResult(config, payload);
+        logSolverDebug("Solve success", {
+          slug: slug,
+          unknownField: state.result.unknownKey,
+          solvedBaseValue: state.result.solvedBaseValue
+        });
         saveReport(buildExportPayload(config, buildSolverView(config, state.result)));
         render();
       } catch (error) {
-        status.textContent = error.message || readyMessage();
+        state.result = null;
+        logSolverDebug("Solve failed", {
+          slug: slug,
+          reason: error && error.message ? error.message : "unknown-error"
+        });
+        status.textContent = error && error.message ? error.message : inconsistentInputMessage();
         status.setAttribute("data-state", "error");
       }
     });

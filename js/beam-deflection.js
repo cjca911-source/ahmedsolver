@@ -98,6 +98,10 @@
         inertia: "Moment of inertia used",
         spanRatio: "Span / deflection ratio"
       },
+      labels: {
+        inertiaSi: "I in SI",
+        siPreview: "SI"
+      },
       caseLabels: {
         simplySupportedPoint: "Simply supported beam with center point load",
         simplySupportedUdl: "Simply supported beam with uniformly distributed load",
@@ -214,6 +218,10 @@
         inertia: "عزم العطالة المستخدم",
         spanRatio: "نسبة البحر إلى الانحراف"
       },
+      labels: {
+        inertiaSi: "I بوحدات SI",
+        siPreview: "SI"
+      },
       caseLabels: {
         simplySupportedPoint: "جائز بسيط مع حمل مركز في المنتصف",
         simplySupportedUdl: "جائز بسيط مع حمل موزع منتظم",
@@ -269,6 +277,16 @@
         return (base.load * Math.pow(base.length, 4)) / (8 * base.modulus * base.inertia);
       }
     }
+  };
+
+  const beamUnits = {
+    length: ["mm", "cm", "m"],
+    pointLoad: ["N", "kN"],
+    lineLoad: ["N/m", "kN/m"],
+    modulus: ["MPa", "GPa"],
+    inertia: ["mm4", "cm4", "m4"],
+    output: ["mm", "cm", "m"],
+    dimensions: ["mm", "cm", "m"]
   };
 
   const state = {
@@ -329,13 +347,25 @@
     }).join("");
   }
 
+  function getAllowedLoadUnits() {
+    return cases[state.beamCase].loadType === "point" ? beamUnits.pointLoad : beamUnits.lineLoad;
+  }
+
   function buildShapeFields(texts) {
     const sharedUnitSelect = `
       <div class="field">
         <label for="inertiaDimensionUnit">${esc(texts.unitLabels.dimension)}</label>
         <select id="inertiaDimensionUnit" name="inertiaDimensionUnit" class="select-control">
-          ${["mm", "cm", "m", "in"].map(function (unitKey) {
+          ${beamUnits.dimensions.map(function (unitKey) {
             return `<option value="${unitKey}" ${state.inertiaDimensionUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
+          }).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label for="inertiaUnit">${esc(texts.unitLabels.inertia)}</label>
+        <select id="inertiaUnit" name="inertiaUnit" class="select-control">
+          ${beamUnits.inertia.map(function (unitKey) {
+            return `<option value="${unitKey}" ${state.inertiaUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
           }).join("")}
         </select>
       </div>
@@ -415,8 +445,8 @@
         return { ok: false, positive: true };
       }
 
-      const widthBase = utils.toBase("length", width.value, dimensionUnit);
-      const heightBase = utils.toBase("length", height.value, dimensionUnit);
+      const widthBase = utils.convertLengthToMeters(width.value, dimensionUnit);
+      const heightBase = utils.convertLengthToMeters(height.value, dimensionUnit);
 
       result = (widthBase * Math.pow(heightBase, 3)) / 12;
 
@@ -445,7 +475,7 @@
         return { ok: false, positive: true };
       }
 
-      const diameterBase = utils.toBase("length", diameter.value, dimensionUnit);
+      const diameterBase = utils.convertLengthToMeters(diameter.value, dimensionUnit);
       result = (Math.PI * Math.pow(diameterBase, 4)) / 64;
 
       return {
@@ -475,8 +505,8 @@
       return { ok: false, order: true };
     }
 
-    const outerBase = utils.toBase("length", outer.value, dimensionUnit);
-    const innerBase = utils.toBase("length", inner.value, dimensionUnit);
+    const outerBase = utils.convertLengthToMeters(outer.value, dimensionUnit);
+    const innerBase = utils.convertLengthToMeters(inner.value, dimensionUnit);
     result = (Math.PI * (Math.pow(outerBase, 4) - Math.pow(innerBase, 4))) / 64;
 
     return {
@@ -505,7 +535,7 @@
       warnings.push(texts.warnings.lowModulus);
     }
 
-    if (base.inertia < 1e-12) {
+    if (base.inertia < 1e-10) {
       warnings.push(texts.warnings.tinyInertia);
     }
 
@@ -513,7 +543,7 @@
       warnings.push(texts.warnings.hugeInertia);
     }
 
-    if (deflectionBase > base.length / 100) {
+    if (deflectionBase > base.length / 50) {
       warnings.push(texts.warnings.largeDeflection);
     } else if (deflectionBase > base.length / 360) {
       warnings.push(texts.warnings.serviceability);
@@ -575,7 +605,7 @@
         return;
       }
 
-      inertiaBase = utils.toBase("inertia", inertia.value, state.inertiaUnit);
+      inertiaBase = utils.convertInertiaToMetersFourth(inertia.value, state.inertiaUnit);
       inertiaSummary = {
         mode: "direct",
         label: texts.fieldLabels.inertia,
@@ -602,18 +632,18 @@
     }
 
     const base = {
-      length: utils.toBase("length", length.value, state.lengthUnit),
-      load: utils.toBase(activeCase.loadType === "point" ? "force" : "lineLoad", load.value, state.loadUnit),
-      modulus: utils.toBase("modulus", modulus.value, state.modulusUnit),
+      length: utils.convertLengthToMeters(length.value, state.lengthUnit),
+      load: activeCase.loadType === "point"
+        ? utils.convertForceToNewtons(load.value, state.loadUnit)
+        : utils.convertLineLoadToNewtonPerMeter(load.value, state.loadUnit),
+      modulus: utils.convertModulusToPascals(modulus.value, state.modulusUnit),
       inertia: inertiaBase
     };
 
     const deflectionBase = activeCase.solve(base);
-    const outputDeflection = utils.fromBase("length", deflectionBase, state.outputUnit);
-    const inertiaDisplay = state.inertiaMode === "direct"
-      ? utils.fromBase("inertia", inertiaBase, state.inertiaUnit)
-      : utils.fromBase("inertia", inertiaBase, "mm4");
-    const inertiaOutputUnit = state.inertiaMode === "direct" ? state.inertiaUnit : "mm4";
+    const outputDeflection = utils.convertMetersToLength(deflectionBase, state.outputUnit);
+    const inertiaDisplay = utils.convertMetersFourthToInertia(inertiaBase, state.inertiaUnit);
+    const inertiaOutputUnit = state.inertiaUnit;
 
     state.result = {
       base: base,
@@ -674,6 +704,7 @@
     const lengthDisplay = utils.parseNumber(state.length).value;
     const inertiaInfo = state.result.inertiaSummary;
     const inertiaUsedDisplay = formatUnit("inertia", state.result.inertiaDisplay, state.result.inertiaOutputUnit, 4);
+    const inertiaBaseDisplay = formatUnit("inertia", state.result.base.inertia, "m4", 8);
     const steps = [
       {
         title: texts.stepLabels.units,
@@ -687,7 +718,8 @@
         equation:
           `${inertiaInfo.label}\n` +
           `${inertiaInfo.detail}\n` +
-          `I used = ${inertiaUsedDisplay}`
+          `I used = ${inertiaUsedDisplay}\n` +
+          `${texts.labels.inertiaSi} = ${inertiaBaseDisplay}`
       },
       {
         title: texts.stepLabels.formula,
@@ -850,13 +882,15 @@
       `;
     }
 
-    const inertiaMm4 = utils.fromBase("inertia", preview.value, "mm4");
+    const inertiaSelected = utils.convertMetersFourthToInertia(preview.value, state.inertiaUnit);
+    const inertiaM4 = preview.value;
 
     return `
       <div class="preview-card" style="margin-top: 0.9rem;">
         <h3>${esc(texts.formulas[state.inertiaShape])}</h3>
         <p>${esc(preview.detail)}</p>
-        <p>${esc("I = ")}${esc(formatUnit("inertia", inertiaMm4, "mm4", 4))}</p>
+        <p>${esc("I = ")}${esc(formatUnit("inertia", inertiaSelected, state.inertiaUnit, 4))}</p>
+        <p>${esc(`${texts.labels.siPreview}: `)}${esc(formatUnit("inertia", inertiaM4, "m4", 8))}</p>
       </div>
     `;
   }
@@ -866,6 +900,7 @@
     const activeCase = cases[state.beamCase];
     const loadLabel = activeCase.loadType === "point" ? texts.caseLoadLabels.point : texts.caseLoadLabels.distributed;
     const loadHint = activeCase.loadType === "point" ? texts.fieldHints.loadPoint : texts.fieldHints.loadDistributed;
+    const loadUnits = getAllowedLoadUnits();
     const formula = texts.formulas[state.beamCase];
     const statusMessage = state.status.message || texts.status.ready;
     const statusState = state.status.state === "neutral" ? "success" : state.status.state;
@@ -919,7 +954,7 @@
                   <span class="input-card__hint">${esc(texts.fieldHints.length)}</span>
                   <input id="length" name="length" class="input-control" type="text" inputmode="decimal" value="${esc(state.length)}">
                   <select id="lengthUnit" name="lengthUnit" class="select-control">
-                    ${utils.optionsFor("length").map(function (unitKey) {
+                    ${beamUnits.length.map(function (unitKey) {
                       return `<option value="${unitKey}" ${state.lengthUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
                     }).join("")}
                   </select>
@@ -931,7 +966,7 @@
                   <span class="input-card__hint">${esc(loadHint)}</span>
                   <input id="load" name="load" class="input-control" type="text" inputmode="decimal" value="${esc(state.load)}">
                   <select id="loadUnit" name="loadUnit" class="select-control">
-                    ${utils.optionsFor(activeCase.loadType === "point" ? "force" : "lineLoad").map(function (unitKey) {
+                    ${loadUnits.map(function (unitKey) {
                       return `<option value="${unitKey}" ${state.loadUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
                     }).join("")}
                   </select>
@@ -943,7 +978,7 @@
                   <span class="input-card__hint">${esc(texts.fieldHints.modulus)}</span>
                   <input id="modulus" name="modulus" class="input-control" type="text" inputmode="decimal" value="${esc(state.modulus)}">
                   <select id="modulusUnit" name="modulusUnit" class="select-control">
-                    ${utils.optionsFor("modulus").map(function (unitKey) {
+                    ${beamUnits.modulus.map(function (unitKey) {
                       return `<option value="${unitKey}" ${state.modulusUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
                     }).join("")}
                   </select>
@@ -954,7 +989,7 @@
                   <span class="input-card__title">${esc(texts.unitLabels.output)}</span>
                   <span class="input-card__hint">${esc(texts.fieldHints.output)}</span>
                   <select id="outputUnit" name="outputUnit" class="select-control">
-                    ${["mm", "cm", "m", "in"].map(function (unitKey) {
+                    ${beamUnits.output.map(function (unitKey) {
                       return `<option value="${unitKey}" ${state.outputUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
                     }).join("")}
                   </select>
@@ -987,7 +1022,7 @@
                     <span class="input-card__hint">${esc(texts.fieldHints.inertia)}</span>
                     <input id="inertia" name="inertia" class="input-control" type="text" inputmode="decimal" value="${esc(state.inertia)}">
                     <select id="inertiaUnit" name="inertiaUnit" class="select-control">
-                      ${utils.optionsFor("inertia").map(function (unitKey) {
+                      ${beamUnits.inertia.map(function (unitKey) {
                         return `<option value="${unitKey}" ${state.inertiaUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
                       }).join("")}
                     </select>

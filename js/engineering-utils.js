@@ -110,6 +110,34 @@
     return Object.keys(unitCatalog[category] || {});
   }
 
+  function convertLengthToMeters(value, unitKey) {
+    return toBase("length", value, unitKey);
+  }
+
+  function convertForceToNewtons(value, unitKey) {
+    return toBase("force", value, unitKey);
+  }
+
+  function convertLineLoadToNewtonPerMeter(value, unitKey) {
+    return toBase("lineLoad", value, unitKey);
+  }
+
+  function convertModulusToPascals(value, unitKey) {
+    return toBase("modulus", value, unitKey);
+  }
+
+  function convertInertiaToMetersFourth(value, unitKey) {
+    return toBase("inertia", value, unitKey);
+  }
+
+  function convertMetersToLength(value, unitKey) {
+    return fromBase("length", value, unitKey);
+  }
+
+  function convertMetersFourthToInertia(value, unitKey) {
+    return fromBase("inertia", value, unitKey);
+  }
+
   window.AhmedSolverEngineering = {
     unitCatalog: unitCatalog,
     normalizeText: normalizeText,
@@ -119,6 +147,13 @@
     fromBase: fromBase,
     formatNumber: formatNumber,
     formatWithUnit: formatWithUnit,
-    optionsFor: optionsFor
+    optionsFor: optionsFor,
+    convertLengthToMeters: convertLengthToMeters,
+    convertForceToNewtons: convertForceToNewtons,
+    convertLineLoadToNewtonPerMeter: convertLineLoadToNewtonPerMeter,
+    convertModulusToPascals: convertModulusToPascals,
+    convertInertiaToMetersFourth: convertInertiaToMetersFourth,
+    convertMetersToLength: convertMetersToLength,
+    convertMetersFourthToInertia: convertMetersFourthToInertia
   };
 })();

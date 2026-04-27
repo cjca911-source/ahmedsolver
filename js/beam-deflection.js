@@ -11,96 +11,93 @@
 
   const copy = {
     en: {
-      kicker: "Serviceability and Stiffness Tool",
+      kicker: "Serviceability and Section Tool",
       title: "Beam Deflection Calculator",
       intro:
-        "Choose a classic beam case, define stiffness and loading, calculate the maximum deflection, and inspect the beam drawing with supports, loads, and the deflected shape.",
-      summaryTitle: "What this page includes",
+        "Choose a beam case, define the section geometry, and let AhmedSolver calculate the moment of inertia automatically before solving deflection, reactions, slope, shear, and bending moment.",
+      summaryTitle: "What this page now does",
       summaryPoints: [
-        "Four common beam cases: simply supported or cantilever, each with point load or uniformly distributed load.",
-        "Moment of inertia can be entered directly or computed from rectangle, circle, and hollow circle sections.",
-        "Unit-aware calculations, step-by-step substitution, and warnings for suspicious engineering values."
+        "Automatic section property calculation from geometry only, with no manual inertia input.",
+        "Beam, deflection, SFD, and BMD diagrams that update from the solved case.",
+        "Reactions, maximum moment, slope, and engineering warnings for presentation-ready study output."
       ],
-      caseTitle: "Beam type selection",
-      caseDescription: "Select one loading case. The active deflection formula and drawing will update automatically.",
-      inputTitle: "Beam inputs",
-      inputDescription:
-        "AhmedSolver converts everything to SI units internally, then reports the final deflection in the output unit you choose.",
-      inertiaTitle: "Moment of inertia I",
-      inertiaDescription: "Either enter I directly or compute it from a simple section shape.",
-      directMode: "Enter I directly",
-      shapeMode: "Calculate I from shape",
-      unitLabels: {
-        length: "Beam length unit",
-        load: "Load unit",
-        modulus: "Elastic modulus unit",
-        output: "Deflection output unit",
-        inertia: "Moment of inertia unit",
-        shape: "Shape",
-        dimension: "Dimension unit"
+      caseTitle: "Beam type",
+      caseDescription: "Select one standard beam case. The active formulas and diagrams update automatically.",
+      sectionTitle: "Section geometry",
+      sectionDescription:
+        "Enter all section dimensions in millimeters. AhmedSolver calculates I about the centroidal x-axis and converts it to m^4 for beam calculations.",
+      beamInputTitle: "Beam inputs",
+      beamInputDescription:
+        "Enter beam length L in meters, point load P in newtons, uniformly distributed load w in N/m, and elastic modulus E in GPa.",
+      sectionPreviewTitle: "Section property preview",
+      resultsTitle: "Solved results",
+      stepsTitle: "Step-by-step solution",
+      warningsTitle: "Engineering notes",
+      diagramsTitle: "Beam and diagram visuals",
+      diagramsDescription:
+        "These SVG diagrams are scaled for clear study presentation while keeping the solved deflection, shear, and bending values numerically correct.",
+      buttons: {
+        solve: "Solve Beam Deflection",
+        reset: "Reset"
       },
-      fieldLabels: {
-        length: "Beam length L",
-        load: "Load magnitude",
-        modulus: "Elastic modulus E",
-        inertia: "Area moment of inertia I",
-        width: "Rectangle width b",
-        height: "Rectangle height h",
-        diameter: "Circle diameter d",
-        outerDiameter: "Outer diameter D",
-        innerDiameter: "Inner diameter d"
+      status: {
+        ready: "Select a beam case and fill in the section geometry and beam data.",
+        missing: "Please complete all required geometry and beam inputs.",
+        invalid: "Invalid number format in one or more fields.",
+        positive: "All dimensions and beam inputs must be greater than zero.",
+        hollowRectangle: "Inner hollow rectangle dimensions must be smaller than the outer rectangle.",
+        iBeamDepth: "For the I-beam, flange thickness must satisfy 2tf < H.",
+        iBeamWidth: "For the I-beam, web thickness must be smaller than or equal to flange width.",
+        tBeamDepth: "For the T-beam, flange thickness must be smaller than the overall height.",
+        tBeamWidth: "For the T-beam, web thickness must be smaller than or equal to flange width.",
+        success: "Beam deflection solved successfully."
       },
-      fieldHints: {
-        length: "Use the clear span of the beam.",
-        loadPoint: "Point load applied at the key location for the selected case.",
-        loadDistributed: "Uniform load intensity along the span.",
-        modulus: "Typical steel is about 200 GPa.",
-        inertia: "Use the section property about the bending axis.",
-        output: "Choose the unit used for the reported deflection."
+      fields: {
+        length: "Beam length L (m)",
+        modulus: "Elastic modulus E (GPa)",
+        pointLoad: "Point load P (N)",
+        lineLoad: "Uniform load w (N/m)",
+        sectionShape: "Section shape",
+        rectWidth: "Width b (mm)",
+        rectHeight: "Height h (mm)",
+        circleDiameter: "Diameter d (mm)",
+        hollowOuterWidth: "Outer width B (mm)",
+        hollowOuterHeight: "Outer height H (mm)",
+        hollowInnerWidth: "Inner width b (mm)",
+        hollowInnerHeight: "Inner height h (mm)",
+        iBeamHeight: "Overall height H (mm)",
+        iBeamWidth: "Flange width B (mm)",
+        iBeamFlangeThickness: "Flange thickness tf (mm)",
+        iBeamWebThickness: "Web thickness tw (mm)",
+        tBeamHeight: "Overall height H (mm)",
+        tBeamWidth: "Flange width B (mm)",
+        tBeamFlangeThickness: "Flange thickness tf (mm)",
+        tBeamWebThickness: "Web thickness tw (mm)"
+      },
+      hints: {
+        length: "Use the clear span between supports or the full cantilever length.",
+        modulus: "Typical structural steel is about 200 GPa.",
+        pointLoad: "Use the point load in newtons for the selected point-load case.",
+        lineLoad: "Use the uniform load intensity in newtons per meter.",
+        geometry: "All section dimensions are entered in millimeters."
       },
       shapes: {
         rectangle: "Rectangle",
         circle: "Circle",
-        hollowCircle: "Hollow Circle"
+        hollowRectangle: "Hollow Rectangle",
+        iBeam: "I-Beam",
+        tBeam: "T-Beam"
       },
       formulas: {
-        simplySupportedPoint: "δmax = (P L^3) / (48 E I)",
-        simplySupportedUdl: "δmax = (5 w L^4) / (384 E I)",
-        cantileverPoint: "δmax = (P L^3) / (3 E I)",
-        cantileverUdl: "δmax = (w L^4) / (8 E I)",
-        rectangle: "I = (b h^3) / 12",
-        circle: "I = (pi d^4) / 64",
-        hollowCircle: "I = (pi (D^4 - d^4)) / 64"
-      },
-      buttons: {
-        solve: "Solve Deflection",
-        reset: "Reset"
-      },
-      status: {
-        ready: "Choose a beam case and enter the required geometry, stiffness, and loading.",
-        missing: "Please complete all required beam inputs.",
-        invalid: "Invalid number format in one or more inputs.",
-        positive: "All numerical inputs must be greater than zero.",
-        hollowOrder: "Inner diameter must be smaller than outer diameter.",
-        success: "Beam deflection solved successfully."
-      },
-      drawingTitle: "Beam drawing",
-      drawingDescription:
-        "The drawing shows the selected support condition, the applied load, and a simple deflected shape for educational visualization.",
-      drawingPlaceholder: "The beam drawing updates immediately when you change the beam type.",
-      drawingCaption:
-        "The deflected curve is intentionally simple and educational. It illustrates the location of maximum deflection rather than a full exact elastic curve.",
-      resultsTitle: "Calculated results",
-      stepsTitle: "Step-by-step solution",
-      warningsTitle: "Engineering notes and warnings",
-      metrics: {
-        deflection: "Maximum deflection δmax",
-        inertia: "Moment of inertia used",
-        spanRatio: "Span / deflection ratio"
-      },
-      labels: {
-        inertiaSi: "I in SI",
-        siPreview: "SI"
+        rectangle: "I = b h^3 / 12",
+        circle: "I = pi d^4 / 64",
+        hollowRectangle: "I = (B H^3 - b h^3) / 12",
+        iBeam: "I = [B H^3 - (B - tw) (H - 2tf)^3] / 12",
+        tBeam: "Composite section about the centroidal x-axis",
+        simplySupportedPoint: "delta_max = P L^3 / (48 E I)",
+        simplySupportedUdl: "delta_max = 5 w L^4 / (384 E I)",
+        cantileverPoint: "delta_max = P L^3 / (3 E I)",
+        cantileverUdl: "delta_max = w L^4 / (8 E I)"
       },
       caseLabels: {
         simplySupportedPoint: "Simply supported beam with center point load",
@@ -108,119 +105,144 @@
         cantileverPoint: "Cantilever beam with end point load",
         cantileverUdl: "Cantilever beam with uniformly distributed load"
       },
-      caseLoadLabels: {
-        point: "Point load P",
-        distributed: "Distributed load w"
+      metrics: {
+        inertiaMm4: "Moment of inertia I (mm^4)",
+        inertiaM4: "Moment of inertia I (m^4)",
+        deflectionMm: "Maximum deflection delta_max (mm)",
+        slope: "Support / free-end slope",
+        reactions: "Reactions",
+        maxMoment: "Maximum bending moment"
+      },
+      labels: {
+        supportSlope: "Support slope",
+        freeEndSlope: "Free-end slope",
+        beam: "Beam Setup",
+        deflection: "Deflection Curve",
+        sfd: "Shear Force Diagram",
+        bmd: "Bending Moment Diagram",
+        sectionIncomplete: "Complete the active shape dimensions to preview I.",
+        maxDeflection: "delta_max",
+        maxMoment: "Mmax",
+        sectionWarning: "Section warning",
+        neutralAxis: "Neutral axis from bottom",
+        fixedMoment: "Fixed-end moment",
+        siConversion: "SI conversion"
+      },
+      reactions: {
+        ra: "RA",
+        rb: "RB",
+        r: "R"
       },
       stepLabels: {
-        units: "1. Convert inputs to SI base units",
-        inertia: "2. Determine the moment of inertia",
-        formula: "3. Select the beam formula",
-        substitution: "4. Substitute the numerical values",
-        result: "5. Final deflection"
+        geometry: "1. Calculate the section moment of inertia",
+        conversion: "2. Convert section and material data to SI",
+        reactions: "3. Calculate reactions and bending maximum",
+        deflection: "4. Substitute into the beam deflection formula",
+        slope: "5. Compute the support or free-end slope"
       },
       warnings: {
-        longSpan: "This span is very long for a simple classroom beam example. Consider whether other effects should matter.",
-        shortSpan: "This span is very short. Check whether beam theory is the right model for the problem.",
-        lowModulus: "Elastic modulus is outside common ranges for most structural materials. Check units and material data.",
-        tinyInertia: "Moment of inertia seems very small. Check section dimensions and units carefully.",
-        hugeInertia: "Moment of inertia seems unusually large for a typical student example. Verify units and shape dimensions.",
-        largeDeflection: "This result may be mathematically correct but very large for common serviceability expectations.",
-        serviceability: "Deflection exceeds a common L/360 serviceability reference. Review the structural stiffness.",
-        tinyDeflection: "Deflection is extremely small. Check whether the load magnitude or units were entered correctly."
+        tinyInertia: "Moment of inertia is extremely small. Check the section dimensions and shape selection.",
+        hugeDeflection: "This deflection is very large relative to the span and may be unrealistic for normal serviceability.",
+        serviceability: "The deflection ratio delta/L exceeds a common L/360 serviceability reference.",
+        tinyDimensions: "One or more section dimensions are very small for a practical beam. Check the units and intended scale.",
+        hugeDimensions: "One or more section dimensions are very large for a typical classroom beam example. Verify the geometry.",
+        lowModulus: "Elastic modulus is outside the common range for most structural materials. Recheck E in GPa."
+      },
+      diagramNotes: {
+        beam: "Support symbols, loads, reactions, and maximum deflection location are shown on the main beam sketch.",
+        deflection: "The deflection curve is plotted from the exact case equation and scaled visually for readability.",
+        sfd: "The SFD follows the standard sign convention used in textbooks for these simple beam cases.",
+        bmd: "The BMD updates from the solved reactions and loading model."
       }
     },
     ar: {
-      kicker: "أداة الخدمة والصلابة",
+      kicker: "أداة المقاطع والخدمة",
       title: "حاسبة انحراف الجوائز",
       intro:
-        "اختر حالة جائز شائعة، وحدد الصلابة والحمل، واحسب الانحراف الأعظمي، ثم اعرض رسم الجائز مع الركائز والأحمال والشكل المنحرف.",
-      summaryTitle: "ما الذي تتضمنه هذه الصفحة",
+        "اختر حالة الجائز، ثم أدخل أبعاد المقطع، ودع AhmedSolver يحسب عزم العطالة تلقائياً قبل حل الانحراف وردود الأفعال والميل ومخططات القص والعزم.",
+      summaryTitle: "ما الذي تفعله الصفحة الآن",
       summaryPoints: [
-        "أربع حالات شائعة: جائز بسيط أو كابولي، وكل منهما مع حمل مركز أو حمل موزع منتظم.",
-        "يمكن إدخال عزم العطالة مباشرة أو حسابه من مقطع مستطيل أو دائري أو دائري مجوف.",
-        "حسابات واعية للوحدات، وتعويضات خطوة بخطوة، وتحذيرات للقيم الهندسية المريبة."
+        "حساب تلقائي لخواص المقطع من الأبعاد فقط من دون إدخال يدوي لعزم العطالة.",
+        "رسومات للجائز والانحراف ومخطط القص ومخطط العزم تتحدث مباشرة من الحالة المحلولة.",
+        "عرض لردود الأفعال والعزم الأعظمي والميل وتحذيرات هندسية مناسبة للدراسة والعرض."
       ],
-      caseTitle: "اختيار نوع الجائز",
-      caseDescription: "اختر حالة تحميل واحدة. ستتغير المعادلة الفعالة والرسم تلقائياً.",
-      inputTitle: "مدخلات الجائز",
-      inputDescription:
-        "يقوم AhmedSolver بتحويل جميع القيم داخلياً إلى وحدات SI ثم يعرض الانحراف النهائي بوحدة الإخراج التي تختارها.",
-      inertiaTitle: "عزم العطالة I",
-      inertiaDescription: "يمكنك إدخال I مباشرة أو حسابه من شكل مقطع بسيط.",
-      directMode: "إدخال I مباشرة",
-      shapeMode: "حساب I من الشكل",
-      unitLabels: {
-        length: "وحدة طول الجائز",
-        load: "وحدة الحمل",
-        modulus: "وحدة معامل المرونة",
-        output: "وحدة إخراج الانحراف",
-        inertia: "وحدة عزم العطالة",
-        shape: "الشكل",
-        dimension: "وحدة الأبعاد"
+      caseTitle: "نوع الجائز",
+      caseDescription: "اختر حالة جائز قياسية واحدة. تتغير المعادلات والرسومات تلقائياً.",
+      sectionTitle: "هندسة المقطع",
+      sectionDescription:
+        "أدخل جميع أبعاد المقطع بالميليمتر. يقوم AhmedSolver بحساب I حول المحور x المار بالمركز ثم يحوله إلى m^4 لاستخدامه في حل الجائز.",
+      beamInputTitle: "بيانات الجائز",
+      beamInputDescription:
+        "أدخل طول الجائز L بالمتر، والحمل المركز P بالنيوتن، والحمل الموزع w بالنيوتن لكل متر، ومعامل المرونة E بالجيجا باسكال.",
+      sectionPreviewTitle: "معاينة خواص المقطع",
+      resultsTitle: "النتائج المحلولة",
+      stepsTitle: "الحل خطوة بخطوة",
+      warningsTitle: "ملاحظات هندسية",
+      diagramsTitle: "رسومات الجائز والمخططات",
+      diagramsDescription:
+        "يتم ضبط رسومات SVG بصرياً لتكون واضحة في الدراسة والعرض مع الحفاظ على صحة قيم الانحراف والقص والعزم المحسوبة.",
+      buttons: {
+        solve: "احسب انحراف الجائز",
+        reset: "إعادة ضبط"
       },
-      fieldLabels: {
-        length: "طول الجائز L",
-        load: "مقدار الحمل",
-        modulus: "معامل المرونة E",
-        inertia: "عزم العطالة حول محور الانحناء I",
-        width: "عرض المستطيل b",
-        height: "ارتفاع المستطيل h",
-        diameter: "قطر الدائرة d",
-        outerDiameter: "القطر الخارجي D",
-        innerDiameter: "القطر الداخلي d"
+      status: {
+        ready: "اختر حالة الجائز ثم املأ أبعاد المقطع وبيانات الجائز.",
+        missing: "يرجى إكمال جميع مدخلات المقطع والجائز المطلوبة.",
+        invalid: "تنسيق الرقم غير صالح في واحد أو أكثر من الحقول.",
+        positive: "يجب أن تكون جميع الأبعاد والقيم المدخلة أكبر من الصفر.",
+        hollowRectangle: "يجب أن تكون أبعاد المستطيل الداخلي المجوف أصغر من أبعاد المستطيل الخارجي.",
+        iBeamDepth: "في مقطع I يجب أن يحقق سمك الجناح الشرط 2tf < H.",
+        iBeamWidth: "في مقطع I يجب أن يكون سمك الروح أصغر من أو مساوياً لعرض الجناح.",
+        tBeamDepth: "في مقطع T يجب أن يكون سمك الجناح أصغر من الارتفاع الكلي.",
+        tBeamWidth: "في مقطع T يجب أن يكون سمك الروح أصغر من أو مساوياً لعرض الجناح.",
+        success: "تم حل انحراف الجائز بنجاح."
       },
-      fieldHints: {
-        length: "استخدم البحر الصافي للجائز.",
-        loadPoint: "الحمل المركز عند الموقع المحدد للحالة المختارة.",
-        loadDistributed: "شدة الحمل المنتظم على طول الجائز.",
-        modulus: "الفولاذ النموذجي يقارب 200 GPa.",
-        inertia: "استخدم خاصية المقطع حول محور الانحناء.",
-        output: "اختر الوحدة التي سيعرض بها الانحراف النهائي."
+      fields: {
+        length: "طول الجائز L (m)",
+        modulus: "معامل المرونة E (GPa)",
+        pointLoad: "الحمل المركز P (N)",
+        lineLoad: "الحمل المنتظم w (N/m)",
+        sectionShape: "شكل المقطع",
+        rectWidth: "العرض b (mm)",
+        rectHeight: "الارتفاع h (mm)",
+        circleDiameter: "القطر d (mm)",
+        hollowOuterWidth: "العرض الخارجي B (mm)",
+        hollowOuterHeight: "الارتفاع الخارجي H (mm)",
+        hollowInnerWidth: "العرض الداخلي b (mm)",
+        hollowInnerHeight: "الارتفاع الداخلي h (mm)",
+        iBeamHeight: "الارتفاع الكلي H (mm)",
+        iBeamWidth: "عرض الجناح B (mm)",
+        iBeamFlangeThickness: "سمك الجناح tf (mm)",
+        iBeamWebThickness: "سمك الروح tw (mm)",
+        tBeamHeight: "الارتفاع الكلي H (mm)",
+        tBeamWidth: "عرض الجناح B (mm)",
+        tBeamFlangeThickness: "سمك الجناح tf (mm)",
+        tBeamWebThickness: "سمك الروح tw (mm)"
+      },
+      hints: {
+        length: "استخدم البحر الصافي بين الركائز أو طول الكابولي الكامل.",
+        modulus: "قيمة الفولاذ الإنشائي الشائعة تقارب 200 GPa.",
+        pointLoad: "أدخل الحمل المركز بالنيوتن للحالة المختارة.",
+        lineLoad: "أدخل شدة الحمل المنتظم بالنيوتن لكل متر.",
+        geometry: "جميع أبعاد المقطع تدخل بالميليمتر."
       },
       shapes: {
         rectangle: "مستطيل",
         circle: "دائرة",
-        hollowCircle: "دائرة مجوفة"
+        hollowRectangle: "مستطيل مجوف",
+        iBeam: "مقطع I",
+        tBeam: "مقطع T"
       },
       formulas: {
-        simplySupportedPoint: "δmax = (P L^3) / (48 E I)",
-        simplySupportedUdl: "δmax = (5 w L^4) / (384 E I)",
-        cantileverPoint: "δmax = (P L^3) / (3 E I)",
-        cantileverUdl: "δmax = (w L^4) / (8 E I)",
-        rectangle: "I = (b h^3) / 12",
-        circle: "I = (pi d^4) / 64",
-        hollowCircle: "I = (pi (D^4 - d^4)) / 64"
-      },
-      buttons: {
-        solve: "احسب الانحراف",
-        reset: "إعادة ضبط"
-      },
-      status: {
-        ready: "اختر حالة الجائز ثم أدخل الأبعاد والصلابة والحمل المطلوب.",
-        missing: "يرجى إكمال جميع المدخلات المطلوبة للجائز.",
-        invalid: "تنسيق الرقم غير صالح في واحد أو أكثر من المدخلات.",
-        positive: "يجب أن تكون جميع القيم العددية أكبر من الصفر.",
-        hollowOrder: "يجب أن يكون القطر الداخلي أصغر من القطر الخارجي.",
-        success: "تم حل انحراف الجائز بنجاح."
-      },
-      drawingTitle: "رسم الجائز",
-      drawingDescription:
-        "يعرض الرسم نوع الارتكاز المختار والحمل المطبق وشكلاً تعليمياً بسيطاً للانحراف.",
-      drawingPlaceholder: "يتم تحديث رسم الجائز مباشرة عند تغيير نوع الجائز.",
-      drawingCaption:
-        "المنحنى المنحرف هنا تعليمي ومبسط. يوضح موضع الانحراف الأعظمي ولا يمثل منحنى المرونة الدقيق بالكامل.",
-      resultsTitle: "النتائج المحسوبة",
-      stepsTitle: "الحل خطوة بخطوة",
-      warningsTitle: "ملاحظات وتحذيرات هندسية",
-      metrics: {
-        deflection: "الانحراف الأعظمي δmax",
-        inertia: "عزم العطالة المستخدم",
-        spanRatio: "نسبة البحر إلى الانحراف"
-      },
-      labels: {
-        inertiaSi: "I بوحدات SI",
-        siPreview: "SI"
+        rectangle: "I = b h^3 / 12",
+        circle: "I = pi d^4 / 64",
+        hollowRectangle: "I = (B H^3 - b h^3) / 12",
+        iBeam: "I = [B H^3 - (B - tw) (H - 2tf)^3] / 12",
+        tBeam: "مقطع مركب حول المحور x المار بالمركز",
+        simplySupportedPoint: "delta_max = P L^3 / (48 E I)",
+        simplySupportedUdl: "delta_max = 5 w L^4 / (384 E I)",
+        cantileverPoint: "delta_max = P L^3 / (3 E I)",
+        cantileverUdl: "delta_max = w L^4 / (8 E I)"
       },
       caseLabels: {
         simplySupportedPoint: "جائز بسيط مع حمل مركز في المنتصف",
@@ -228,86 +250,273 @@
         cantileverPoint: "جائز كابولي مع حمل مركز عند الطرف",
         cantileverUdl: "جائز كابولي مع حمل موزع منتظم"
       },
-      caseLoadLabels: {
-        point: "الحمل المركز P",
-        distributed: "شدة الحمل الموزع w"
+      metrics: {
+        inertiaMm4: "عزم العطالة I (mm^4)",
+        inertiaM4: "عزم العطالة I (m^4)",
+        deflectionMm: "الانحراف الأعظمي delta_max (mm)",
+        slope: "الميل عند الركيزة أو الطرف الحر",
+        reactions: "ردود الأفعال",
+        maxMoment: "العزم الأعظمي"
+      },
+      labels: {
+        supportSlope: "ميل الركيزة",
+        freeEndSlope: "ميل الطرف الحر",
+        beam: "رسم الجائز",
+        deflection: "منحنى الانحراف",
+        sfd: "مخطط قوى القص",
+        bmd: "مخطط عزوم الانحناء",
+        sectionIncomplete: "أكمل أبعاد الشكل النشط لمعاينة عزم العطالة.",
+        maxDeflection: "delta_max",
+        maxMoment: "Mmax",
+        sectionWarning: "تحذير مقطع",
+        neutralAxis: "المحور المتعادل من الأسفل",
+        fixedMoment: "العزم عند التثبيت",
+        siConversion: "التحويل إلى وحدات SI"
+      },
+      reactions: {
+        ra: "RA",
+        rb: "RB",
+        r: "R"
       },
       stepLabels: {
-        units: "1. تحويل المدخلات إلى وحدات SI",
-        inertia: "2. تحديد عزم العطالة",
-        formula: "3. اختيار معادلة الجائز",
-        substitution: "4. التعويض بالقيم العددية",
-        result: "5. الانحراف النهائي"
+        geometry: "1. حساب عزم عطالة المقطع",
+        conversion: "2. تحويل الخواص إلى وحدات SI",
+        reactions: "3. حساب ردود الأفعال والعزم الأعظمي",
+        deflection: "4. التعويض في معادلة الانحراف",
+        slope: "5. حساب الميل عند الركيزة أو الطرف الحر"
       },
       warnings: {
-        longSpan: "هذا البحر طويل جداً بالنسبة إلى مثال تدريسي بسيط. فكر فيما إذا كانت هناك تأثيرات إضافية يجب أخذها بالحسبان.",
-        shortSpan: "هذا البحر قصير جداً. تحقق مما إذا كانت نظرية الجوائز هي النموذج المناسب للمسألة.",
-        lowModulus: "معامل المرونة خارج الحدود الشائعة لمعظم المواد الإنشائية. تحقق من الوحدات وبيانات المادة.",
-        tinyInertia: "عزم العطالة يبدو صغيراً جداً. تحقق من أبعاد المقطع ووحداته بعناية.",
-        hugeInertia: "عزم العطالة يبدو كبيراً بشكل غير معتاد بالنسبة إلى مثال طلابي نموذجي. تحقق من الوحدات وأبعاد الشكل.",
-        largeDeflection: "قد تكون النتيجة صحيحة رياضياً لكنها كبيرة جداً مقارنة بتوقعات الخدمة الشائعة.",
-        serviceability: "الانحراف يتجاوز مرجع خدمة شائع من نوع L/360. راجع صلابة العنصر الإنشائي.",
-        tinyDeflection: "الانحراف صغير جداً. تحقق مما إذا كانت قيمة الحمل أو الوحدات قد أُدخلت بشكل صحيح."
+        tinyInertia: "عزم العطالة صغير جداً. تحقق من أبعاد المقطع واختيار الشكل.",
+        hugeDeflection: "الانحراف كبير جداً مقارنة بطول الجائز وقد يكون غير واقعي إنشائياً.",
+        serviceability: "نسبة الانحراف delta/L تتجاوز مرجع الخدمة الشائع L/360.",
+        tinyDimensions: "يوجد بعد أو أكثر صغير جداً بالنسبة إلى جائز عملي. تحقق من الوحدات والمقياس المقصود.",
+        hugeDimensions: "يوجد بعد أو أكثر كبير جداً بالنسبة إلى مثال تدريسي معتاد. تحقق من صحة الأبعاد.",
+        lowModulus: "معامل المرونة خارج الحدود الشائعة لمعظم المواد الإنشائية. تحقق من E بوحدة GPa."
+      },
+      diagramNotes: {
+        beam: "يظهر الرسم الرئيسي نوع الارتكاز والأحمال وردود الأفعال وموقع الانحراف الأعظمي.",
+        deflection: "يتم رسم منحنى الانحراف من المعادلة الدقيقة للحالة مع تكبير بصري مناسب للعرض.",
+        sfd: "يعرض مخطط القص وفق إشارة الكتب الدراسية لهذه الحالات البسيطة.",
+        bmd: "يتحدث مخطط العزم مباشرة من ردود الأفعال ونموذج التحميل المحلول."
       }
     }
   };
 
-  const cases = {
+  const sectionShapes = {
+    rectangle: {
+      fieldNames: ["rectWidth", "rectHeight"]
+    },
+    circle: {
+      fieldNames: ["circleDiameter"]
+    },
+    hollowRectangle: {
+      fieldNames: ["hollowOuterWidth", "hollowOuterHeight", "hollowInnerWidth", "hollowInnerHeight"]
+    },
+    iBeam: {
+      fieldNames: ["iBeamHeight", "iBeamWidth", "iBeamFlangeThickness", "iBeamWebThickness"]
+    },
+    tBeam: {
+      fieldNames: ["tBeamHeight", "tBeamWidth", "tBeamFlangeThickness", "tBeamWebThickness"]
+    }
+  };
+
+  const beamCases = {
     simplySupportedPoint: {
       loadType: "point",
-      solve: function (base) {
-        return (base.load * Math.pow(base.length, 3)) / (48 * base.modulus * base.inertia);
+      deflection: function (input) {
+        return (input.loadN * Math.pow(input.lengthM, 3)) / (48 * input.modulusPa * input.section.iM4);
+      },
+      slope: function (input) {
+        return (input.loadN * Math.pow(input.lengthM, 2)) / (16 * input.modulusPa * input.section.iM4);
+      },
+      reactions: function (input, texts) {
+        return [
+          { label: texts.reactions.ra, value: input.loadN / 2, unit: "N" },
+          { label: texts.reactions.rb, value: input.loadN / 2, unit: "N" }
+        ];
+      },
+      maxMoment: function (input) {
+        return (input.loadN * input.lengthM) / 4;
+      },
+      slopeLabelKey: "supportSlope",
+      maxDeflectionX: function (input) {
+        return input.lengthM / 2;
+      },
+      shearPoints: function (input) {
+        return [
+          { x: 0, y: input.loadN / 2 },
+          { x: input.lengthM / 2, y: input.loadN / 2 },
+          { x: input.lengthM / 2, y: -input.loadN / 2 },
+          { x: input.lengthM, y: -input.loadN / 2 }
+        ];
+      },
+      momentPoints: function (input) {
+        return [
+          { x: 0, y: 0 },
+          { x: input.lengthM / 2, y: (input.loadN * input.lengthM) / 4 },
+          { x: input.lengthM, y: 0 }
+        ];
+      },
+      deflectionCurve: function (input, samples) {
+        const points = [];
+
+        for (let index = 0; index <= samples; index += 1) {
+          const x = (input.lengthM * index) / samples;
+          let y;
+
+          if (x <= input.lengthM / 2) {
+            y = (input.loadN * x * (3 * Math.pow(input.lengthM, 2) - 4 * Math.pow(x, 2))) / (48 * input.modulusPa * input.section.iM4);
+          } else {
+            const xr = input.lengthM - x;
+            y = (input.loadN * xr * (3 * Math.pow(input.lengthM, 2) - 4 * Math.pow(xr, 2))) / (48 * input.modulusPa * input.section.iM4);
+          }
+
+          points.push({ x: x, y: y });
+        }
+
+        return points;
       }
     },
     simplySupportedUdl: {
       loadType: "distributed",
-      solve: function (base) {
-        return (5 * base.load * Math.pow(base.length, 4)) / (384 * base.modulus * base.inertia);
+      deflection: function (input) {
+        return (5 * input.loadPerMeter * Math.pow(input.lengthM, 4)) / (384 * input.modulusPa * input.section.iM4);
+      },
+      slope: function (input) {
+        return (input.loadPerMeter * Math.pow(input.lengthM, 3)) / (24 * input.modulusPa * input.section.iM4);
+      },
+      reactions: function (input, texts) {
+        return [
+          { label: texts.reactions.ra, value: (input.loadPerMeter * input.lengthM) / 2, unit: "N" },
+          { label: texts.reactions.rb, value: (input.loadPerMeter * input.lengthM) / 2, unit: "N" }
+        ];
+      },
+      maxMoment: function (input) {
+        return (input.loadPerMeter * Math.pow(input.lengthM, 2)) / 8;
+      },
+      slopeLabelKey: "supportSlope",
+      maxDeflectionX: function (input) {
+        return input.lengthM / 2;
+      },
+      shearPoints: function (input) {
+        return sampleLine(input.lengthM, 48, function (x) {
+          return (input.loadPerMeter * input.lengthM) / 2 - input.loadPerMeter * x;
+        });
+      },
+      momentPoints: function (input) {
+        return sampleLine(input.lengthM, 48, function (x) {
+          const reaction = (input.loadPerMeter * input.lengthM) / 2;
+          return reaction * x - (input.loadPerMeter * Math.pow(x, 2)) / 2;
+        });
+      },
+      deflectionCurve: function (input, samples) {
+        return sampleLine(input.lengthM, samples, function (x) {
+          return (input.loadPerMeter * x * (Math.pow(input.lengthM, 3) - 2 * input.lengthM * Math.pow(x, 2) + Math.pow(x, 3))) / (24 * input.modulusPa * input.section.iM4);
+        });
       }
     },
     cantileverPoint: {
       loadType: "point",
-      solve: function (base) {
-        return (base.load * Math.pow(base.length, 3)) / (3 * base.modulus * base.inertia);
+      deflection: function (input) {
+        return (input.loadN * Math.pow(input.lengthM, 3)) / (3 * input.modulusPa * input.section.iM4);
+      },
+      slope: function (input) {
+        return (input.loadN * Math.pow(input.lengthM, 2)) / (2 * input.modulusPa * input.section.iM4);
+      },
+      reactions: function (input, texts) {
+        return [
+          { label: texts.reactions.r, value: input.loadN, unit: "N" }
+        ];
+      },
+      fixedMoment: function (input) {
+        return input.loadN * input.lengthM;
+      },
+      maxMoment: function (input) {
+        return input.loadN * input.lengthM;
+      },
+      slopeLabelKey: "freeEndSlope",
+      maxDeflectionX: function (input) {
+        return input.lengthM;
+      },
+      shearPoints: function (input) {
+        return [
+          { x: 0, y: -input.loadN },
+          { x: input.lengthM, y: -input.loadN }
+        ];
+      },
+      momentPoints: function (input) {
+        return sampleLine(input.lengthM, 48, function (x) {
+          return -input.loadN * (input.lengthM - x);
+        });
+      },
+      deflectionCurve: function (input, samples) {
+        return sampleLine(input.lengthM, samples, function (x) {
+          return (input.loadN * Math.pow(x, 2) * (3 * input.lengthM - x)) / (6 * input.modulusPa * input.section.iM4);
+        });
       }
     },
     cantileverUdl: {
       loadType: "distributed",
-      solve: function (base) {
-        return (base.load * Math.pow(base.length, 4)) / (8 * base.modulus * base.inertia);
+      deflection: function (input) {
+        return (input.loadPerMeter * Math.pow(input.lengthM, 4)) / (8 * input.modulusPa * input.section.iM4);
+      },
+      slope: function (input) {
+        return (input.loadPerMeter * Math.pow(input.lengthM, 3)) / (6 * input.modulusPa * input.section.iM4);
+      },
+      reactions: function (input, texts) {
+        return [
+          { label: texts.reactions.r, value: input.loadPerMeter * input.lengthM, unit: "N" }
+        ];
+      },
+      fixedMoment: function (input) {
+        return (input.loadPerMeter * Math.pow(input.lengthM, 2)) / 2;
+      },
+      maxMoment: function (input) {
+        return (input.loadPerMeter * Math.pow(input.lengthM, 2)) / 2;
+      },
+      slopeLabelKey: "freeEndSlope",
+      maxDeflectionX: function (input) {
+        return input.lengthM;
+      },
+      shearPoints: function (input) {
+        return sampleLine(input.lengthM, 48, function (x) {
+          return -input.loadPerMeter * (input.lengthM - x);
+        });
+      },
+      momentPoints: function (input) {
+        return sampleLine(input.lengthM, 48, function (x) {
+          return -(input.loadPerMeter * Math.pow(input.lengthM - x, 2)) / 2;
+        });
+      },
+      deflectionCurve: function (input, samples) {
+        return sampleLine(input.lengthM, samples, function (x) {
+          return (input.loadPerMeter * Math.pow(x, 2) * (6 * Math.pow(input.lengthM, 2) - 4 * input.lengthM * x + Math.pow(x, 2))) / (24 * input.modulusPa * input.section.iM4);
+        });
       }
     }
   };
 
-  const beamUnits = {
-    length: ["mm", "cm", "m"],
-    pointLoad: ["N", "kN"],
-    lineLoad: ["N/m", "kN/m"],
-    modulus: ["MPa", "GPa"],
-    inertia: ["mm4", "cm4", "m4"],
-    output: ["mm", "cm", "m"],
-    dimensions: ["mm", "cm", "m"]
-  };
-
   const state = {
     beamCase: "simplySupportedPoint",
+    sectionShape: "rectangle",
     length: "",
-    lengthUnit: "m",
-    load: "",
-    loadUnit: "kN",
     modulus: "",
-    modulusUnit: "GPa",
-    outputUnit: "mm",
-    inertiaMode: "direct",
-    inertia: "",
-    inertiaUnit: "mm4",
-    inertiaShape: "rectangle",
-    inertiaDimensionUnit: "mm",
-    shapeWidth: "",
-    shapeHeight: "",
-    shapeDiameter: "",
-    shapeOuterDiameter: "",
-    shapeInnerDiameter: "",
+    load: "",
+    rectWidth: "",
+    rectHeight: "",
+    circleDiameter: "",
+    hollowOuterWidth: "",
+    hollowOuterHeight: "",
+    hollowInnerWidth: "",
+    hollowInnerHeight: "",
+    iBeamHeight: "",
+    iBeamWidth: "",
+    iBeamFlangeThickness: "",
+    iBeamWebThickness: "",
+    tBeamHeight: "",
+    tBeamWidth: "",
+    tBeamFlangeThickness: "",
+    tBeamWebThickness: "",
     result: null,
     status: {
       state: "neutral",
@@ -329,353 +538,437 @@
   }
 
   function format(value, decimals) {
-    return utils.formatNumber(value, app.getLanguage(), decimals);
+    return utils.formatNumber(value, app.getLanguage(), typeof decimals === "number" ? decimals : 4);
   }
 
-  function formatUnit(category, value, unitKey, decimals) {
-    return utils.formatWithUnit(category, value, unitKey, app.getLanguage(), decimals);
-  }
+  function parsePositiveNumber(fieldName, texts) {
+    const parsed = utils.parseNumber(state[fieldName]);
 
-  function buildCaseOptions(texts) {
-    return Object.keys(cases).map(function (caseKey) {
-      return `
-        <label class="case-option">
-          <input type="radio" name="beamCase" value="${caseKey}" ${state.beamCase === caseKey ? "checked" : ""}>
-          <span>${esc(texts.caseLabels[caseKey])}</span>
-        </label>
-      `;
-    }).join("");
-  }
-
-  function getAllowedLoadUnits() {
-    return cases[state.beamCase].loadType === "point" ? beamUnits.pointLoad : beamUnits.lineLoad;
-  }
-
-  function buildShapeFields(texts) {
-    const sharedUnitSelect = `
-      <div class="field">
-        <label for="inertiaDimensionUnit">${esc(texts.unitLabels.dimension)}</label>
-        <select id="inertiaDimensionUnit" name="inertiaDimensionUnit" class="select-control">
-          ${beamUnits.dimensions.map(function (unitKey) {
-            return `<option value="${unitKey}" ${state.inertiaDimensionUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
-          }).join("")}
-        </select>
-      </div>
-      <div class="field">
-        <label for="inertiaUnit">${esc(texts.unitLabels.inertia)}</label>
-        <select id="inertiaUnit" name="inertiaUnit" class="select-control">
-          ${beamUnits.inertia.map(function (unitKey) {
-            return `<option value="${unitKey}" ${state.inertiaUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
-          }).join("")}
-        </select>
-      </div>
-    `;
-
-    let fields = "";
-
-    if (state.inertiaShape === "rectangle") {
-      fields = `
-        <div class="field">
-          <label for="shapeWidth">${esc(texts.fieldLabels.width)}</label>
-          <input id="shapeWidth" name="shapeWidth" class="input-control" type="text" inputmode="decimal" value="${esc(state.shapeWidth)}">
-        </div>
-        <div class="field">
-          <label for="shapeHeight">${esc(texts.fieldLabels.height)}</label>
-          <input id="shapeHeight" name="shapeHeight" class="input-control" type="text" inputmode="decimal" value="${esc(state.shapeHeight)}">
-        </div>
-      `;
-    } else if (state.inertiaShape === "circle") {
-      fields = `
-        <div class="field">
-          <label for="shapeDiameter">${esc(texts.fieldLabels.diameter)}</label>
-          <input id="shapeDiameter" name="shapeDiameter" class="input-control" type="text" inputmode="decimal" value="${esc(state.shapeDiameter)}">
-        </div>
-      `;
-    } else {
-      fields = `
-        <div class="field">
-          <label for="shapeOuterDiameter">${esc(texts.fieldLabels.outerDiameter)}</label>
-          <input id="shapeOuterDiameter" name="shapeOuterDiameter" class="input-control" type="text" inputmode="decimal" value="${esc(state.shapeOuterDiameter)}">
-        </div>
-        <div class="field">
-          <label for="shapeInnerDiameter">${esc(texts.fieldLabels.innerDiameter)}</label>
-          <input id="shapeInnerDiameter" name="shapeInnerDiameter" class="input-control" type="text" inputmode="decimal" value="${esc(state.shapeInnerDiameter)}">
-        </div>
-      `;
-    }
-
-    return `
-      <div class="field-grid">
-        <div class="field">
-          <label for="inertiaShape">${esc(texts.unitLabels.shape)}</label>
-          <select id="inertiaShape" name="inertiaShape" class="select-control">
-            ${Object.keys(texts.shapes).map(function (shapeKey) {
-              return `<option value="${shapeKey}" ${state.inertiaShape === shapeKey ? "selected" : ""}>${esc(texts.shapes[shapeKey])}</option>`;
-            }).join("")}
-          </select>
-        </div>
-        ${sharedUnitSelect}
-      </div>
-
-      <div class="field-grid" style="margin-top: 0.9rem;">
-        ${fields}
-      </div>
-    `;
-  }
-
-  function computeShapeInertia() {
-    const texts = currentCopy();
-    const dimensionUnit = state.inertiaDimensionUnit;
-    const formulaLabel = texts.formulas[state.inertiaShape];
-    let result = null;
-
-    if (state.inertiaShape === "rectangle") {
-      const width = utils.parseNumber(state.shapeWidth);
-      const height = utils.parseNumber(state.shapeHeight);
-
-      if (width.empty || height.empty) {
-        return { ok: false, missing: true };
-      }
-
-      if (!width.ok || !height.ok) {
-        return { ok: false, invalid: true };
-      }
-
-      if (width.value <= 0 || height.value <= 0) {
-        return { ok: false, positive: true };
-      }
-
-      const widthBase = utils.convertLengthToMeters(width.value, dimensionUnit);
-      const heightBase = utils.convertLengthToMeters(height.value, dimensionUnit);
-
-      result = (widthBase * Math.pow(heightBase, 3)) / 12;
-
+    if (parsed.empty) {
       return {
-        ok: true,
-        value: result,
-        formulaLabel: formulaLabel,
-        detail:
-          `b = ${formatUnit("length", width.value, dimensionUnit, 4)}, ` +
-          `h = ${formatUnit("length", height.value, dimensionUnit, 4)}`
+        ok: false,
+        reason: "missing",
+        field: fieldName,
+        label: texts.fields[fieldName]
       };
     }
 
-    if (state.inertiaShape === "circle") {
-      const diameter = utils.parseNumber(state.shapeDiameter);
-
-      if (diameter.empty) {
-        return { ok: false, missing: true };
-      }
-
-      if (!diameter.ok) {
-        return { ok: false, invalid: true };
-      }
-
-      if (diameter.value <= 0) {
-        return { ok: false, positive: true };
-      }
-
-      const diameterBase = utils.convertLengthToMeters(diameter.value, dimensionUnit);
-      result = (Math.PI * Math.pow(diameterBase, 4)) / 64;
-
+    if (!parsed.ok) {
       return {
-        ok: true,
-        value: result,
-        formulaLabel: formulaLabel,
-        detail: `d = ${formatUnit("length", diameter.value, dimensionUnit, 4)}`
+        ok: false,
+        reason: "invalid",
+        field: fieldName,
+        label: texts.fields[fieldName]
       };
     }
 
-    const outer = utils.parseNumber(state.shapeOuterDiameter);
-    const inner = utils.parseNumber(state.shapeInnerDiameter);
-
-    if (outer.empty || inner.empty) {
-      return { ok: false, missing: true };
+    if (parsed.value <= 0) {
+      return {
+        ok: false,
+        reason: "positive",
+        field: fieldName,
+        label: texts.fields[fieldName]
+      };
     }
-
-    if (!outer.ok || !inner.ok) {
-      return { ok: false, invalid: true };
-    }
-
-    if (outer.value <= 0 || inner.value <= 0) {
-      return { ok: false, positive: true };
-    }
-
-    if (inner.value >= outer.value) {
-      return { ok: false, order: true };
-    }
-
-    const outerBase = utils.convertLengthToMeters(outer.value, dimensionUnit);
-    const innerBase = utils.convertLengthToMeters(inner.value, dimensionUnit);
-    result = (Math.PI * (Math.pow(outerBase, 4) - Math.pow(innerBase, 4))) / 64;
 
     return {
       ok: true,
-      value: result,
-      formulaLabel: formulaLabel,
-      detail:
-        `D = ${formatUnit("length", outer.value, dimensionUnit, 4)}, ` +
-        `d = ${formatUnit("length", inner.value, dimensionUnit, 4)}`
+      value: parsed.value
     };
   }
 
-  function evaluateWarnings(base, deflectionBase) {
+  function sampleLine(lengthM, count, fn) {
+    const points = [];
+
+    for (let index = 0; index <= count; index += 1) {
+      const x = (lengthM * index) / count;
+      points.push({
+        x: x,
+        y: fn(x)
+      });
+    }
+
+    return points;
+  }
+
+  function getShapeFields() {
+    return sectionShapes[state.sectionShape].fieldNames;
+  }
+
+  function shapeFormulaTexts(texts) {
+    return texts.formulas[state.sectionShape];
+  }
+
+  function getSectionPreview() {
     const texts = currentCopy();
     const warnings = [];
 
-    if (base.length > 30) {
-      warnings.push(texts.warnings.longSpan);
+    function genericWarnings(values) {
+      const numbers = values.filter(function (value) {
+        return Number.isFinite(value);
+      });
+
+      if (numbers.some(function (value) { return value < 5; })) {
+        warnings.push(texts.warnings.tinyDimensions);
+      }
+
+      if (numbers.some(function (value) { return value > 5000; })) {
+        warnings.push(texts.warnings.hugeDimensions);
+      }
     }
 
-    if (base.length < 0.05) {
-      warnings.push(texts.warnings.shortSpan);
+    if (state.sectionShape === "rectangle") {
+      const width = parsePositiveNumber("rectWidth", texts);
+      const height = parsePositiveNumber("rectHeight", texts);
+
+      if (!width.ok || !height.ok) {
+        return {
+          ok: false,
+          formula: texts.formulas.rectangle
+        };
+      }
+
+      const iMm4 = (width.value * Math.pow(height.value, 3)) / 12;
+      genericWarnings([width.value, height.value]);
+
+      return {
+        ok: true,
+        formula: texts.formulas.rectangle,
+        detailLines: [
+          `b = ${format(width.value, 4)} mm`,
+          `h = ${format(height.value, 4)} mm`
+        ],
+        iMm4: iMm4,
+        iM4: iMm4 * 1e-12,
+        warnings: warnings
+      };
     }
 
-    if (base.modulus < 1e9 || base.modulus > 3.5e11) {
-      warnings.push(texts.warnings.lowModulus);
+    if (state.sectionShape === "circle") {
+      const diameter = parsePositiveNumber("circleDiameter", texts);
+
+      if (!diameter.ok) {
+        return {
+          ok: false,
+          formula: texts.formulas.circle
+        };
+      }
+
+      const iMm4 = (Math.PI * Math.pow(diameter.value, 4)) / 64;
+      genericWarnings([diameter.value]);
+
+      return {
+        ok: true,
+        formula: texts.formulas.circle,
+        detailLines: [
+          `d = ${format(diameter.value, 4)} mm`
+        ],
+        iMm4: iMm4,
+        iM4: iMm4 * 1e-12,
+        warnings: warnings
+      };
     }
 
-    if (base.inertia < 1e-10) {
+    if (state.sectionShape === "hollowRectangle") {
+      const outerWidth = parsePositiveNumber("hollowOuterWidth", texts);
+      const outerHeight = parsePositiveNumber("hollowOuterHeight", texts);
+      const innerWidth = parsePositiveNumber("hollowInnerWidth", texts);
+      const innerHeight = parsePositiveNumber("hollowInnerHeight", texts);
+
+      if (!outerWidth.ok || !outerHeight.ok || !innerWidth.ok || !innerHeight.ok) {
+        return {
+          ok: false,
+          formula: texts.formulas.hollowRectangle
+        };
+      }
+
+      if (innerWidth.value >= outerWidth.value || innerHeight.value >= outerHeight.value) {
+        return {
+          ok: false,
+          formula: texts.formulas.hollowRectangle,
+          error: texts.status.hollowRectangle
+        };
+      }
+
+      const iMm4 = ((outerWidth.value * Math.pow(outerHeight.value, 3)) - (innerWidth.value * Math.pow(innerHeight.value, 3))) / 12;
+      genericWarnings([outerWidth.value, outerHeight.value, innerWidth.value, innerHeight.value]);
+
+      return {
+        ok: true,
+        formula: texts.formulas.hollowRectangle,
+        detailLines: [
+          `B = ${format(outerWidth.value, 4)} mm`,
+          `H = ${format(outerHeight.value, 4)} mm`,
+          `b = ${format(innerWidth.value, 4)} mm`,
+          `h = ${format(innerHeight.value, 4)} mm`
+        ],
+        iMm4: iMm4,
+        iM4: iMm4 * 1e-12,
+        warnings: warnings
+      };
+    }
+
+    if (state.sectionShape === "iBeam") {
+      const height = parsePositiveNumber("iBeamHeight", texts);
+      const width = parsePositiveNumber("iBeamWidth", texts);
+      const flangeThickness = parsePositiveNumber("iBeamFlangeThickness", texts);
+      const webThickness = parsePositiveNumber("iBeamWebThickness", texts);
+
+      if (!height.ok || !width.ok || !flangeThickness.ok || !webThickness.ok) {
+        return {
+          ok: false,
+          formula: texts.formulas.iBeam
+        };
+      }
+
+      if (2 * flangeThickness.value >= height.value) {
+        return {
+          ok: false,
+          formula: texts.formulas.iBeam,
+          error: texts.status.iBeamDepth
+        };
+      }
+
+      if (webThickness.value > width.value) {
+        return {
+          ok: false,
+          formula: texts.formulas.iBeam,
+          error: texts.status.iBeamWidth
+        };
+      }
+
+      const iMm4 = ((width.value * Math.pow(height.value, 3)) - ((width.value - webThickness.value) * Math.pow(height.value - 2 * flangeThickness.value, 3))) / 12;
+      genericWarnings([height.value, width.value, flangeThickness.value, webThickness.value]);
+
+      return {
+        ok: true,
+        formula: texts.formulas.iBeam,
+        detailLines: [
+          `H = ${format(height.value, 4)} mm`,
+          `B = ${format(width.value, 4)} mm`,
+          `tf = ${format(flangeThickness.value, 4)} mm`,
+          `tw = ${format(webThickness.value, 4)} mm`
+        ],
+        iMm4: iMm4,
+        iM4: iMm4 * 1e-12,
+        warnings: warnings
+      };
+    }
+
+    const height = parsePositiveNumber("tBeamHeight", texts);
+    const width = parsePositiveNumber("tBeamWidth", texts);
+    const flangeThickness = parsePositiveNumber("tBeamFlangeThickness", texts);
+    const webThickness = parsePositiveNumber("tBeamWebThickness", texts);
+
+    if (!height.ok || !width.ok || !flangeThickness.ok || !webThickness.ok) {
+      return {
+        ok: false,
+        formula: texts.formulas.tBeam
+      };
+    }
+
+    if (flangeThickness.value >= height.value) {
+      return {
+        ok: false,
+        formula: texts.formulas.tBeam,
+        error: texts.status.tBeamDepth
+      };
+    }
+
+    if (webThickness.value > width.value) {
+      return {
+        ok: false,
+        formula: texts.formulas.tBeam,
+        error: texts.status.tBeamWidth
+      };
+    }
+
+    const flangeArea = width.value * flangeThickness.value;
+    const webArea = webThickness.value * (height.value - flangeThickness.value);
+    const yf = height.value - flangeThickness.value / 2;
+    const yw = (height.value - flangeThickness.value) / 2;
+    const ybar = (flangeArea * yf + webArea * yw) / (flangeArea + webArea);
+    const iFlangeCentroid = (width.value * Math.pow(flangeThickness.value, 3)) / 12;
+    const iWebCentroid = (webThickness.value * Math.pow(height.value - flangeThickness.value, 3)) / 12;
+    const iMm4 = iFlangeCentroid + flangeArea * Math.pow(yf - ybar, 2) + iWebCentroid + webArea * Math.pow(yw - ybar, 2);
+    genericWarnings([height.value, width.value, flangeThickness.value, webThickness.value]);
+
+    return {
+      ok: true,
+      formula: texts.formulas.tBeam,
+      detailLines: [
+        `H = ${format(height.value, 4)} mm`,
+        `B = ${format(width.value, 4)} mm`,
+        `tf = ${format(flangeThickness.value, 4)} mm`,
+        `tw = ${format(webThickness.value, 4)} mm`,
+        `${texts.labels.neutralAxis} = ${format(ybar, 4)} mm`
+      ],
+      iMm4: iMm4,
+      iM4: iMm4 * 1e-12,
+      ybarMm: ybar,
+      warnings: warnings
+    };
+  }
+
+  function getBeamInputPreview() {
+    const texts = currentCopy();
+    const length = parsePositiveNumber("length", texts);
+    const modulus = parsePositiveNumber("modulus", texts);
+    const loadField = beamCases[state.beamCase].loadType === "point" ? "pointLoad" : "lineLoad";
+    const load = parsePositiveNumber("load", Object.assign({}, texts, { fields: Object.assign({}, texts.fields, { load: texts.fields[loadField] }) }));
+
+    if (!length.ok || !modulus.ok || !load.ok) {
+      return null;
+    }
+
+    return {
+      lengthM: length.value,
+      modulusGPa: modulus.value,
+      modulusPa: modulus.value * 1e9,
+      loadInput: load.value,
+      loadField: loadField
+    };
+  }
+
+  function buildSolvedResult(section, beamInput) {
+    const texts = currentCopy();
+    const beamCase = beamCases[state.beamCase];
+    const input = {
+      lengthM: beamInput.lengthM,
+      modulusGPa: beamInput.modulusGPa,
+      modulusPa: beamInput.modulusPa,
+      section: section
+    };
+
+    if (beamCase.loadType === "point") {
+      input.loadN = beamInput.loadInput;
+    } else {
+      input.loadPerMeter = beamInput.loadInput;
+    }
+
+    const reactions = beamCase.reactions(input, texts);
+    const maxMomentNm = beamCase.maxMoment(input);
+    const slopeRad = beamCase.slope(input);
+    const deltaM = beamCase.deflection(input);
+    const deltaMm = deltaM * 1000;
+    const slopeDeg = slopeRad * (180 / Math.PI);
+    const deflectionRatio = deltaM / input.lengthM;
+    const warnings = section.warnings.slice();
+
+    if (section.iM4 < 1e-10) {
       warnings.push(texts.warnings.tinyInertia);
     }
 
-    if (base.inertia > 1) {
-      warnings.push(texts.warnings.hugeInertia);
-    }
-
-    if (deflectionBase > base.length / 50) {
-      warnings.push(texts.warnings.largeDeflection);
-    } else if (deflectionBase > base.length / 360) {
+    if (deltaM > input.lengthM / 180) {
+      warnings.push(texts.warnings.hugeDeflection);
+    } else if (deltaM > input.lengthM / 360) {
       warnings.push(texts.warnings.serviceability);
     }
 
-    if (deflectionBase < 1e-9) {
-      warnings.push(texts.warnings.tinyDeflection);
+    if (input.modulusGPa < 1 || input.modulusGPa > 400) {
+      warnings.push(texts.warnings.lowModulus);
     }
 
-    return warnings;
+    return {
+      caseKey: state.beamCase,
+      caseConfig: beamCase,
+      section: section,
+      input: input,
+      reactions: reactions,
+      maxMomentNm: maxMomentNm,
+      deltaM: deltaM,
+      deltaMm: deltaMm,
+      slopeRad: slopeRad,
+      slopeDeg: slopeDeg,
+      deflectionRatio: deflectionRatio,
+      maxDeflectionX: beamCase.maxDeflectionX(input),
+      fixedMomentNm: typeof beamCase.fixedMoment === "function" ? beamCase.fixedMoment(input) : null,
+      warnings: uniqueList(warnings)
+    };
+  }
+
+  function uniqueList(items) {
+    return items.filter(function (item, index) {
+      return items.indexOf(item) === index;
+    });
   }
 
   function solve() {
     const texts = currentCopy();
-    const activeCase = cases[state.beamCase];
-    const length = utils.parseNumber(state.length);
-    const load = utils.parseNumber(state.load);
-    const modulus = utils.parseNumber(state.modulus);
+    const section = getSectionPreview();
+    const beamInput = getBeamInputPreview();
 
-    if (length.empty || load.empty || modulus.empty) {
+    if (section.error) {
       state.result = null;
-      state.status = { state: "error", message: texts.status.missing };
+      state.status = { state: "error", message: section.error };
       return;
     }
 
-    if (!length.ok || !load.ok || !modulus.ok) {
+    if (!section.ok || !beamInput) {
+      const firstInvalid = findFirstInvalidInput(texts);
+
       state.result = null;
-      state.status = { state: "error", message: texts.status.invalid };
-      return;
-    }
-
-    if (length.value <= 0 || load.value <= 0 || modulus.value <= 0) {
-      state.result = null;
-      state.status = { state: "error", message: texts.status.positive };
-      return;
-    }
-
-    let inertiaBase = NaN;
-    let inertiaSummary = null;
-
-    if (state.inertiaMode === "direct") {
-      const inertia = utils.parseNumber(state.inertia);
-
-      if (inertia.empty) {
-        state.result = null;
-        state.status = { state: "error", message: texts.status.missing };
-        return;
-      }
-
-      if (!inertia.ok) {
-        state.result = null;
-        state.status = { state: "error", message: texts.status.invalid };
-        return;
-      }
-
-      if (inertia.value <= 0) {
-        state.result = null;
-        state.status = { state: "error", message: texts.status.positive };
-        return;
-      }
-
-      inertiaBase = utils.convertInertiaToMetersFourth(inertia.value, state.inertiaUnit);
-      inertiaSummary = {
-        mode: "direct",
-        label: texts.fieldLabels.inertia,
-        detail: `${formatUnit("inertia", inertia.value, state.inertiaUnit, 4)}`
+      state.status = {
+        state: "error",
+        message: firstInvalid || texts.status.missing
       };
-    } else {
-      const shapeResult = computeShapeInertia();
-
-      if (!shapeResult.ok) {
-        state.result = null;
-        state.status = {
-          state: "error",
-          message: shapeResult.order ? texts.status.hollowOrder : shapeResult.invalid ? texts.status.invalid : shapeResult.positive ? texts.status.positive : texts.status.missing
-        };
-        return;
-      }
-
-      inertiaBase = shapeResult.value;
-      inertiaSummary = {
-        mode: "shape",
-        label: shapeResult.formulaLabel,
-        detail: shapeResult.detail
-      };
+      return;
     }
 
-    const base = {
-      length: utils.convertLengthToMeters(length.value, state.lengthUnit),
-      load: activeCase.loadType === "point"
-        ? utils.convertForceToNewtons(load.value, state.loadUnit)
-        : utils.convertLineLoadToNewtonPerMeter(load.value, state.loadUnit),
-      modulus: utils.convertModulusToPascals(modulus.value, state.modulusUnit),
-      inertia: inertiaBase
-    };
-
-    const deflectionBase = activeCase.solve(base);
-    const outputDeflection = utils.convertMetersToLength(deflectionBase, state.outputUnit);
-    const inertiaDisplay = utils.convertMetersFourthToInertia(inertiaBase, state.inertiaUnit);
-    const inertiaOutputUnit = state.inertiaUnit;
-
-    state.result = {
-      base: base,
-      deflectionBase: deflectionBase,
-      outputDeflection: outputDeflection,
-      inertiaDisplay: inertiaDisplay,
-      inertiaOutputUnit: inertiaOutputUnit,
-      inertiaSummary: inertiaSummary,
-      warnings: evaluateWarnings(base, deflectionBase)
-    };
+    state.result = buildSolvedResult(section, beamInput);
     state.status = { state: "success", message: texts.status.success };
+  }
+
+  function findFirstInvalidInput(texts) {
+    const shapeFields = getShapeFields().concat(["length", "modulus", "load"]);
+
+    for (let index = 0; index < shapeFields.length; index += 1) {
+      const fieldName = shapeFields[index];
+      const parsed = utils.parseNumber(state[fieldName]);
+
+      if (parsed.empty) {
+        return texts.status.missing;
+      }
+
+      if (!parsed.ok) {
+        return texts.status.invalid;
+      }
+
+      if (parsed.value <= 0) {
+        return texts.status.positive;
+      }
+    }
+
+    const sectionPreview = getSectionPreview();
+
+    if (sectionPreview.error) {
+      return sectionPreview.error;
+    }
+
+    return null;
   }
 
   function reset() {
     state.beamCase = "simplySupportedPoint";
+    state.sectionShape = "rectangle";
     state.length = "";
-    state.lengthUnit = "m";
-    state.load = "";
-    state.loadUnit = "kN";
     state.modulus = "";
-    state.modulusUnit = "GPa";
-    state.outputUnit = "mm";
-    state.inertiaMode = "direct";
-    state.inertia = "";
-    state.inertiaUnit = "mm4";
-    state.inertiaShape = "rectangle";
-    state.inertiaDimensionUnit = "mm";
-    state.shapeWidth = "";
-    state.shapeHeight = "";
-    state.shapeDiameter = "";
-    state.shapeOuterDiameter = "";
-    state.shapeInnerDiameter = "";
+    state.load = "";
+    state.rectWidth = "";
+    state.rectHeight = "";
+    state.circleDiameter = "";
+    state.hollowOuterWidth = "";
+    state.hollowOuterHeight = "";
+    state.hollowInnerWidth = "";
+    state.hollowInnerHeight = "";
+    state.iBeamHeight = "";
+    state.iBeamWidth = "";
+    state.iBeamFlangeThickness = "";
+    state.iBeamWebThickness = "";
+    state.tBeamHeight = "";
+    state.tBeamWidth = "";
+    state.tBeamFlangeThickness = "";
+    state.tBeamWebThickness = "";
     state.result = null;
     state.status = {
       state: "neutral",
@@ -683,81 +976,133 @@
     };
   }
 
-  function buildSteps() {
-    const texts = currentCopy();
+  function createFieldCard(fieldName, texts) {
+    return `
+      <label class="input-card" for="${fieldName}">
+        <span class="input-card__badge">${esc(fieldNameBadge(fieldName))}</span>
+        <span class="input-card__title">${esc(texts.fields[fieldName])}</span>
+        <span class="input-card__hint">${esc(fieldHint(fieldName, texts))}</span>
+        <input
+          id="${fieldName}"
+          name="${fieldName}"
+          class="input-control"
+          type="text"
+          inputmode="decimal"
+          value="${esc(state[fieldName])}"
+        >
+      </label>
+    `;
+  }
 
+  function fieldNameBadge(fieldName) {
+    const badges = {
+      length: "L",
+      modulus: "E",
+      load: beamCases[state.beamCase].loadType === "point" ? "P" : "w",
+      rectWidth: "b",
+      rectHeight: "h",
+      circleDiameter: "d",
+      hollowOuterWidth: "B",
+      hollowOuterHeight: "H",
+      hollowInnerWidth: "b",
+      hollowInnerHeight: "h",
+      iBeamHeight: "H",
+      iBeamWidth: "B",
+      iBeamFlangeThickness: "tf",
+      iBeamWebThickness: "tw",
+      tBeamHeight: "H",
+      tBeamWidth: "B",
+      tBeamFlangeThickness: "tf",
+      tBeamWebThickness: "tw"
+    };
+
+    return badges[fieldName] || fieldName;
+  }
+
+  function fieldHint(fieldName, texts) {
+    if (fieldName === "length") {
+      return texts.hints.length;
+    }
+
+    if (fieldName === "modulus") {
+      return texts.hints.modulus;
+    }
+
+    if (fieldName === "load") {
+      return beamCases[state.beamCase].loadType === "point" ? texts.hints.pointLoad : texts.hints.lineLoad;
+    }
+
+    return texts.hints.geometry;
+  }
+
+  function buildSectionPreview(texts) {
+    const preview = getSectionPreview();
+
+    if (!preview.ok) {
+      return `
+        <article class="preview-card">
+          <h3>${esc(texts.sectionPreviewTitle)}</h3>
+          <p>${esc(shapeFormulaTexts(texts))}</p>
+          <p>${esc(preview.error || texts.labels.sectionIncomplete)}</p>
+        </article>
+      `;
+    }
+
+    return `
+      <article class="preview-card">
+        <h3>${esc(texts.sectionPreviewTitle)}</h3>
+        <p>${esc(preview.formula)}</p>
+        <ul class="summary-list">
+          ${preview.detailLines.map(function (line) {
+            return `<li>${esc(line)}</li>`;
+          }).join("")}
+        </ul>
+        <p><strong>${esc(texts.metrics.inertiaMm4)}:</strong> ${esc(`${format(preview.iMm4, 4)} mm^4`)}</p>
+        <p><strong>${esc(texts.metrics.inertiaM4)}:</strong> ${esc(`${preview.iM4.toExponential(4)} m^4`)}</p>
+      </article>
+    `;
+  }
+
+  function buildMetrics(texts) {
     if (!state.result) {
       return `
-        <article class="placeholder-card">
+        <article class="placeholder-card" style="grid-column: 1 / -1;">
           <p>${esc(texts.status.ready)}</p>
         </article>
       `;
     }
 
-    const activeCase = cases[state.beamCase];
-    const loadCategory = activeCase.loadType === "point" ? "force" : "lineLoad";
-    const loadLabel = activeCase.loadType === "point" ? texts.caseLoadLabels.point : texts.caseLoadLabels.distributed;
-    const formula = texts.formulas[state.beamCase];
-    const loadSymbol = activeCase.loadType === "point" ? "P" : "w";
-    const loadDisplay = utils.parseNumber(state.load).value;
-    const modulusDisplay = utils.parseNumber(state.modulus).value;
-    const lengthDisplay = utils.parseNumber(state.length).value;
-    const inertiaInfo = state.result.inertiaSummary;
-    const inertiaUsedDisplay = formatUnit("inertia", state.result.inertiaDisplay, state.result.inertiaOutputUnit, 4);
-    const inertiaBaseDisplay = formatUnit("inertia", state.result.base.inertia, "m4", 8);
-    const steps = [
-      {
-        title: texts.stepLabels.units,
-        equation:
-          `L = ${formatUnit("length", lengthDisplay, state.lengthUnit, 4)} = ${formatUnit("length", state.result.base.length, "m", 6)}\n` +
-          `${loadSymbol} = ${formatUnit(loadCategory, loadDisplay, state.loadUnit, 4)} = ${formatUnit(loadCategory, state.result.base.load, loadCategory === "force" ? "N" : "N/m", 6)}\n` +
-          `E = ${formatUnit("modulus", modulusDisplay, state.modulusUnit, 4)} = ${formatUnit("modulus", state.result.base.modulus, "Pa", 6)}`
-      },
-      {
-        title: texts.stepLabels.inertia,
-        equation:
-          `${inertiaInfo.label}\n` +
-          `${inertiaInfo.detail}\n` +
-          `I used = ${inertiaUsedDisplay}\n` +
-          `${texts.labels.inertiaSi} = ${inertiaBaseDisplay}`
-      },
-      {
-        title: texts.stepLabels.formula,
-        equation: formula
-      },
-      {
-        title: texts.stepLabels.substitution,
-        equation:
-          `δmax = ${activeCase.loadType === "point"
-            ? state.beamCase === "simplySupportedPoint"
-              ? `(P L^3) / (48 E I)`
-              : `(P L^3) / (3 E I)`
-            : state.beamCase === "simplySupportedUdl"
-              ? `(5 w L^4) / (384 E I)`
-              : `(w L^4) / (8 E I)`}\n` +
-          `δmax = ${format(state.result.deflectionBase, 8)} m`
-      },
-      {
-        title: texts.stepLabels.result,
-        equation:
-          `δmax = ${formatUnit("length", state.result.outputDeflection, state.outputUnit, 6)}\n` +
-          `Span / deflection = ${format(state.result.base.length / state.result.deflectionBase, 2)}`
-      }
-    ];
+    const slopeLabel = texts.labels[state.result.caseConfig.slopeLabelKey];
+    const reactionSummary = state.result.reactions.map(function (item) {
+      return `${item.label} = ${format(item.value, 3)} ${item.unit}`;
+    }).join(" | ");
+    const maxMomentText = `${format(state.result.maxMomentNm, 4)} N·m`;
 
-    return steps.map(function (step) {
-      return `
-        <article class="step-card">
-          <h4>${esc(step.title)}</h4>
-          <span class="equation-line">${esc(step.equation)}</span>
-        </article>
-      `;
-    }).join("");
+    return [
+      metricCard(texts.metrics.inertiaMm4, `${format(state.result.section.iMm4, 4)} mm^4`),
+      metricCard(texts.metrics.inertiaM4, `${state.result.section.iM4.toExponential(4)} m^4`),
+      metricCard(texts.metrics.deflectionMm, `${format(state.result.deltaMm, 6)} mm`),
+      metricCard(texts.metrics.slope, `${slopeLabel}: ${format(state.result.slopeRad, 6)} rad (${format(state.result.slopeDeg, 4)} deg)`),
+      metricCard(texts.metrics.reactions, reactionSummary),
+      metricCard(
+        texts.metrics.maxMoment,
+        state.result.fixedMomentNm == null
+          ? `${texts.labels.maxMoment}: ${maxMomentText}`
+          : `${texts.labels.fixedMoment}: ${format(state.result.fixedMomentNm, 4)} N·m | ${texts.labels.maxMoment}: ${maxMomentText}`
+      )
+    ].join("");
   }
 
-  function buildWarnings() {
-    const texts = currentCopy();
+  function metricCard(title, value) {
+    return `
+      <article class="metric-card">
+        <h3>${esc(title)}</h3>
+        <span class="metric-value">${esc(value)}</span>
+      </article>
+    `;
+  }
 
+  function buildWarnings(texts) {
     if (!state.result) {
       return `
         <article class="placeholder-card">
@@ -769,7 +1114,9 @@
     if (!state.result.warnings.length) {
       return `
         <article class="preview-card">
-          <p>${app.getLanguage() === "ar" ? "لا توجد مؤشرات تحذيرية واضحة لهذه القيم. استمر مع التفسير الهندسي المعتاد." : "No major realism warnings were triggered for these values. Continue with normal engineering interpretation."}</p>
+          <p>${esc(app.getLanguage() === "ar"
+            ? "لا توجد تحذيرات هندسية رئيسية لهذه القيم. استمر في تفسير الحالة إنشائياً بصورة طبيعية."
+            : "No major engineering warnings were triggered for this case. Continue with normal interpretation.")}</p>
         </article>
       `;
     }
@@ -785,123 +1132,310 @@
     `;
   }
 
-  function buildDrawing() {
-    const texts = currentCopy();
+  function buildSteps(texts) {
+    if (!state.result) {
+      return `
+        <article class="placeholder-card">
+          <p>${esc(texts.status.ready)}</p>
+        </article>
+      `;
+    }
+
+    const beamFormula = texts.formulas[state.result.caseKey];
+    const sectionFormula = texts.formulas[state.sectionShape];
+    const loadSymbol = state.result.caseConfig.loadType === "point" ? "P" : "w";
+    const loadText = state.result.caseConfig.loadType === "point"
+      ? `${loadSymbol} = ${format(state.result.input.loadN, 4)} N`
+      : `${loadSymbol} = ${format(state.result.input.loadPerMeter, 4)} N/m`;
+    const reactionText = state.result.reactions.map(function (item) {
+      return `${item.label} = ${format(item.value, 4)} ${item.unit}`;
+    }).join(", ");
+    const reactionStepText = state.result.fixedMomentNm == null
+      ? reactionText
+      : `${reactionText}\n${texts.labels.fixedMoment} = ${format(state.result.fixedMomentNm, 4)} N·m`;
+
+    const steps = [
+      {
+        title: texts.stepLabels.geometry,
+        equation:
+          `${sectionFormula}\n` +
+          `${state.result.section.detailLines.join("\n")}\n` +
+          `I = ${format(state.result.section.iMm4, 4)} mm^4`
+      },
+      {
+        title: texts.stepLabels.conversion,
+        equation:
+          `${texts.labels.siConversion}\n` +
+          `I = ${state.result.section.iMm4.toExponential(4)} mm^4 = ${state.result.section.iM4.toExponential(4)} m^4\n` +
+          `E = ${format(state.result.input.modulusGPa, 4)} GPa = ${state.result.input.modulusPa.toExponential(4)} Pa`
+      },
+      {
+        title: texts.stepLabels.reactions,
+        equation:
+          `${reactionStepText}\n` +
+          `${texts.labels.maxMoment} = ${format(state.result.maxMomentNm, 4)} N·m`
+      },
+      {
+        title: texts.stepLabels.deflection,
+        equation:
+          `${beamFormula}\n` +
+          `L = ${format(state.result.input.lengthM, 4)} m\n` +
+          `${loadText}\n` +
+          `delta_max = ${state.result.deltaM.toExponential(4)} m = ${format(state.result.deltaMm, 6)} mm`
+      },
+      {
+        title: texts.stepLabels.slope,
+        equation:
+          `${texts.labels[state.result.caseConfig.slopeLabelKey]} = ${format(state.result.slopeRad, 6)} rad\n` +
+          `= ${format(state.result.slopeDeg, 4)} deg`
+      }
+    ];
+
+    return steps.map(function (step) {
+      return `
+        <article class="step-card">
+          <h4>${esc(step.title)}</h4>
+          <span class="equation-line">${esc(step.equation)}</span>
+        </article>
+      `;
+    }).join("");
+  }
+
+  function buildDiagramCards(texts) {
+    return `
+      <div class="diagram-grid">
+        ${diagramCard(texts.labels.beam, texts.diagramNotes.beam, state.result ? buildBeamDiagram(texts) : null)}
+        ${diagramCard(texts.labels.deflection, texts.diagramNotes.deflection, state.result ? buildDeflectionDiagram(texts) : null)}
+        ${diagramCard(texts.labels.sfd, texts.diagramNotes.sfd, state.result ? buildSfdDiagram(texts) : null)}
+        ${diagramCard(texts.labels.bmd, texts.diagramNotes.bmd, state.result ? buildBmdDiagram(texts) : null)}
+      </div>
+    `;
+  }
+
+  function diagramCard(title, note, svg) {
+    return `
+      <article class="result-panel glass-card diagram-card">
+        <div class="panel-header">
+          <h3>${esc(title)}</h3>
+          <p>${esc(note)}</p>
+        </div>
+        <div class="drawing-shell drawing-shell--diagram">
+          ${svg || `<div class="placeholder-card"><p>${esc(currentCopy().status.ready)}</p></div>`}
+        </div>
+      </article>
+    `;
+  }
+
+  function buildBeamDiagram(texts) {
+    const result = state.result;
     const width = 760;
-    const height = 320;
+    const height = 260;
     const left = 90;
     const right = 680;
-    const beamY = 150;
+    const beamY = 110;
     const centerX = (left + right) / 2;
-    const activeCase = state.beamCase;
+    const maxDeflectionX = left + ((right - left) * result.maxDeflectionX) / result.input.lengthM;
     let supports = "";
     let loads = "";
-    let deflection = "";
-    let maxPointX = centerX;
+    let reactions = "";
+    let fixedMoment = "";
 
-    function pointLoad(xPosition, label) {
+    function downArrow(x, topY, bottomY, label) {
       return `
-        <line x1="${xPosition}" y1="46" x2="${xPosition}" y2="${beamY - 10}" stroke="#ff6d6d" stroke-width="4" marker-end="url(#beam-arrow)"></line>
-        <text x="${xPosition + 10}" y="52" fill="#f5f5f5" font-size="15">${esc(label)}</text>
+        <line x1="${x}" y1="${topY}" x2="${x}" y2="${bottomY}" stroke="#ff6d6d" stroke-width="4" marker-end="url(#beam-arrow-down)"></line>
+        <text x="${x + 10}" y="${topY + 8}" fill="#f5f5f5" font-size="15">${esc(label)}</text>
+      `;
+    }
+
+    function upArrow(x, bottomY, topY, label) {
+      return `
+        <line x1="${x}" y1="${bottomY}" x2="${x}" y2="${topY}" stroke="#8cffc1" stroke-width="4" marker-end="url(#beam-arrow-up)"></line>
+        <text x="${x + 10}" y="${topY - 8}" fill="#f5f5f5" font-size="15">${esc(label)}</text>
       `;
     }
 
     function udl(label) {
       const arrows = [];
+
       for (let index = 0; index < 8; index += 1) {
-        const xPosition = left + ((right - left) / 7) * index;
-        arrows.push(`<line x1="${xPosition}" y1="62" x2="${xPosition}" y2="${beamY - 10}" stroke="#ff6d6d" stroke-width="2.4" marker-end="url(#beam-arrow)"></line>`);
+        const x = left + ((right - left) * index) / 7;
+        arrows.push(`<line x1="${x}" y1="36" x2="${x}" y2="${beamY - 10}" stroke="#ff6d6d" stroke-width="2.4" marker-end="url(#beam-arrow-down)"></line>`);
       }
 
-      arrows.push(`<text x="${centerX - 12}" y="48" fill="#f5f5f5" font-size="15">${esc(label)}</text>`);
+      arrows.push(`<text x="${centerX - 8}" y="30" fill="#f5f5f5" font-size="15">${esc(label)}</text>`);
       return arrows.join("");
     }
 
-    if (activeCase === "simplySupportedPoint" || activeCase === "simplySupportedUdl") {
+    if (result.caseKey === "simplySupportedPoint" || result.caseKey === "simplySupportedUdl") {
       supports = `
-        <polygon points="${left},${beamY + 8} ${left - 18},${beamY + 42} ${left + 18},${beamY + 42}" fill="rgba(255,255,255,0.72)"></polygon>
-        <circle cx="${right}" cy="${beamY + 28}" r="10" fill="rgba(255,255,255,0.72)"></circle>
-        <line x1="${right - 20}" y1="${beamY + 40}" x2="${right + 20}" y2="${beamY + 40}" stroke="rgba(255,255,255,0.72)" stroke-width="4"></line>
+        <polygon points="${left},${beamY + 10} ${left - 18},${beamY + 40} ${left + 18},${beamY + 40}" fill="rgba(255,255,255,0.76)"></polygon>
+        <circle cx="${right}" cy="${beamY + 22}" r="10" fill="rgba(255,255,255,0.76)"></circle>
+        <line x1="${right - 20}" y1="${beamY + 34}" x2="${right + 20}" y2="${beamY + 34}" stroke="rgba(255,255,255,0.76)" stroke-width="4"></line>
       `;
-      maxPointX = centerX;
-      deflection = activeCase === "simplySupportedPoint"
-        ? `M ${left} ${beamY} Q ${centerX} ${beamY + 42} ${right} ${beamY}`
-        : `M ${left} ${beamY} C ${left + 160} ${beamY + 18}, ${right - 160} ${beamY + 18}, ${right} ${beamY} M ${left} ${beamY} Q ${centerX} ${beamY + 34} ${right} ${beamY}`;
+      reactions = result.reactions.map(function (item, index) {
+        return upArrow(index === 0 ? left : right, beamY + 70, beamY + 22, `${item.label} = ${format(item.value, 2)} N`);
+      }).join("");
+      loads = result.caseKey === "simplySupportedPoint"
+        ? downArrow(centerX, 36, beamY - 10, `P = ${format(result.input.loadN, 2)} N`)
+        : udl(`w = ${format(result.input.loadPerMeter, 2)} N/m`);
     } else {
       supports = `
-        <rect x="${left - 24}" y="${beamY - 54}" width="24" height="108" fill="rgba(255,255,255,0.78)"></rect>
-        <line x1="${left - 24}" y1="${beamY - 54}" x2="${left - 44}" y2="${beamY - 76}" stroke="rgba(255,255,255,0.45)" stroke-width="4"></line>
-        <line x1="${left - 24}" y1="${beamY - 26}" x2="${left - 44}" y2="${beamY - 48}" stroke="rgba(255,255,255,0.45)" stroke-width="4"></line>
-        <line x1="${left - 24}" y1="${beamY + 2}" x2="${left - 44}" y2="${beamY - 20}" stroke="rgba(255,255,255,0.45)" stroke-width="4"></line>
-        <line x1="${left - 24}" y1="${beamY + 30}" x2="${left - 44}" y2="${beamY + 8}" stroke="rgba(255,255,255,0.45)" stroke-width="4"></line>
-        <line x1="${left - 24}" y1="${beamY + 58}" x2="${left - 44}" y2="${beamY + 36}" stroke="rgba(255,255,255,0.45)" stroke-width="4"></line>
+        <rect x="${left - 26}" y="${beamY - 52}" width="26" height="104" fill="rgba(255,255,255,0.82)"></rect>
+        <line x1="${left - 26}" y1="${beamY - 52}" x2="${left - 48}" y2="${beamY - 72}" stroke="rgba(255,255,255,0.44)" stroke-width="4"></line>
+        <line x1="${left - 26}" y1="${beamY - 24}" x2="${left - 48}" y2="${beamY - 44}" stroke="rgba(255,255,255,0.44)" stroke-width="4"></line>
+        <line x1="${left - 26}" y1="${beamY + 4}" x2="${left - 48}" y2="${beamY - 16}" stroke="rgba(255,255,255,0.44)" stroke-width="4"></line>
+        <line x1="${left - 26}" y1="${beamY + 32}" x2="${left - 48}" y2="${beamY + 12}" stroke="rgba(255,255,255,0.44)" stroke-width="4"></line>
+        <line x1="${left - 26}" y1="${beamY + 60}" x2="${left - 48}" y2="${beamY + 40}" stroke="rgba(255,255,255,0.44)" stroke-width="4"></line>
       `;
-      maxPointX = right;
-      deflection = activeCase === "cantileverPoint"
-        ? `M ${left} ${beamY} C ${left + 140} ${beamY + 2}, ${left + 300} ${beamY + 18}, ${right} ${beamY + 48}`
-        : `M ${left} ${beamY} C ${left + 120} ${beamY + 4}, ${left + 280} ${beamY + 24}, ${right} ${beamY + 58}`;
+      reactions = upArrow(left + 16, beamY + 74, beamY + 20, `${result.reactions[0].label} = ${format(result.reactions[0].value, 2)} N`);
+      fixedMoment = `
+        <path d="M ${left + 8} ${beamY - 18} A 22 22 0 1 1 ${left + 8} ${beamY + 18}" fill="none" stroke="#ffd166" stroke-width="4" marker-end="url(#beam-arrow-up)"></path>
+        <text x="${left + 34}" y="${beamY - 24}" fill="#ffd166" font-size="14">${esc(`${texts.labels.fixedMoment} = ${format(result.fixedMomentNm, 2)} N·m`)}</text>
+      `;
+      loads = result.caseKey === "cantileverPoint"
+        ? downArrow(right, 36, beamY - 10, `P = ${format(result.input.loadN, 2)} N`)
+        : udl(`w = ${format(result.input.loadPerMeter, 2)} N/m`);
     }
 
-    loads = activeCase === "simplySupportedPoint" || activeCase === "cantileverPoint"
-      ? pointLoad(activeCase === "cantileverPoint" ? right : centerX, activeCase === "cantileverPoint" || activeCase === "simplySupportedPoint" ? "P" : "w")
-      : udl("w");
-
     return `
-      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(texts.drawingTitle)}">
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(texts.labels.beam)}">
         <defs>
-          <marker id="beam-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+          <marker id="beam-arrow-down" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
             <path d="M0 0L10 5L0 10Z" fill="#ff6d6d"></path>
+          </marker>
+          <marker id="beam-arrow-up" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0 10L10 5L0 0Z" fill="#8cffc1"></path>
           </marker>
         </defs>
         <line x1="${left}" y1="${beamY}" x2="${right}" y2="${beamY}" stroke="#ffffff" stroke-width="8" stroke-linecap="round"></line>
         ${supports}
         ${loads}
-        <path d="${deflection}" fill="none" stroke="#ff7a7a" stroke-width="4" stroke-linecap="round"></path>
-        <circle cx="${maxPointX}" cy="${activeCase.indexOf("cantilever") === 0 ? beamY + 48 : beamY + 34}" r="5" fill="#ffd166"></circle>
-        <text x="${maxPointX + 10}" y="${activeCase.indexOf("cantilever") === 0 ? beamY + 62 : beamY + 48}" fill="#ffd166" font-size="15">δmax</text>
+        ${reactions}
+        ${fixedMoment}
+        <circle cx="${maxDeflectionX}" cy="${beamY + 42}" r="5" fill="#ffd166"></circle>
+        <text x="${maxDeflectionX + 10}" y="${beamY + 48}" fill="#ffd166" font-size="14">${esc(texts.labels.maxDeflection)}</text>
         <line x1="${left}" y1="${beamY + 92}" x2="${right}" y2="${beamY + 92}" stroke="rgba(255,255,255,0.46)" stroke-width="2"></line>
         <line x1="${left}" y1="${beamY + 82}" x2="${left}" y2="${beamY + 102}" stroke="rgba(255,255,255,0.46)" stroke-width="2"></line>
         <line x1="${right}" y1="${beamY + 82}" x2="${right}" y2="${beamY + 102}" stroke="rgba(255,255,255,0.46)" stroke-width="2"></line>
-        <text x="${centerX - 6}" y="${beamY + 118}" fill="#f5f5f5" font-size="15">L</text>
+        <text x="${centerX - 18}" y="${beamY + 118}" fill="#f5f5f5" font-size="15">0 ... L = ${format(result.input.lengthM, 3)} m</text>
       </svg>
     `;
   }
 
-  function buildShapePreview(texts) {
-    if (state.inertiaMode !== "shape") {
-      return "";
-    }
-
-    const preview = computeShapeInertia();
-
-    if (!preview.ok) {
-      return `
-        <div class="preview-card">
-          <p>${esc(texts.formulas[state.inertiaShape])}</p>
-        </div>
-      `;
-    }
-
-    const inertiaSelected = utils.convertMetersFourthToInertia(preview.value, state.inertiaUnit);
-    const inertiaM4 = preview.value;
+  function buildDeflectionDiagram(texts) {
+    const result = state.result;
+    const width = 760;
+    const height = 260;
+    const left = 70;
+    const right = 700;
+    const top = 54;
+    const bottom = 214;
+    const referenceY = 78;
+    const maxGraphDepth = 90;
+    const points = result.caseConfig.deflectionCurve(result.input, 80);
+    const maxValue = points.reduce(function (max, point) {
+      return Math.max(max, point.y);
+    }, 0) || 1;
+    const scaleX = (right - left) / result.input.lengthM;
+    const scaleY = maxGraphDepth / maxValue;
+    const path = points.map(function (point, index) {
+      const x = left + point.x * scaleX;
+      const y = referenceY + point.y * scaleY;
+      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+    }).join(" ");
+    const maxX = left + result.maxDeflectionX * scaleX;
+    const maxY = referenceY + result.deltaM * scaleY;
 
     return `
-      <div class="preview-card" style="margin-top: 0.9rem;">
-        <h3>${esc(texts.formulas[state.inertiaShape])}</h3>
-        <p>${esc(preview.detail)}</p>
-        <p>${esc("I = ")}${esc(formatUnit("inertia", inertiaSelected, state.inertiaUnit, 4))}</p>
-        <p>${esc(`${texts.labels.siPreview}: `)}${esc(formatUnit("inertia", inertiaM4, "m4", 8))}</p>
-      </div>
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(texts.labels.deflection)}">
+        <line x1="${left}" y1="${referenceY}" x2="${right}" y2="${referenceY}" stroke="rgba(255,255,255,0.42)" stroke-width="2" stroke-dasharray="10 8"></line>
+        <path d="${path}" fill="none" stroke="#ff7a7a" stroke-width="4" stroke-linecap="round"></path>
+        <line x1="${left}" y1="${bottom}" x2="${right}" y2="${bottom}" stroke="rgba(255,255,255,0.5)" stroke-width="2"></line>
+        <line x1="${left}" y1="${bottom - 8}" x2="${left}" y2="${bottom + 8}" stroke="rgba(255,255,255,0.5)" stroke-width="2"></line>
+        <line x1="${right}" y1="${bottom - 8}" x2="${right}" y2="${bottom + 8}" stroke="rgba(255,255,255,0.5)" stroke-width="2"></line>
+        <circle cx="${maxX}" cy="${maxY}" r="5" fill="#ffd166"></circle>
+        <text x="${maxX + 12}" y="${maxY + 6}" fill="#ffd166" font-size="14">${esc(`${texts.labels.maxDeflection} = ${format(result.deltaMm, 6)} mm`)}</text>
+        <text x="${left}" y="${top}" fill="#f5f5f5" font-size="14">undeformed</text>
+        <text x="${left}" y="${bottom + 24}" fill="#f5f5f5" font-size="14">x = 0</text>
+        <text x="${right - 86}" y="${bottom + 24}" fill="#f5f5f5" font-size="14">x = L</text>
+      </svg>
+    `;
+  }
+
+  function buildSfdDiagram(texts) {
+    return buildGraphSvg(
+      texts.labels.sfd,
+      state.result.caseConfig.shearPoints(state.result.input),
+      "V (N)",
+      texts.diagramNotes.sfd
+    );
+  }
+
+  function buildBmdDiagram(texts) {
+    return buildGraphSvg(
+      texts.labels.bmd,
+      state.result.caseConfig.momentPoints(state.result.input),
+      "M (N·m)",
+      texts.diagramNotes.bmd
+    );
+  }
+
+  function buildGraphSvg(title, points, yLabel) {
+    const width = 760;
+    const height = 260;
+    const marginLeft = 70;
+    const marginRight = 30;
+    const marginTop = 24;
+    const marginBottom = 44;
+    const graphWidth = width - marginLeft - marginRight;
+    const graphHeight = height - marginTop - marginBottom;
+    const xMax = state.result.input.lengthM || 1;
+    let minY = 0;
+    let maxY = 0;
+
+    points.forEach(function (point) {
+      minY = Math.min(minY, point.y);
+      maxY = Math.max(maxY, point.y);
+    });
+
+    const amplitude = Math.max(Math.abs(minY), Math.abs(maxY), 1);
+    minY = -amplitude;
+    maxY = amplitude;
+
+    function xPosition(xValue) {
+      return marginLeft + (xValue / xMax) * graphWidth;
+    }
+
+    function yPosition(yValue) {
+      return marginTop + ((maxY - yValue) / (maxY - minY)) * graphHeight;
+    }
+
+    const polyline = points.map(function (point) {
+      return `${xPosition(point.x)},${yPosition(point.y)}`;
+    }).join(" ");
+    const baselineY = yPosition(0);
+    const peak = points.reduce(function (best, point) {
+      return Math.abs(point.y) > Math.abs(best.y) ? point : best;
+    }, points[0]);
+
+    return `
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(title)}">
+        <line x1="${marginLeft}" y1="${baselineY}" x2="${width - marginRight}" y2="${baselineY}" stroke="rgba(255,255,255,0.48)" stroke-width="2"></line>
+        <line x1="${marginLeft}" y1="${marginTop}" x2="${marginLeft}" y2="${height - marginBottom}" stroke="rgba(255,255,255,0.34)" stroke-width="2"></line>
+        <polyline fill="none" stroke="#ff6d6d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="${polyline}"></polyline>
+        <circle cx="${xPosition(peak.x)}" cy="${yPosition(peak.y)}" r="5" fill="#ffd166"></circle>
+        <text x="${xPosition(peak.x) + 10}" y="${yPosition(peak.y) - 10}" fill="#ffd166" font-size="14">${esc(`${yLabel}max = ${format(Math.abs(peak.y), 4)}`)}</text>
+        <text x="${marginLeft}" y="${height - 14}" fill="#f5f5f5" font-size="14">0</text>
+        <text x="${width - marginRight - 78}" y="${height - 14}" fill="#f5f5f5" font-size="14">L = ${format(xMax, 3)} m</text>
+        <text x="${marginLeft + 6}" y="${marginTop + 14}" fill="#f5f5f5" font-size="14">${esc(yLabel)}</text>
+      </svg>
     `;
   }
 
   function render() {
     const texts = currentCopy();
-    const activeCase = cases[state.beamCase];
-    const loadLabel = activeCase.loadType === "point" ? texts.caseLoadLabels.point : texts.caseLoadLabels.distributed;
-    const loadHint = activeCase.loadType === "point" ? texts.fieldHints.loadPoint : texts.fieldHints.loadDistributed;
-    const loadUnits = getAllowedLoadUnits();
-    const formula = texts.formulas[state.beamCase];
+    const sectionPreview = getSectionPreview();
+    const loadFieldName = beamCases[state.beamCase].loadType === "point" ? "pointLoad" : "lineLoad";
     const statusMessage = state.status.message || texts.status.ready;
     const statusState = state.status.state === "neutral" ? "success" : state.status.state;
 
@@ -914,11 +1448,10 @@
               <h1 class="page-title">${esc(texts.title)}</h1>
               <p class="page-intro">${esc(texts.intro)}</p>
               <div class="equation-row">
-                <span class="equation-chip">${esc(formula)}</span>
-                ${state.inertiaMode === "shape" ? `<span class="equation-chip">${esc(texts.formulas[state.inertiaShape])}</span>` : ""}
+                <span class="equation-chip">${esc(texts.formulas[state.beamCase])}</span>
+                <span class="equation-chip">${esc(shapeFormulaTexts(texts))}</span>
               </div>
             </div>
-
             <aside class="page-summary-card">
               <h2>${esc(texts.summaryTitle)}</h2>
               <ul class="summary-list">
@@ -938,100 +1471,51 @@
             </div>
 
             <div class="option-grid">
-              ${buildCaseOptions(texts)}
+              ${Object.keys(beamCases).map(function (caseKey) {
+                return `
+                  <label class="case-option">
+                    <input type="radio" name="beamCase" value="${caseKey}" ${state.beamCase === caseKey ? "checked" : ""}>
+                    <span>${esc(texts.caseLabels[caseKey])}</span>
+                  </label>
+                `;
+              }).join("")}
             </div>
 
             <div class="subsection">
               <div class="panel-header">
-                <h3>${esc(texts.inputTitle)}</h3>
-                <p>${esc(texts.inputDescription)}</p>
+                <h3>${esc(texts.sectionTitle)}</h3>
+                <p>${esc(texts.sectionDescription)}</p>
               </div>
 
               <div class="field-grid">
-                <label class="input-card" for="length">
-                  <span class="input-card__badge">L</span>
-                  <span class="input-card__title">${esc(texts.fieldLabels.length)}</span>
-                  <span class="input-card__hint">${esc(texts.fieldHints.length)}</span>
-                  <input id="length" name="length" class="input-control" type="text" inputmode="decimal" value="${esc(state.length)}">
-                  <select id="lengthUnit" name="lengthUnit" class="select-control">
-                    ${beamUnits.length.map(function (unitKey) {
-                      return `<option value="${unitKey}" ${state.lengthUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
+                <div class="field field--full">
+                  <label for="sectionShape">${esc(texts.fields.sectionShape)}</label>
+                  <select id="sectionShape" name="sectionShape" class="select-control">
+                    ${Object.keys(sectionShapes).map(function (shapeKey) {
+                      return `<option value="${shapeKey}" ${state.sectionShape === shapeKey ? "selected" : ""}>${esc(texts.shapes[shapeKey])}</option>`;
                     }).join("")}
                   </select>
-                </label>
-
-                <label class="input-card" for="load">
-                  <span class="input-card__badge">${activeCase.loadType === "point" ? "P" : "w"}</span>
-                  <span class="input-card__title">${esc(loadLabel)}</span>
-                  <span class="input-card__hint">${esc(loadHint)}</span>
-                  <input id="load" name="load" class="input-control" type="text" inputmode="decimal" value="${esc(state.load)}">
-                  <select id="loadUnit" name="loadUnit" class="select-control">
-                    ${loadUnits.map(function (unitKey) {
-                      return `<option value="${unitKey}" ${state.loadUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
-                    }).join("")}
-                  </select>
-                </label>
-
-                <label class="input-card" for="modulus">
-                  <span class="input-card__badge">E</span>
-                  <span class="input-card__title">${esc(texts.fieldLabels.modulus)}</span>
-                  <span class="input-card__hint">${esc(texts.fieldHints.modulus)}</span>
-                  <input id="modulus" name="modulus" class="input-control" type="text" inputmode="decimal" value="${esc(state.modulus)}">
-                  <select id="modulusUnit" name="modulusUnit" class="select-control">
-                    ${beamUnits.modulus.map(function (unitKey) {
-                      return `<option value="${unitKey}" ${state.modulusUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
-                    }).join("")}
-                  </select>
-                </label>
-
-                <label class="input-card" for="outputUnit">
-                  <span class="input-card__badge">δ</span>
-                  <span class="input-card__title">${esc(texts.unitLabels.output)}</span>
-                  <span class="input-card__hint">${esc(texts.fieldHints.output)}</span>
-                  <select id="outputUnit" name="outputUnit" class="select-control">
-                    ${beamUnits.output.map(function (unitKey) {
-                      return `<option value="${unitKey}" ${state.outputUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
-                    }).join("")}
-                  </select>
-                </label>
+                </div>
+                ${getShapeFields().map(function (fieldName) {
+                  return createFieldCard(fieldName, texts);
+                }).join("")}
               </div>
             </div>
 
             <div class="subsection">
               <div class="panel-header">
-                <h3>${esc(texts.inertiaTitle)}</h3>
-                <p>${esc(texts.inertiaDescription)}</p>
+                <h3>${esc(texts.beamInputTitle)}</h3>
+                <p>${esc(texts.beamInputDescription)}</p>
               </div>
 
-              <div class="toggle-grid">
-                <label class="toggle-option">
-                  <input type="radio" name="inertiaMode" value="direct" ${state.inertiaMode === "direct" ? "checked" : ""}>
-                  <span>${esc(texts.directMode)}</span>
-                </label>
-                <label class="toggle-option">
-                  <input type="radio" name="inertiaMode" value="shape" ${state.inertiaMode === "shape" ? "checked" : ""}>
-                  <span>${esc(texts.shapeMode)}</span>
-                </label>
+              <div class="field-grid">
+                ${createFieldCard("length", texts)}
+                ${createFieldCard("modulus", texts)}
+                ${createFieldCard("load", {
+                  fields: Object.assign({}, texts.fields, { load: texts.fields[loadFieldName] }),
+                  hints: texts.hints
+                })}
               </div>
-
-              ${state.inertiaMode === "direct" ? `
-                <div class="field-grid" style="margin-top: 0.9rem;">
-                  <label class="input-card" for="inertia">
-                    <span class="input-card__badge">I</span>
-                    <span class="input-card__title">${esc(texts.fieldLabels.inertia)}</span>
-                    <span class="input-card__hint">${esc(texts.fieldHints.inertia)}</span>
-                    <input id="inertia" name="inertia" class="input-control" type="text" inputmode="decimal" value="${esc(state.inertia)}">
-                    <select id="inertiaUnit" name="inertiaUnit" class="select-control">
-                      ${beamUnits.inertia.map(function (unitKey) {
-                        return `<option value="${unitKey}" ${state.inertiaUnit === unitKey ? "selected" : ""}>${unitKey}</option>`;
-                      }).join("")}
-                    </select>
-                  </label>
-                </div>
-              ` : `
-                ${buildShapeFields(texts)}
-                ${buildShapePreview(texts)}
-              `}
             </div>
 
             <div class="action-row">
@@ -1044,16 +1528,13 @@
             </div>
           </form>
 
-          <section class="solver-panel glass-card">
+          <div class="solver-panel glass-card">
             <div class="panel-header">
-              <h2>${esc(texts.drawingTitle)}</h2>
-              <p>${esc(texts.drawingDescription)}</p>
+              <h2>${esc(texts.sectionPreviewTitle)}</h2>
+              <p>${esc(sectionPreview.ok ? texts.sectionDescription : texts.labels.sectionIncomplete)}</p>
             </div>
-            <div class="drawing-shell">
-              ${buildDrawing()}
-            </div>
-            <p class="drawing-caption">${esc(texts.drawingCaption)}</p>
-          </section>
+            ${buildSectionPreview(texts)}
+          </div>
         </div>
 
         <div class="result-layout">
@@ -1062,35 +1543,12 @@
               <h2>${esc(texts.resultsTitle)}</h2>
             </div>
             <div class="result-grid">
-              ${state.result ? [
-                `
-                  <article class="metric-card">
-                    <h3>${esc(texts.metrics.deflection)}</h3>
-                    <span class="metric-value">${esc(formatUnit("length", state.result.outputDeflection, state.outputUnit, 6))}</span>
-                  </article>
-                `,
-                `
-                  <article class="metric-card">
-                    <h3>${esc(texts.metrics.inertia)}</h3>
-                    <span class="metric-value">${esc(formatUnit("inertia", state.result.inertiaDisplay, state.result.inertiaOutputUnit, 4))}</span>
-                  </article>
-                `,
-                `
-                  <article class="metric-card">
-                    <h3>${esc(texts.metrics.spanRatio)}</h3>
-                    <span class="metric-value">${esc(format(state.result.base.length / state.result.deflectionBase, 2))}</span>
-                  </article>
-                `
-              ].join("") : `
-                <article class="placeholder-card" style="grid-column: 1 / -1;">
-                  <p>${esc(texts.status.ready)}</p>
-                </article>
-              `}
+              ${buildMetrics(texts)}
             </div>
-            <div class="panel-header" style="margin-top: 1.1rem;">
+            <div class="panel-header" style="margin-top: 1rem;">
               <h3>${esc(texts.warningsTitle)}</h3>
             </div>
-            ${buildWarnings()}
+            ${buildWarnings(texts)}
           </section>
 
           <section class="result-panel glass-card">
@@ -1098,10 +1556,18 @@
               <h2>${esc(texts.stepsTitle)}</h2>
             </div>
             <div class="steps-grid">
-              ${buildSteps()}
+              ${buildSteps(texts)}
             </div>
           </section>
         </div>
+
+        <section class="result-panel glass-card">
+          <div class="panel-header">
+            <h2>${esc(texts.diagramsTitle)}</h2>
+            <p>${esc(texts.diagramsDescription)}</p>
+          </div>
+          ${buildDiagramCards(texts)}
+        </section>
       </section>
     `;
 
@@ -1123,15 +1589,7 @@
 
       state[event.target.name] = event.target.value;
 
-      if (
-        event.target.name === "beamCase" ||
-        event.target.name === "inertiaMode" ||
-        event.target.name === "inertiaShape"
-      ) {
-        if (event.target.name === "beamCase") {
-          state.loadUnit = cases[state.beamCase].loadType === "point" ? "kN" : "kN/m";
-        }
-
+      if (event.target.name === "beamCase" || event.target.name === "sectionShape") {
         render();
       }
     });

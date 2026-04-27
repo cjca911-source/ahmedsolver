@@ -124,6 +124,10 @@
   gap: 0.95rem;
 }
 
+.field--full {
+  grid-column: 1 / -1;
+}
+
 .field-grid--three {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -305,6 +309,11 @@
   height: auto;
 }
 
+.drawing-shell--diagram {
+  min-height: 280px;
+  padding: 0.85rem;
+}
+
 .drawing-caption {
   margin: 0.8rem 0 0;
 }
@@ -349,6 +358,20 @@
   gap: 0.9rem;
 }
 
+.diagram-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.diagram-card {
+  padding: 1rem;
+}
+
+.diagram-card .panel-header {
+  margin-bottom: 0.85rem;
+}
+
 .equation-line {
   display: block;
   margin-top: 0.5rem;
@@ -389,7 +412,8 @@
 @media (max-width: 1100px) {
   .page-hero__grid,
   .solver-layout,
-  .result-layout {
+  .result-layout,
+  .diagram-grid {
     grid-template-columns: 1fr;
   }
 
@@ -404,7 +428,8 @@
   .toggle-grid,
   .field-grid,
   .field-grid--three,
-  .result-grid {
+  .result-grid,
+  .diagram-grid {
     grid-template-columns: 1fr;
   }
 

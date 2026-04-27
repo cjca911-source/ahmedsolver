@@ -332,6 +332,41 @@
   margin: 0.8rem 0 0;
 }
 
+.drawing-shell--interactive {
+  position: relative;
+  overflow: hidden;
+}
+
+.drawing-tooltip {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 0.2rem;
+  min-width: 148px;
+  max-width: 210px;
+  padding: 0.7rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 66, 66, 0.2);
+  background: rgba(10, 10, 10, 0.96);
+  color: #fff;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34), 0 0 20px rgba(179, 0, 0, 0.14);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+}
+
+.drawing-tooltip[hidden] {
+  display: none;
+}
+
+.drawing-tooltip strong {
+  color: #ffd6d6;
+}
+
+.drawing-tooltip span {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
 .placeholder-card {
   display: grid;
   place-items: center;
@@ -442,6 +477,134 @@
   margin-top: 1rem;
 }
 
+.element-state-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.state-chip {
+  appearance: none;
+  padding: 0.72rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 66, 66, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    background-color var(--transition);
+}
+
+.state-chip:hover,
+.state-chip:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(255, 66, 66, 0.38);
+  box-shadow: 0 0 16px rgba(179, 0, 0, 0.14);
+}
+
+.state-chip.is-active {
+  background: rgba(179, 0, 0, 0.16);
+  border-color: rgba(255, 66, 66, 0.42);
+  color: #fff1f1;
+  box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.12), 0 0 18px rgba(255, 66, 66, 0.14);
+}
+
+.element-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.element-card__header,
+.point-info-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.element-card__angles {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: end;
+  color: #ffd6d6;
+  font-size: 0.93rem;
+}
+
+.point-info-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  padding: 0.48rem 0.78rem;
+  border-radius: 999px;
+  background: rgba(179, 0, 0, 0.14);
+  border: 1px solid rgba(255, 66, 66, 0.22);
+  color: #ffb4b4;
+  font-weight: 700;
+}
+
+.point-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.point-info-grid div {
+  display: grid;
+  gap: 0.32rem;
+  padding: 0.88rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.028);
+  border: 1px solid rgba(255, 66, 66, 0.1);
+}
+
+.point-info-grid strong {
+  color: #ffd6d6;
+}
+
+.point-info-note {
+  margin-top: 1rem;
+  padding: 0.95rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 66, 66, 0.1);
+}
+
+.point-info-note strong {
+  color: #ffd6d6;
+}
+
+.point-info-note p {
+  margin-top: 0.45rem;
+}
+
+.mohr-point {
+  cursor: pointer;
+  outline: none;
+}
+
+.mohr-point circle {
+  transform-origin: center;
+  transition:
+    transform var(--transition),
+    stroke-width var(--transition),
+    filter var(--transition),
+    opacity var(--transition);
+}
+
+.mohr-point:hover circle,
+.mohr-point:focus-visible circle,
+.mohr-point.is-selected circle {
+  transform: scale(1.14);
+  filter: drop-shadow(0 0 10px rgba(255, 66, 66, 0.28));
+}
+
 [dir="rtl"] .page-kicker::before {
   background: linear-gradient(270deg, var(--accent), transparent);
 }
@@ -469,6 +632,10 @@
 [dir="rtl"] .data-table th,
 [dir="rtl"] .data-table td {
   text-align: right;
+}
+
+[dir="rtl"] .element-card__angles {
+  justify-items: start;
 }
 
 @media (max-width: 1100px) {
@@ -503,6 +670,20 @@
   .solver-panel,
   .result-panel {
     padding: 1.1rem;
+  }
+
+  .element-card__header,
+  .point-info-card__header {
+    flex-direction: column;
+  }
+
+  .element-card__angles,
+  [dir="rtl"] .element-card__angles {
+    justify-items: start;
+  }
+
+  .point-info-grid {
+    grid-template-columns: 1fr;
   }
 
   .drawing-shell {

@@ -3,473 +3,153 @@ window.StrengthSolverI18n = {
     en: {
       meta: {
         appName: "AhmedSolver",
+        brandCaption: "Smart Engineering Platform for Strength of Materials",
         languageCode: "en",
         dir: "ltr"
       },
-      common: {
-        solve: "Solve",
-        clear: "Clear",
-        backToTopics: "Back to Topics",
-        viewRoadmap: "View Roadmap",
-        moduleScaffold: "Module Scaffold",
-        formulaLabel: "Primary Formula",
-        available: "Available",
-        comingSoon: "Coming Soon",
-        footerNote: "AhmedSolver is built as a student-friendly engineering platform."
-      },
       nav: {
-        brandCaption: "Smart Engineering Platform for Strength of Materials",
         home: "Home",
-        topics: "Topics",
-        tools: "Platform",
-        roadmap: "Roadmap",
-        featured: "Stress Page",
-        quiz: "Quiz",
+        mohrsCircle: "Mohr's Circle",
+        beamDeflection: "Beam Deflection",
         languageToggle: "العربية",
         languageToggleLabel: "Switch language to Arabic",
         menu: "Toggle navigation"
       },
-      hero: {
-        eyebrow: "Engineering Learning Platform",
-        title: "AhmedSolver",
-        description: "Smart Engineering Platform for Strength of Materials",
-        primaryCta: "Browse Topics",
-        secondaryCta: "See Build Roadmap",
-        statModules: "scaffolded learning modules",
-        statLanguages: "language-ready interface",
-        statResponsive: "responsive and RTL-ready layout",
-        visualBadge: "Foundation Preview",
-        visualTitle: "AhmedSolver brings calculators, diagrams, and study tools into one workspace.",
-        visualDescription:
-          "Built for university students with bilingual navigation, responsive engineering layouts, and modular tools ready to grow.",
-        formulas: {
-          stress: "Normal stress",
-          strain: "Normal strain",
-          torsion: "Torsion",
-          bending: "Bending stress"
-        }
-      },
-      features: {
-        stepByStep: {
-          title: "Step-by-step architecture",
-          description:
-            "The app is scaffolded for reusable calculators, shared result panels, validation helpers, and export-friendly sections."
-        },
-        bilingual: {
-          title: "Arabic and English from day one",
-          description:
-            "Every core label is translation-driven, with layout direction and typography switching smoothly between LTR and RTL."
-        },
-        engineeringUi: {
-          title: "Modern engineering theme",
-          description:
-            "A dark academic interface uses high-contrast cards, technical spacing, and subtle motion suited for long study sessions."
-        }
-      },
-      sections: {
-        topics: {
-          kicker: "Module Library",
-          title: "The homepage now maps the full platform.",
-          description:
-            "Each card already points to a dedicated module page so we can build the calculators and tools incrementally without restructuring later."
-        }
-      },
-      groups: {
-        core: {
-          title: "Core Calculators",
-          description: "Essential mechanics formulas that will become interactive solver pages."
-        },
-        visual: {
-          title: "Visual Analysis Tools",
-          description: "Diagram-focused modules for beams, reactions, force systems, and stress transformation."
-        },
-        tools: {
-          title: "Study and Utility Tools",
-          description: "Question practice, quiz flows, unit conversion, and export support."
-        }
-      },
-      roadmap: {
-        kicker: "Build Sequence",
-        title: "This first phase builds the platform spine.",
-        description:
-          "The structure below keeps the project modular so each future feature can plug into a stable shared shell.",
-        steps: {
-          solve: {
-            title: "Shared Shell",
-            description: "Navbar, footer, responsive layout, and page scaffolding are ready across the app."
-          },
-          visualize: {
-            title: "Language Engine",
-            description: "Translations, direction switching, and document titles are centralized in reusable code."
-          },
-          practice: {
-            title: "Module Routing",
-            description: "Dedicated pages already exist for calculators, quizzes, diagrams, and question-bank features."
-          },
-          share: {
-            title: "Future Expansion",
-            description: "Placeholder JavaScript and data files are in place for the next implementation steps."
-          }
-        }
-      },
-      bilingual: {
-        kicker: "Bilingual UX",
-        title: "The language system is part of the foundation, not an afterthought.",
-        description:
-          "Switching language updates shared navigation, homepage content, page placeholders, and interface direction while keeping the layout polished on desktop and mobile.",
-        points: {
-          toggle: {
-            title: "Instant toggle",
-            description: "Language preference is saved locally so students return to the same interface next time."
-          },
-          layout: {
-            title: "Directional support",
-            description: "Arabic activates RTL layout rules and the Cairo font pairing without breaking spacing or components."
-          },
-          foundation: {
-            title: "Ready for growth",
-            description: "Future calculators only need translation keys and reusable markup patterns to join the system."
-          }
-        },
-        previewLabel: "Live Interface Preview",
-        previewTitle: "A consistent interface for every mechanics topic",
-        previewRows: {
-          stress: "Stress Solver",
-          strain: "Strain Solver",
-          result: "Example Result",
-          resultValue: "Ready for step-by-step output"
-        }
-      },
-      moduleTypes: {
-        calculator: "Calculator",
-        visualizer: "Visualizer",
-        practice: "Practice",
-        utility: "Utility"
-      },
-      topics: {
-        stress: {
-          title: "Normal Stress",
-          description: "Compute axial stress from load and cross-sectional area."
-        },
-        strain: {
-          title: "Normal Strain",
-          description: "Measure elongation relative to original member length."
-        },
-        hookesLaw: {
-          title: "Hooke's Law",
-          description: "Relate stress and strain through the elastic modulus."
-        },
-        axialDeformation: {
-          title: "Axial Deformation",
-          description: "Find member elongation under axial loading."
-        },
-        shearStress: {
-          title: "Shear Stress",
-          description: "Evaluate average shear stress from force and area."
-        },
-        torsion: {
-          title: "Torsion",
-          description: "Estimate torsional shear stress using torque, radius, and polar inertia."
-        },
-        bending: {
-          title: "Bending Stress",
-          description: "Determine flexural stress due to moment, distance, and inertia."
-        },
-        beamReactions: {
-          title: "Beam Reactions",
-          description: "Solve reactions for a simply supported beam with center loading."
-        },
-        mohrsCircle: {
-          title: "Mohr's Circle",
-          description: "Transform plane stress to average, principal, and maximum shear values."
-        },
-        thermalStress: {
-          title: "Thermal Stress and Strain",
-          description: "Study restrained expansion and thermal effects in members."
-        },
-        fbd: {
-          title: "Free Body Diagram Tool",
-          description: "Add forces, inspect components, and study equilibrium visually."
-        },
-        unitConverter: {
-          title: "Unit Converter",
-          description: "Convert engineering values across force, stress, length, area, and torque."
-        },
-        aiInput: {
-          title: "AI Input",
-          description: "Describe an engineering problem in natural language and receive a structured step-by-step solution."
-        },
-        questionBank: {
-          title: "Question Bank",
-          description: "Filter curated practice problems by topic and difficulty."
-        },
-        quiz: {
-          title: "Quiz Section",
-          description: "Test understanding with topic-based multiple-choice quizzes."
-        },
-        beamDiagrams: {
-          title: "Beam Diagrams",
-          description: "Visualize supports, point loads, shear force, and bending moment basics."
-        },
-        pdfExport: {
-          title: "Export Results as PDF",
-          description: "Prepare solver outputs for printable student-friendly study records."
-        }
-      },
-      placeholder: {
-        readyTitle: "Ready in this phase",
-        nextTitle: "Planned next additions",
-        readyItems: [
-          "Shared navbar and footer render automatically across the site.",
-          "Arabic and English translations are already wired into the page shell.",
-          "Responsive layout and dark engineering styling are active on every scaffolded page."
-        ],
-        nextDescription:
-          "The next implementation pass will replace this scaffold with interactive calculators, diagrams, result panels, and topic-specific JavaScript logic.",
-        nextChip: "Next phase: calculators, canvas tools, and quizzes"
+      pageTitles: {
+        home: "AhmedSolver",
+        mohrsCircle: "Mohr's Circle Solver",
+        beamDeflection: "Beam Deflection Solver"
       },
       footer: {
         description:
-          "AhmedSolver is a smart engineering platform for Strength of Materials with bilingual calculators, visual tools, and guided study support.",
+          "AhmedSolver now focuses on two visual mechanics tools for stress transformation and beam serviceability.",
         quickLinks: "Quick Links",
-        starterPages: "Starter Pages",
-        rights: "All core layouts, translations, and page scaffolds are ready for expansion."
+        rights: "Focused engineering study tools with bilingual support and responsive drawings."
+      },
+      home: {
+        eyebrow: "Focused Engineering Toolkit",
+        title: "AhmedSolver",
+        subtitle: "Smart Engineering Platform for Strength of Materials",
+        description:
+          "AhmedSolver is streamlined around two visual mechanics tools built for clear learning, quick iteration, and engineering realism.",
+        primaryCta: "Open Mohr's Circle",
+        secondaryCta: "Open Beam Deflection",
+        statTools: "focused solvers",
+        statLanguage: "Arabic / English interface",
+        statDrawings: "live SVG drawings",
+        signalMohrTitle: "sigma_1, sigma_2, and tau_max",
+        signalMohrText: "Plane stress transformation with a live circle and labeled points.",
+        signalBeamTitle: "delta_max from E, I, L, and load",
+        signalBeamText: "Serviceability-focused beam deflection checks with structural drawings.",
+        toolsKicker: "Core Tools",
+        toolsTitle: "Two precise tools. One cleaner workflow.",
+        toolsDescription:
+          "Analyze plane stress with Mohr's Circle or study beam serviceability with guided deflection calculations and beam drawings.",
+        mohrsTag: "Stress Transformation",
+        mohrsTitle: "Mohr's Circle Analyzer",
+        mohrsDescription:
+          "Convert sigma_x, sigma_y, and tau_xy into principal stresses, maximum shear, and principal angle with a live circle diagram.",
+        mohrsPoint1: "Average, principal, and maximum shear stresses",
+        mohrsPoint2: "Responsive circle drawing with labeled points",
+        mohrsPoint3: "Step-by-step equations and angle output",
+        mohrsCta: "Open Analyzer",
+        beamTag: "Deflection and Stiffness",
+        beamTitle: "Beam Deflection Calculator",
+        beamDescription:
+          "Switch between simply supported and cantilever cases, compute deflection, and draw the beam with supports and loads.",
+        beamPoint1: "Four common beam loading cases",
+        beamPoint2: "Shape-based moment of inertia calculator",
+        beamPoint3: "Warnings for unrealistic spans and deflections",
+        beamCta: "Open Calculator",
+        focusKicker: "Platform Focus",
+        focusTitle: "Why AhmedSolver now feels sharper",
+        focusDescription:
+          "The website now centers on two visual mechanics workflows that students revisit often in class and design checks.",
+        focusCard1Title: "Less clutter, more depth",
+        focusCard1Description:
+          "Each remaining page goes beyond a basic calculator with drawings, validation, and guided interpretation.",
+        focusCard2Title: "Designed for bilingual study",
+        focusCard2Description:
+          "English and Arabic layouts switch smoothly without breaking spacing, hierarchy, or the engineering visuals.",
+        focusCard3Title: "Deployment-friendly",
+        focusCard3Description:
+          "The site stays fully static for GitHub Pages while still working cleanly with the local Express preview server."
       }
     },
     ar: {
       meta: {
         appName: "AhmedSolver",
+        brandCaption: "منصة هندسية ذكية لمقاومة المواد",
         languageCode: "ar",
         dir: "rtl"
       },
-      common: {
-        solve: "احسب",
-        clear: "مسح",
-        backToTopics: "العودة إلى الموضوعات",
-        viewRoadmap: "عرض خطة التطوير",
-        moduleScaffold: "هيكل أولي للصفحة",
-        formulaLabel: "المعادلة الأساسية",
-        available: "متاح الآن",
-        comingSoon: "قريباً",
-        footerNote: "AhmedSolver منصة هندسية تعليمية مناسبة للطلاب."
-      },
       nav: {
-        brandCaption: "منصة هندسية ذكية لمقاومة المواد",
         home: "الرئيسية",
-        topics: "الموضوعات",
-        tools: "المنصة",
-        roadmap: "الخطة",
-        featured: "صفحة الإجهاد",
-        quiz: "الاختبار",
+        mohrsCircle: "دائرة مور",
+        beamDeflection: "انحراف الجوائز",
         languageToggle: "English",
         languageToggleLabel: "التبديل إلى اللغة الإنجليزية",
         menu: "فتح قائمة التنقل"
       },
-      hero: {
-        eyebrow: "منصة هندسية ذكية",
-        title: "AhmedSolver",
-        description: "منصة هندسية ذكية لمقاومة المواد",
-        primaryCta: "استعراض الموضوعات",
-        secondaryCta: "عرض مراحل البناء",
-        statModules: "وحدة تعليمية مهيأة",
-        statLanguages: "واجهة جاهزة للغتين",
-        statResponsive: "تصميم متجاوب ويدعم RTL",
-        visualBadge: "معاينة الأساس",
-        visualTitle: "يجمع AhmedSolver الحاسبات والرسومات وأدوات الدراسة في مساحة واحدة.",
-        visualDescription:
-          "تم تصميمه لطلاب الجامعة مع تنقل ثنائي اللغة وتخطيط هندسي متجاوب وأدوات قابلة للتوسع.",
-        formulas: {
-          stress: "الإجهاد العمودي",
-          strain: "الانفعال العمودي",
-          torsion: "اللي",
-          bending: "إجهاد الانحناء"
-        }
-      },
-      features: {
-        stepByStep: {
-          title: "بنية تدعم الحل خطوة بخطوة",
-          description:
-            "تم تجهيز المشروع ليعتمد على حاسبات قابلة لإعادة الاستخدام ولوحات نتائج مشتركة وأقسام مناسبة للتصدير لاحقاً."
-        },
-        bilingual: {
-          title: "العربية والإنجليزية من البداية",
-          description:
-            "كل العناصر الأساسية مرتبطة ببيانات الترجمة مع تبديل سلس بين الاتجاهين والخطوط المناسبة لكل لغة."
-        },
-        engineeringUi: {
-          title: "واجهة هندسية حديثة",
-          description:
-            "تصميم أكاديمي داكن يعتمد على بطاقات واضحة وتباين مرتفع وحركة خفيفة مناسبة لجلسات الدراسة الطويلة."
-        }
-      },
-      sections: {
-        topics: {
-          kicker: "مكتبة الوحدات",
-          title: "الصفحة الرئيسية ترسم الآن خريطة المنصة كاملة.",
-          description:
-            "كل بطاقة ترتبط بصفحة مستقلة مهيأة مسبقاً حتى نبني الحاسبات والأدوات تدريجياً من دون إعادة هيكلة لاحقاً."
-        }
-      },
-      groups: {
-        core: {
-          title: "الحاسبات الأساسية",
-          description: "معادلات الميكانيكا الأساسية التي ستتحول إلى صفحات حل تفاعلية."
-        },
-        visual: {
-          title: "أدوات التحليل البصري",
-          description: "وحدات مخصصة للرسومات ومخططات القوى والجوائز وتحويلات الإجهاد."
-        },
-        tools: {
-          title: "أدوات الدراسة والخدمات",
-          description: "بنك الأسئلة والاختبارات والتحويل بين الوحدات ودعم التصدير."
-        }
-      },
-      roadmap: {
-        kicker: "تسلسل البناء",
-        title: "هذه المرحلة الأولى تبني العمود الفقري للمنصة.",
-        description:
-          "الهيكل التالي يحافظ على المشروع منظماً بحيث يمكن إضافة كل ميزة لاحقة بسهولة داخل إطار مشترك ثابت.",
-        steps: {
-          solve: {
-            title: "القالب المشترك",
-            description: "شريط التنقل والتذييل والتصميم المتجاوب وهيكل الصفحات أصبح جاهزاً في كامل التطبيق."
-          },
-          visualize: {
-            title: "محرك اللغة",
-            description: "الترجمات وتبديل الاتجاه وعناوين الصفحات تمت مركزتها في كود قابل لإعادة الاستخدام."
-          },
-          practice: {
-            title: "ربط الوحدات",
-            description: "تم إنشاء صفحات مستقلة بالفعل للحاسبات والاختبارات والرسومات وبنك الأسئلة."
-          },
-          share: {
-            title: "التوسعة القادمة",
-            description: "ملفات JavaScript والبيانات الأساسية موجودة وجاهزة للمرحلة التنفيذية التالية."
-          }
-        }
-      },
-      bilingual: {
-        kicker: "تجربة ثنائية اللغة",
-        title: "نظام اللغة جزء من الأساس وليس إضافة متأخرة.",
-        description:
-          "عند تبديل اللغة يتم تحديث شريط التنقل ومحتوى الصفحة الرئيسية والصفحات المهيأة واتجاه الواجهة مع الحفاظ على مظهر مرتب في الهاتف والحاسوب.",
-        points: {
-          toggle: {
-            title: "تبديل فوري",
-            description: "يتم حفظ اللغة المختارة محلياً ليعود الطالب إلى نفس الواجهة في الزيارة التالية."
-          },
-          layout: {
-            title: "دعم كامل للاتجاه",
-            description: "عند استخدام العربية يتم تفعيل RTL وخط Cairo من دون إفساد المسافات أو المكونات."
-          },
-          foundation: {
-            title: "جاهز للتوسع",
-            description: "أي حاسبة جديدة تحتاج فقط إلى مفاتيح ترجمة وبنية مشتركة حتى تنضم إلى النظام."
-          }
-        },
-        previewLabel: "معاينة مباشرة للواجهة",
-        previewTitle: "واجهة متسقة لكل موضوع في مقاومة المواد",
-        previewRows: {
-          stress: "حاسبة الإجهاد",
-          strain: "حاسبة الانفعال",
-          result: "مثال على النتيجة",
-          resultValue: "جاهزة لعرض الخطوات بالتفصيل"
-        }
-      },
-      moduleTypes: {
-        calculator: "حاسبة",
-        visualizer: "أداة بصرية",
-        practice: "تدريب",
-        utility: "خدمة"
-      },
-      topics: {
-        stress: {
-          title: "الإجهاد العمودي",
-          description: "حساب الإجهاد المحوري من الحمل والمساحة العرضية."
-        },
-        strain: {
-          title: "الانفعال العمودي",
-          description: "قياس الاستطالة نسبةً إلى الطول الأصلي للعضو."
-        },
-        hookesLaw: {
-          title: "قانون هوك",
-          description: "ربط الإجهاد بالانفعال من خلال معامل المرونة."
-        },
-        axialDeformation: {
-          title: "الاستطالة المحورية",
-          description: "إيجاد مقدار التغير في الطول تحت حمل محوري."
-        },
-        shearStress: {
-          title: "إجهاد القص",
-          description: "حساب إجهاد القص المتوسط من القوة والمساحة."
-        },
-        torsion: {
-          title: "اللي",
-          description: "تقدير إجهاد القص الناتج عن العزم ونصف القطر والعزم القطبي."
-        },
-        bending: {
-          title: "إجهاد الانحناء",
-          description: "إيجاد الإجهاد الناتج عن العزم والمسافة ومحور العطالة."
-        },
-        beamReactions: {
-          title: "ردود الأفعال في الجوائز",
-          description: "حساب ردود الأفعال لجائز بسيط الارتكاز تحت حمل مركزي."
-        },
-        mohrsCircle: {
-          title: "دائرة مور",
-          description: "تحويل حالة الإجهاد المستوي إلى إجهادات رئيسية وقص أعظمي."
-        },
-        thermalStress: {
-          title: "الإجهاد والانفعال الحراري",
-          description: "دراسة التمدد المقيد وتأثيرات الحرارة في العناصر."
-        },
-        fbd: {
-          title: "أداة مخطط الجسم الحر",
-          description: "إضافة قوى متعددة ومتابعة المركبات والاتزان بصرياً."
-        },
-        unitConverter: {
-          title: "محول الوحدات",
-          description: "التحويل بين وحدات القوة والإجهاد والطول والمساحة والعزم."
-        },
-        aiInput: {
-          title: "إدخال بالذكاء الاصطناعي",
-          description: "اكتب مسألة هندسية بلغة طبيعية واحصل على حل منظم خطوة بخطوة."
-        },
-        questionBank: {
-          title: "بنك الأسئلة",
-          description: "تصفية مسائل تدريبية هندسية حسب الموضوع ومستوى الصعوبة."
-        },
-        quiz: {
-          title: "قسم الاختبارات",
-          description: "اختبر فهمك من خلال أسئلة اختيار من متعدد حسب الموضوع."
-        },
-        beamDiagrams: {
-          title: "مخططات الجوائز",
-          description: "عرض الركائز والأحمال ومخططات القص والعزم بشكل تعليمي مبسط."
-        },
-        pdfExport: {
-          title: "تصدير النتائج إلى PDF",
-          description: "تهيئة مخرجات الحل للتخزين والطباعة بطريقة مناسبة للطلاب."
-        }
-      },
-      placeholder: {
-        readyTitle: "المتاح في هذه المرحلة",
-        nextTitle: "الإضافات المخطط لها لاحقاً",
-        readyItems: [
-          "يتم عرض شريط التنقل والتذييل المشتركين تلقائياً في جميع الصفحات.",
-          "الترجمة بين العربية والإنجليزية مرتبطة بالفعل بالقالب العام للصفحات.",
-          "التصميم المتجاوب والواجهة الهندسية الداكنة يعملان الآن في كل الصفحات المهيأة."
-        ],
-        nextDescription:
-          "في المرحلة التالية سيتم استبدال هذا الهيكل بحاسبات تفاعلية ورسومات ولوحات نتائج ومنطق JavaScript خاص بكل موضوع.",
-        nextChip: "المرحلة التالية: الحاسبات والأدوات الرسومية والاختبارات"
+      pageTitles: {
+        home: "AhmedSolver",
+        mohrsCircle: "محلل دائرة مور",
+        beamDeflection: "حاسبة انحراف الجوائز"
       },
       footer: {
         description:
-          "AhmedSolver منصة هندسية ذكية لمقاومة المواد تضم حاسبات ثنائية اللغة وأدوات بصرية ودعماً دراسياً موجهاً.",
+          "يركز AhmedSolver الآن على أداتين بصريتين لتحويلات الإجهاد وخدمة الجوائز والانحراف.",
         quickLinks: "روابط سريعة",
-        starterPages: "صفحات البداية",
-        rights: "جميع القوالب الأساسية والترجمات وهياكل الصفحات أصبحت جاهزة للتوسعة."
+        rights: "أدوات هندسية تعليمية مركزة مع دعم ثنائي اللغة ورسومات متجاوبة."
+      },
+      home: {
+        eyebrow: "مجموعة هندسية مركزة",
+        title: "AhmedSolver",
+        subtitle: "منصة هندسية ذكية لمقاومة المواد",
+        description:
+          "تم تبسيط AhmedSolver ليعتمد على أداتين بصريتين في الميكانيك تساعدان على التعلم الواضح والتحليل السريع والتفسير الهندسي الواقعي.",
+        primaryCta: "افتح دائرة مور",
+        secondaryCta: "افتح انحراف الجوائز",
+        statTools: "حلان هندسيان مركزان",
+        statLanguage: "واجهة عربية / إنجليزية",
+        statDrawings: "رسومات SVG حية",
+        signalMohrTitle: "sigma_1 و sigma_2 و tau_max",
+        signalMohrText: "تحويلات الإجهاد المستوي مع دائرة حية ونقاط معلمة بوضوح.",
+        signalBeamTitle: "delta_max من E و I و L والحمل",
+        signalBeamText: "فحوصات انحراف الجوائز الموجهة للخدمة مع رسومات إنشائية.",
+        toolsKicker: "الأدوات الأساسية",
+        toolsTitle: "أداتان دقيقتان. مسار أوضح.",
+        toolsDescription:
+          "حلل الإجهاد المستوي باستخدام دائرة مور أو ادرس خدمة الجوائز من خلال حسابات الانحراف ورسومات الجائز.",
+        mohrsTag: "تحويلات الإجهاد",
+        mohrsTitle: "محلل دائرة مور",
+        mohrsDescription:
+          "حوّل sigma_x و sigma_y و tau_xy إلى إجهادات رئيسية وقص أعظمي وزاوية رئيسية مع رسم حي للدائرة.",
+        mohrsPoint1: "الإجهاد المتوسط والرئيسي والقص الأعظمي",
+        mohrsPoint2: "رسم متجاوب للدائرة مع نقاط وعلامات واضحة",
+        mohrsPoint3: "معادلات وخطوات حل مع عرض الزاوية",
+        mohrsCta: "افتح المحلل",
+        beamTag: "الانحراف والصلابة",
+        beamTitle: "حاسبة انحراف الجوائز",
+        beamDescription:
+          "بدّل بين حالات الجوائز البسيطة والكابولية، واحسب الانحراف، وارسم الجائز مع الركائز والأحمال.",
+        beamPoint1: "أربع حالات تحميل شائعة للجوائز",
+        beamPoint2: "حاسبة ذكية لعزم العطالة من الشكل",
+        beamPoint3: "تنبيهات للقيم غير الواقعية للبحور والانحرافات",
+        beamCta: "افتح الحاسبة",
+        focusKicker: "تركيز المنصة",
+        focusTitle: "لماذا أصبح AhmedSolver أكثر دقة",
+        focusDescription:
+          "تركز المنصة الآن على مسارين بصريين في الميكانيك يعود إليهما الطلاب كثيراً في الدراسة والتحقق التصميمي.",
+        focusCard1Title: "أقل ازدحاماً وأكثر عمقاً",
+        focusCard1Description:
+          "كل صفحة متبقية تتجاوز فكرة الحاسبة البسيطة عبر الرسومات والتحقق والتفسير الموجّه.",
+        focusCard2Title: "مصمم للدراسة الثنائية اللغة",
+        focusCard2Description:
+          "يتم التبديل بين الإنجليزية والعربية بسلاسة من دون كسر المسافات أو التسلسل البصري أو الرسومات الهندسية.",
+        focusCard3Title: "ملائم للنشر",
+        focusCard3Description:
+          "يبقى الموقع ثابتاً بالكامل ليتوافق مع GitHub Pages مع استمرار عمله محلياً عبر خادم Express."
       }
     }
   }

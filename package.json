@@ -2,7 +2,7 @@
   "name": "ahmedsolver",
   "version": "1.0.0",
   "private": true,
-  "description": "AhmedSolver backend for local Ollama-powered engineering text solving.",
+  "description": "AhmedSolver focused website for Mohr's Circle and beam deflection analysis.",
   "type": "module",
   "scripts": {
     "start": "node server.js",

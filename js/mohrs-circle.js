@@ -504,16 +504,18 @@
             </div>
           </form>
 
-          <section class="solver-panel glass-card">
-            <div class="panel-header">
-              <h2>${esc(texts.drawingTitle)}</h2>
-              <p>${esc(texts.drawingDescription)}</p>
-            </div>
-            <div class="drawing-shell">
-              ${createDrawing()}
-            </div>
-            <p class="drawing-caption">${esc(texts.drawingCaption)}</p>
-          </section>
+          <div class="visual-stack">
+            <section class="solver-panel glass-card">
+              <div class="panel-header">
+                <h2>${esc(texts.drawingTitle)}</h2>
+                <p>${esc(texts.drawingDescription)}</p>
+              </div>
+              <div class="drawing-shell">
+                ${createDrawing()}
+              </div>
+              <p class="drawing-caption">${esc(texts.drawingCaption)}</p>
+            </section>
+          </div>
         </div>
 
         <div class="result-layout">

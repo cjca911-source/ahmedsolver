@@ -1528,12 +1528,22 @@
             </div>
           </form>
 
-          <div class="solver-panel glass-card">
-            <div class="panel-header">
-              <h2>${esc(texts.sectionPreviewTitle)}</h2>
-              <p>${esc(sectionPreview.ok ? texts.sectionDescription : texts.labels.sectionIncomplete)}</p>
-            </div>
-            ${buildSectionPreview(texts)}
+          <div class="visual-stack">
+            <section class="solver-panel glass-card">
+              <div class="panel-header">
+                <h2>${esc(texts.sectionPreviewTitle)}</h2>
+                <p>${esc(sectionPreview.ok ? texts.sectionDescription : texts.labels.sectionIncomplete)}</p>
+              </div>
+              ${buildSectionPreview(texts)}
+            </section>
+
+            <section class="result-panel glass-card">
+              <div class="panel-header">
+                <h2>${esc(texts.diagramsTitle)}</h2>
+                <p>${esc(texts.diagramsDescription)}</p>
+              </div>
+              ${buildDiagramCards(texts)}
+            </section>
           </div>
         </div>
 
@@ -1561,13 +1571,6 @@
           </section>
         </div>
 
-        <section class="result-panel glass-card">
-          <div class="panel-header">
-            <h2>${esc(texts.diagramsTitle)}</h2>
-            <p>${esc(texts.diagramsDescription)}</p>
-          </div>
-          ${buildDiagramCards(texts)}
-        </section>
       </section>
     `;
 

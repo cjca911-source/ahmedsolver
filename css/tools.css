@@ -1,6 +1,7 @@
 .tool-page {
   display: grid;
   gap: 1.35rem;
+  padding-top: 0.25rem;
 }
 
 .page-hero {
@@ -101,9 +102,15 @@
 .solver-layout,
 .result-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.94fr) minmax(340px, 1.06fr);
   gap: 1.2rem;
   align-items: start;
+}
+
+.visual-stack {
+  display: grid;
+  gap: 1.2rem;
+  align-content: start;
 }
 
 .solver-panel,
@@ -178,13 +185,20 @@
   padding: 0.95rem 1rem;
   border-radius: 16px;
   border: 1px solid rgba(255, 66, 66, 0.16);
-  background: rgba(255, 255, 255, 0.035);
-  color: var(--text);
+  background: #111;
+  color: #fff;
   outline: none;
+  color-scheme: dark;
   transition:
     border-color var(--transition),
     box-shadow var(--transition),
     background-color var(--transition);
+}
+
+.select-control option,
+.select-control optgroup {
+  background: #111;
+  color: #fff;
 }
 
 .input-control::placeholder {
@@ -403,7 +417,7 @@
 
 .diagram-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 

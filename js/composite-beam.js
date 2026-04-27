@@ -924,13 +924,26 @@
             </div>
           </form>
 
-          <section class="solver-panel glass-card">
-            <div class="panel-header">
-              <h2>${esc(texts.previewTitle)}</h2>
-              <p>${esc(texts.previewDescription)}</p>
-            </div>
-            ${buildPreview(texts)}
-          </section>
+          <div class="visual-stack">
+            <section class="solver-panel glass-card">
+              <div class="panel-header">
+                <h2>${esc(texts.previewTitle)}</h2>
+                <p>${esc(texts.previewDescription)}</p>
+              </div>
+              ${buildPreview(texts)}
+            </section>
+
+            <section class="result-panel glass-card">
+              <div class="panel-header">
+                <h2>${esc(texts.chartsTitle)}</h2>
+                <p>${esc(texts.chartsDescription)}</p>
+              </div>
+              <div class="diagram-grid">
+                ${chartCard(texts.labels.distribution, distributionSvg(texts))}
+                ${chartCard(texts.labels.layerBar, layerBarSvg(texts))}
+              </div>
+            </section>
+          </div>
         </div>
 
         <div class="result-layout">
@@ -955,16 +968,6 @@
           </section>
         </div>
 
-        <section class="result-panel glass-card">
-          <div class="panel-header">
-            <h2>${esc(texts.chartsTitle)}</h2>
-            <p>${esc(texts.chartsDescription)}</p>
-          </div>
-          <div class="diagram-grid">
-            ${chartCard(texts.labels.distribution, distributionSvg(texts))}
-            ${chartCard(texts.labels.layerBar, layerBarSvg(texts))}
-          </div>
-        </section>
       </section>
     `;
 

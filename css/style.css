@@ -89,6 +89,18 @@ textarea {
   font: inherit;
 }
 
+select {
+  background: #111;
+  color: #fff;
+  color-scheme: dark;
+}
+
+select option,
+select optgroup {
+  background: #111;
+  color: #fff;
+}
+
 button {
   cursor: pointer;
 }
@@ -334,7 +346,7 @@ button {
 main {
   width: min(calc(100% - 2rem), var(--max-width));
   margin: 0 auto;
-  padding: 2rem 0 4rem;
+  padding: 2.35rem 0 4rem;
 }
 
 .hero-home {

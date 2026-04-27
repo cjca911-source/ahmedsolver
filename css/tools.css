@@ -339,6 +339,10 @@
   border: 1px solid rgba(255, 66, 66, 0.12);
 }
 
+.layer-card {
+  gap: 0.9rem;
+}
+
 .metric-card h3,
 .step-card h4 {
   margin-bottom: 0.45rem;
@@ -356,6 +360,45 @@
 .steps-grid {
   display: grid;
   gap: 0.9rem;
+}
+
+.mini-field-grid,
+.layer-stack,
+.detail-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.mini-field-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.layer-stack,
+.detail-grid {
+  margin-top: 0.9rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.7rem 0.65rem;
+  border-bottom: 1px solid rgba(255, 66, 66, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  color: #ffd6d6;
+  font-weight: 700;
+}
+
+.result-note-card {
+  margin-top: 1rem;
 }
 
 .diagram-grid {
@@ -409,6 +452,11 @@
   padding-inline-end: 1.1rem;
 }
 
+[dir="rtl"] .data-table th,
+[dir="rtl"] .data-table td {
+  text-align: right;
+}
+
 @media (max-width: 1100px) {
   .page-hero__grid,
   .solver-layout,
@@ -417,6 +465,8 @@
     grid-template-columns: 1fr;
   }
 
+  .mini-field-grid,
+  .detail-grid,
   .field-grid--three,
   .result-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -428,6 +478,8 @@
   .toggle-grid,
   .field-grid,
   .field-grid--three,
+  .mini-field-grid,
+  .detail-grid,
   .result-grid,
   .diagram-grid {
     grid-template-columns: 1fr;

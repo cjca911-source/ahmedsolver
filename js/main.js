@@ -8,7 +8,9 @@
   const pageMap = {
     "index.html": "home",
     "mohrs-circle.html": "mohrsCircle",
-    "beam-deflection.html": "beamDeflection"
+    "beam-deflection.html": "beamDeflection",
+    "bending-stress.html": "bendingStress",
+    "composite-beam.html": "compositeBeam"
   };
 
   function getStoredLanguage() {
@@ -100,6 +102,8 @@
     const homeHref = isHomePage() ? "#top" : buildUrl("index.html");
     const mohrsHref = buildUrl("pages/mohrs-circle.html");
     const beamHref = buildUrl("pages/beam-deflection.html");
+    const bendingHref = buildUrl("pages/bending-stress.html");
+    const compositeHref = buildUrl("pages/composite-beam.html");
 
     target.className = "site-header";
     target.innerHTML = `
@@ -128,6 +132,8 @@
             ${createNavLink(homeHref, translate("nav.home", language), currentPageKey === "home")}
             ${createNavLink(mohrsHref, translate("nav.mohrsCircle", language), currentPageKey === "mohrsCircle")}
             ${createNavLink(beamHref, translate("nav.beamDeflection", language), currentPageKey === "beamDeflection")}
+            ${createNavLink(bendingHref, translate("nav.bendingStress", language), currentPageKey === "bendingStress")}
+            ${createNavLink(compositeHref, translate("nav.compositeBeam", language), currentPageKey === "compositeBeam")}
           </ul>
 
           <div class="nav-actions">
@@ -168,6 +174,8 @@
             <li><a href="${isHomePage() ? "#top" : buildUrl("index.html")}">${translate("nav.home", language)}</a></li>
             <li><a href="${buildUrl("pages/mohrs-circle.html")}">${translate("nav.mohrsCircle", language)}</a></li>
             <li><a href="${buildUrl("pages/beam-deflection.html")}">${translate("nav.beamDeflection", language)}</a></li>
+            <li><a href="${buildUrl("pages/bending-stress.html")}">${translate("nav.bendingStress", language)}</a></li>
+            <li><a href="${buildUrl("pages/composite-beam.html")}">${translate("nav.compositeBeam", language)}</a></li>
           </ul>
         </div>
       </div>

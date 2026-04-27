@@ -21,6 +21,11 @@
       kN: { factor: 1e3, symbol: "kN" },
       lbf: { factor: 4.4482216152605, symbol: "lbf" }
     },
+    moment: {
+      "N·m": { factor: 1, symbol: "N·m" },
+      "kN·m": { factor: 1e3, symbol: "kN·m" },
+      "N·mm": { factor: 1e-3, symbol: "N·mm" }
+    },
     lineLoad: {
       "N/m": { factor: 1, symbol: "N/m" },
       "kN/m": { factor: 1e3, symbol: "kN/m" },
@@ -118,6 +123,10 @@
     return toBase("force", value, unitKey);
   }
 
+  function convertMomentToNewtonMeters(value, unitKey) {
+    return toBase("moment", value, unitKey);
+  }
+
   function convertLineLoadToNewtonPerMeter(value, unitKey) {
     return toBase("lineLoad", value, unitKey);
   }
@@ -132,6 +141,10 @@
 
   function convertMetersToLength(value, unitKey) {
     return fromBase("length", value, unitKey);
+  }
+
+  function convertNewtonMetersToMoment(value, unitKey) {
+    return fromBase("moment", value, unitKey);
   }
 
   function convertMetersFourthToInertia(value, unitKey) {
@@ -150,10 +163,12 @@
     optionsFor: optionsFor,
     convertLengthToMeters: convertLengthToMeters,
     convertForceToNewtons: convertForceToNewtons,
+    convertMomentToNewtonMeters: convertMomentToNewtonMeters,
     convertLineLoadToNewtonPerMeter: convertLineLoadToNewtonPerMeter,
     convertModulusToPascals: convertModulusToPascals,
     convertInertiaToMetersFourth: convertInertiaToMetersFourth,
     convertMetersToLength: convertMetersToLength,
+    convertNewtonMetersToMoment: convertNewtonMetersToMoment,
     convertMetersFourthToInertia: convertMetersFourthToInertia
   };
 })();
